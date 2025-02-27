@@ -65,20 +65,28 @@ public class ElevatorSys extends SubsystemBase {
     return encoderToIn(elevatorMain.getEncoder().getPosition());
   }
 
-  public void toStow() {
-    setHeight(Constants.ELEVATOR.STOW);
+  public void toHome() {
+    setHeight(Constants.ELEVATOR.HOME);
   }
 
   public void toClear() {
     setHeight(Constants.ELEVATOR.CLEAR);
   }
 
+  public void toAProcessor() {
+    setHeight(Constants.ELEVATOR.APROCESSOR);
+  }
+
   public void toAL1() {
     setHeight(Constants.ELEVATOR.AL1);
   }
 
-  public void toABarge() {
-    setHeight(Constants.ELEVATOR.ABARGE);
+  public void toAL2() {
+    setHeight(Constants.ELEVATOR.AL2);
+  }
+
+  public void toANet() {
+    setHeight(Constants.ELEVATOR.ANET);
   }
 
   public void toCL1() {

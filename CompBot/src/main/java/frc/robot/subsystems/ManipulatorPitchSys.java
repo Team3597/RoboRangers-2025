@@ -61,20 +61,28 @@ public class ManipulatorPitchSys extends SubsystemBase {
     return encoderToDegree(manipulatorPitch.getEncoder().getPosition());
   }
 
-  public void toStow() {
-    setPitch(Constants.MANIPULATOR.ABARGE);
+  public void toHome() {
+    setPitch(Constants.MANIPULATOR.HOME);
+  }
+
+  public void toUnstick() {
+    setPitch(Constants.MANIPULATOR.UNSTICK);
   }
 
   public void toAGround() {
     setPitch(Constants.MANIPULATOR.AGROUND);
   }
 
+  public void toAProcessor() {
+    setPitch(Constants.MANIPULATOR.APROCESSOR);
+  }
+
   public void toAReef() {
     setPitch(Constants.MANIPULATOR.AREEF);
   }
 
-  public void toABarge() {
-    setPitch(Constants.MANIPULATOR.ABARGE);
+  public void toANet() {
+    setPitch(Constants.MANIPULATOR.ANET);
   }
 
   public void toCLow() {

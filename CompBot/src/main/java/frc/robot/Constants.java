@@ -76,14 +76,15 @@ public final class Constants {
     public static final double ELEVATOR_MAX_HEIGHT = 30;
     public static final double ELEVATOR_MAX_COUNTS = 8000;
 
-    public static final double STOW = 0;
-    public static final double CLEAR = 0;
+    public static final double HOME = 0; // home height
+    public static final double CLEAR = 0; // clearance height for manipulator
 
-    public static final double AL1 = 0; //algae l1, l2, barge
+    public static final double APROCESSOR = 0; // algae processor, l1, l2, net
+    public static final double AL1 = 0;
     public static final double AL2 = 0;
-    public static final double ABARGE = 0;
+    public static final double ANET = 0;
 
-    public static final double CL1 = 0;
+    public static final double CL1 = 0; // coral l1, l2, l3, l4
     public static final double CL2 = 0;
     public static final double CL3 = 0;
     public static final double CL4 = 0;
@@ -97,14 +98,15 @@ public final class Constants {
     public static final double MANIPULATOR_MIN_PITCH = 0;
     public static final double MANIPULATOR_MAX_PITCH = 1;
 
-    public static final double STOW = 0;
-    public static final double UNSTICK = 0;
+    public static final double HOME = 0; // home pitch
+    public static final double UNSTICK = 0; // pitch to unstick coral
 
-    public static final double AGROUND = 0; //algae ground, reef, barge
+    public static final double AGROUND = 0; // algae ground, processor, reef (l1, l2), net
+    public static final double APROCESSOR = 0;
     public static final double AREEF = 0;
-    public static final double ABARGE = 0;
+    public static final double ANET = 0;
 
-    public static final double CLOW = 0;
+    public static final double CLOW = 0; // coral low (l1, l2, l3), high (l4)
     public static final double CHIGH = 0;
   }
 }
