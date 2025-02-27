@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -18,6 +19,7 @@ public class ManipulatorPitchSys extends SubsystemBase {
 
   private static SparkMax manipulatorPitch = new SparkMax(Constants.CAN.MANIPULATOR_PITCH, MotorType.kBrushless);
   private static SparkClosedLoopController pitchController;
+  private static AbsoluteEncoder pitchEncoder;
 
   //private static final AbsoluteEncoder manipulatorEncoder = manipulatorPitch.getAbsoluteEncoder();
 
@@ -25,9 +27,10 @@ public class ManipulatorPitchSys extends SubsystemBase {
 
   public ManipulatorPitchSys() {
     pitchController = manipulatorPitch.getClosedLoopController();
+    pitchEncoder = manipulatorPitch.getAbsoluteEncoder();
 
     pitchConfig.closedLoop
-      .feedbackSensor(FeedbackSensor.kAlternateOrExternalEncoder)
+      .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
       .p(Constants.PID.PITCH_P)
       .i(Constants.PID.PITCH_I)
       .d(Constants.PID.PITCH_D)
