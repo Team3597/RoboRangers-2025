@@ -60,11 +60,51 @@ public final class Constants {
     public static final double PITCH_D = 0;
     public static final double PITCH_MIN = -1;
     public static final double PITCH_MAX = 1;
+    public static final double ELEVATOR_P = 0;
+    public static final double ELEVATOR_I = 0;
+    public static final double ELEVATOR_D = 0;
+    public static final double ELEVATOR_MIN = 0;
+    public static final double ELEVATOR_MAX = 0;
+    public static final double ELEVATOR_FF = 0;
   }
 
   public static class UTIL {
+  }
+
+  public static class ELEVATOR {
+    public static final double ELEVATOR_COUNT_OFFSET = 0;
+    public static final double ELEVATOR_MAX_HEIGHT = 30;
+    public static final double ELEVATOR_MAX_COUNTS = 8000;
+
+    public static final double STOW = 0;
+    public static final double CLEAR = 0;
+
+    public static final double AL1 = 0; //algae l1, l2, barge
+    public static final double AL2 = 0;
+    public static final double ABARGE = 0;
+
+    public static final double CL1 = 0;
+    public static final double CL2 = 0;
+    public static final double CL3 = 0;
+    public static final double CL4 = 0;
+  }
+
+  public static class MANIPULATOR {
     public static final double NEO_CPR = 42;
     public static final double THROUGHBORE_CPR = 8192;
     public static final double MANIPULATOR_PIVOT_OFFSET = 0;
+
+    public static final double MANIPULATOR_MIN_PITCH = 0;
+    public static final double MANIPULATOR_MAX_PITCH = 1;
+
+    public static final double STOW = 0;
+    public static final double UNSTICK = 0;
+
+    public static final double AGROUND = 0; //algae ground, reef, barge
+    public static final double AREEF = 0;
+    public static final double ABARGE = 0;
+
+    public static final double CLOW = 0;
+    public static final double CHIGH = 0;
   }
 }

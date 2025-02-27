@@ -4,6 +4,12 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.config.SparkMaxConfig;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -13,22 +19,81 @@ public class Elevator extends SubsystemBase {
   private static SparkMax elevatorMain = new SparkMax(Constants.CAN.ELEVATOR_MAIN, MotorType.kBrushed);
   private static SparkMax elevatorSlave = new SparkMax(Constants.CAN.ELEVATOR_SLAVE, MotorType.kBrushed);
 
-  private static SparkClosedLoopController algaeVelocityController = algaeManipulator.getClosedLoopController();
+  private static SparkClosedLoopController elevatorController = elevatorMain.getClosedLoopController();
 
-  private static SparkMaxConfig algaeConfig = new SparkMaxConfig();
+  private static SparkMaxConfig elevatorConfig = new SparkMaxConfig();
+  private static SparkMaxConfig slaveConfig = new SparkMaxConfig();
 
   public Elevator() {
-    algaeConfig.closedLoop
-    .p(Constants.PID.ALGAE_P)
-    .i(Constants.PID.ALGAE_I)
-    .d(Constants.PID.ALGAE_D)
-    .outputRange(Constants.PID.ALGAE_MIN, Constants.PID.ALGAE_MAX)
+    elevatorConfig.closedLoop
+    .p(Constants.PID.ELEVATOR_P)
+    .i(Constants.PID.ELEVATOR_I)
+    .d(Constants.PID.ELEVATOR_D)
+    .outputRange(Constants.PID.ELEVATOR_MIN, Constants.PID.ELEVATOR_MAX)
     //includes feedforward due to gravity
-    .velocityFF(Constants.PID.ALGAE_FF);
+    .velocityFF(Constants.PID.ELEVATOR_FF);
+    elevatorMain.configure(elevatorConfig, null, null);
+
+    slaveConfig.follow(elevatorMain);
+    elevatorSlave.configure(slaveConfig, null, null);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+  private void setHeight(double in) {
+    if (in < Constants.ELEVATOR.ELEVATOR_MAX_HEIGHT && in > 0) {
+      elevatorController.setReference(inToEncoder(in), ControlType.kPosition);
+    }
+  }
+
+  private double inToEncoder(double in) {
+    return (in / Constants.ELEVATOR.ELEVATOR_MAX_HEIGHT) * Constants.ELEVATOR.ELEVATOR_MAX_COUNTS + Constants.ELEVATOR.ELEVATOR_COUNT_OFFSET;
+  }
+
+  private double encoderToIn(double counts) {
+    return ((counts + Constants.ELEVATOR.ELEVATOR_COUNT_OFFSET) / Constants.ELEVATOR.ELEVATOR_MAX_HEIGHT) * Constants.ELEVATOR.ELEVATOR_MAX_HEIGHT;
+  }
+
+  public double GetElevatorEncoder() {
+    return elevatorMain.getEncoder().getPosition();
+  }
+
+  public double GetElevatorPosition() {
+    return encoderToIn(elevatorMain.getEncoder().getPosition());
+  }
+
+  public void toStow() {
+    setHeight(Constants.ELEVATOR.STOW);
+  }
+
+  public void toClear() {
+    setHeight(Constants.ELEVATOR.CLEAR);
+  }
+
+  public void toAL1() {
+    setHeight(Constants.ELEVATOR.AL1);
+  }
+
+  public void toABarge() {
+    setHeight(Constants.ELEVATOR.ABARGE);
+  }
+
+  public void toCL1() {
+    setHeight(Constants.ELEVATOR.CL1);
+  }
+
+  public void toCL2() {
+    setHeight(Constants.ELEVATOR.CL2);
+  }
+
+  public void toCL3() {
+    setHeight(Constants.ELEVATOR.CL3);
+  }
+
+  public void toCL4() {
+    setHeight(Constants.ELEVATOR.CL4);
   }
 }
