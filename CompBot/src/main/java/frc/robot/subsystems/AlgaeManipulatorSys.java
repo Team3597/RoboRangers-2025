@@ -13,7 +13,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class AlgaeManipulator extends SubsystemBase {
+public class AlgaeManipulatorSys extends SubsystemBase {
   /** Creates a new AlgaeManipulator. */
 
   private static SparkMax algaeManipulator = new SparkMax(Constants.CAN.ALGAE_MANIPULATOR, MotorType.kBrushed);
@@ -23,7 +23,7 @@ public class AlgaeManipulator extends SubsystemBase {
   private static SparkMaxConfig algaeConfig = new SparkMaxConfig();
   //Updated config docs: https://docs.revrobotics.com/revlib/configuring-devices
 
-  public AlgaeManipulator() {
+  public AlgaeManipulatorSys() {
     algaeConfig.closedLoop
       .p(Constants.PID.ALGAE_P)
       .i(Constants.PID.ALGAE_I)

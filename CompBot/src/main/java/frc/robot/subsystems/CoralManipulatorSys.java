@@ -10,12 +10,12 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class CoralManipulator extends SubsystemBase {
+public class CoralManipulatorSys extends SubsystemBase {
   /** Creates a new CoralManipulator. */
 
   private static SparkMax coralManipulator = new SparkMax(Constants.CAN.CORAL_MANIPULATOR, MotorType.kBrushed);
   
-  public CoralManipulator() {}
+  public CoralManipulatorSys() {}
 
   @Override
   public void periodic() {

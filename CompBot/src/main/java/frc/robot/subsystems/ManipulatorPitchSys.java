@@ -13,7 +13,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class ManipulatorPitch extends SubsystemBase {
+public class ManipulatorPitchSys extends SubsystemBase {
   /** Creates a new ManipulatorPitch. */
 
   private static SparkMax manipulatorPitch = new SparkMax(Constants.CAN.MANIPULATOR_PITCH, MotorType.kBrushless);
@@ -23,7 +23,7 @@ public class ManipulatorPitch extends SubsystemBase {
 
   private static SparkMaxConfig pitchConfig = new SparkMaxConfig();
 
-  public ManipulatorPitch() {
+  public ManipulatorPitchSys() {
     pitchController = manipulatorPitch.getClosedLoopController();
 
     pitchConfig.closedLoop

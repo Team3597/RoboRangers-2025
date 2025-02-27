@@ -13,7 +13,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Elevator extends SubsystemBase {
+public class ElevatorSys extends SubsystemBase {
   /** Creates a new Elevator. */
 
   private static SparkMax elevatorMain = new SparkMax(Constants.CAN.ELEVATOR_MAIN, MotorType.kBrushed);
@@ -24,7 +24,7 @@ public class Elevator extends SubsystemBase {
   private static SparkMaxConfig elevatorConfig = new SparkMaxConfig();
   private static SparkMaxConfig slaveConfig = new SparkMaxConfig();
 
-  public Elevator() {
+  public ElevatorSys() {
     elevatorConfig.closedLoop
     .p(Constants.PID.ELEVATOR_P)
     .i(Constants.PID.ELEVATOR_I)
