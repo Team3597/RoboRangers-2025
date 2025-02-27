@@ -18,21 +18,21 @@ public final class Constants {
   }
 
   public static class CAN {
-    public static final int FRONT_LEFT_DRIVE = 0;
-    public static final int FRONT_LEFT_ROT = 0;
-    public static final int FRONT_RIGHT_DRIVE = 0;
-    public static final int FRONT_RIGHT_ROT = 0;
-    public static final int BACK_LEFT_DRIVE = 0;
-    public static final int BACK_LEFT_ROT = 0;
-    public static final int BACK_RIGHT_DRIVE = 0;
-    public static final int BACK_RIGHT_ROT = 0;
+    public static final int FRONT_LEFT_DRIVE = 1;
+    public static final int FRONT_LEFT_ROT = 2;
+    public static final int FRONT_RIGHT_DRIVE = 3;
+    public static final int FRONT_RIGHT_ROT = 4;
+    public static final int BACK_LEFT_DRIVE = 5;
+    public static final int BACK_LEFT_ROT = 6;
+    public static final int BACK_RIGHT_DRIVE = 7;
+    public static final int BACK_RIGHT_ROT = 8;
 
-    public static final int ELEVATOR_LEFT = 0;
-    public static final int ELEVATOR_RIGHT = 0;
+    public static final int ELEVATOR_MAIN = 9; //left
+    public static final int ELEVATOR_SLAVE = 10; //right
 
-    public static final int MANIPULATOR_PITCH = 0;
-    public static final int ALGAE_MANIPULATOR = 0;
-    public static final int CORAL_MANIPULATOR = 0;
+    public static final int MANIPULATOR_PITCH = 11;
+    public static final int ALGAE_MANIPULATOR = 12;
+    public static final int CORAL_MANIPULATOR = 13;
   }
 
   public static class Motion {
@@ -60,5 +60,11 @@ public final class Constants {
     public static final double PITCH_D = 0;
     public static final double PITCH_MIN = -1;
     public static final double PITCH_MAX = 1;
+  }
+
+  public static class UTIL {
+    public static final double NEO_CPR = 42;
+    public static final double THROUGHBORE_CPR = 8192;
+    public static final double MANIPULATOR_PIVOT_OFFSET = 0;
   }
 }

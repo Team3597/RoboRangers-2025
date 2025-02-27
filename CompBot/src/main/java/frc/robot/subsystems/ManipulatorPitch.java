@@ -18,6 +18,7 @@ public class ManipulatorPitch extends SubsystemBase {
   /** Creates a new ManipulatorPitch. */
 
   private static SparkMax manipulatorPitch = new SparkMax(Constants.CAN.MANIPULATOR_PITCH, MotorType.kBrushed);
+  private static AbsoluteEncoder manipultorThroughBore = new AbsoluteEncoder(manipulatorPitch.getEncoder);
   private static SparkClosedLoopController pitchController = manipulatorPitch.getClosedLoopController();
 
   private static SparkMaxConfig pitchConfig = new SparkMaxConfig();
@@ -37,7 +38,12 @@ public class ManipulatorPitch extends SubsystemBase {
   }
 
   public void setPitch(double pitch) {
-    pitchController.setReference(pitch, ControlType.kPosition);
+    pitchController.setReference(degreeToEncoder(pitch), ControlType.kPosition);
+  }
+
+  private double degreeToEncoder(double degrees) {
+    return (degrees/360)*Constants.UTIL.THROUGHBORE_CPR + Constants.UTIL.MANIPULATOR_PIVOT_OFFSET;
+    //add factor and constant for setpoint in testing
   }
 
 
