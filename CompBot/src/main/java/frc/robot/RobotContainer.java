@@ -4,10 +4,17 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.AlgaeManipulatorSys;
+import frc.robot.subsystems.CoralManipulatorSys;
+import frc.robot.subsystems.ElevatorSys;
 import frc.robot.subsystems.ExampleSys;
+import frc.robot.subsystems.ManipulatorPitchSys;
+import frc.robot.subsystems.VisionSys;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -20,12 +27,22 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSys m_exampleSubsystem = new ExampleSys();
+
+  private static final ExampleSys m_exampleSubsystem = new ExampleSys(); 
+
+  private static final AlgaeManipulatorSys m_algaeManipulatorSys = new AlgaeManipulatorSys();
+  private static final CoralManipulatorSys m_coralManipulatorSys = new CoralManipulatorSys();
+  private static final ElevatorSys m_elevatorSys = new ElevatorSys();
+  private static final ManipulatorPitchSys m_manpulatorPitchSys = new ManipulatorPitchSys();
+  private static final VisionSys m_visionSys = new VisionSys();
+
+  private static DigitalInput m_coralLimit = new DigitalInput(Constants.DIO.CORAL_LIMIT);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController m_controlController = new CommandXboxController(Constants.OPERATOR.CONTROL_CONTROLLER_PORT);
 
+  private final Joystick driveJoystick = new Joystick(Constants.OPERATOR.DRIVE_CONTROLLER_PORT);
+  
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -48,7 +65,7 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
   /**

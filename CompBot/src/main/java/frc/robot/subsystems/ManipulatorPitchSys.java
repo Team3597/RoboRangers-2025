@@ -53,11 +53,11 @@ public class ManipulatorPitchSys extends SubsystemBase {
     return ((counts + Constants.MANIPULATOR.MANIPULATOR_PIVOT_OFFSET)/Constants.MANIPULATOR.THROUGHBORE_CPR) * 360;
   }
 
-  public double getManipulatorEncoder() {
+  public double getEncoder() {
     return manipulatorPitch.getEncoder().getPosition();
   }
 
-  public double getManipulatorPosition() {
+  public double getPosition() {
     return encoderToDegree(manipulatorPitch.getEncoder().getPosition());
   }
 

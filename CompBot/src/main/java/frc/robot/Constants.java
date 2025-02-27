@@ -13,8 +13,9 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+  public static class OPERATOR {
+    public static final int DRIVE_CONTROLLER_PORT = 0;
+    public static final int CONTROL_CONTROLLER_PORT = 1;
   }
 
   public static class CAN {
@@ -35,7 +36,13 @@ public final class Constants {
     public static final int CORAL_MANIPULATOR = 13;
   }
 
-  public static class Motion {
+  public static class DIO {
+
+    public static final int CORAL_LIMIT = 0;
+    
+  }
+
+  public static class MOTION {
     public static final double ALGAE_INTAKE_RPM = 60;
     public static final double ALGAE_OUTTAKE_RPM = 60;
     //potentially differ speeds for different levels later
