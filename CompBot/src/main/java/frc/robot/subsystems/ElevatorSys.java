@@ -4,43 +4,65 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ElevatorSys extends SubsystemBase {
   /** Creates a new Elevator. */
 
-  private static SparkMax elevatorMain = new SparkMax(Constants.CAN.ELEVATOR_MAIN, MotorType.kBrushed);
-  private static SparkMax elevatorSlave = new SparkMax(Constants.CAN.ELEVATOR_SLAVE, MotorType.kBrushed);
+  private static SparkMax elevatorMain = new SparkMax(Constants.CAN.ELEVATOR_MAIN, MotorType.kBrushless);
+  private static SparkMax elevatorSlave = new SparkMax(Constants.CAN.ELEVATOR_SLAVE, MotorType.kBrushless);
 
   private static SparkClosedLoopController elevatorController = elevatorMain.getClosedLoopController();
 
-  private static SparkMaxConfig elevatorConfig = new SparkMaxConfig();
+  private static SparkMaxConfig mainConfig = new SparkMaxConfig();
   private static SparkMaxConfig slaveConfig = new SparkMaxConfig();
 
-  public ElevatorSys() {
-    elevatorConfig.closedLoop
-    .p(Constants.PID.ELEVATOR_P)
-    .i(Constants.PID.ELEVATOR_I)
-    .d(Constants.PID.ELEVATOR_D)
-    .outputRange(Constants.PID.ELEVATOR_MIN, Constants.PID.ELEVATOR_MAX)
-    //includes feedforward due to gravity
-    .velocityFF(Constants.PID.ELEVATOR_FF);
-    elevatorMain.configure(elevatorConfig, null, null);
 
-    slaveConfig.follow(elevatorMain);
-    elevatorSlave.configure(slaveConfig, null, null);
+  public ElevatorSys() {
+    mainConfig.closedLoop
+      .p(Constants.PID.ELEVATOR_P)
+      .i(Constants.PID.ELEVATOR_I)
+      .d(Constants.PID.ELEVATOR_D)
+      .outputRange(Constants.PID.ELEVATOR_MIN, Constants.PID.ELEVATOR_MAX)
+      //includes feedforward due to gravity
+      .velocityFF(Constants.PID.ELEVATOR_FF)
+      .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+    mainConfig
+      .idleMode(IdleMode.kBrake)
+      .inverted(false)
+      .smartCurrentLimit(Constants.ELEVATOR.AMP_LIMIT);
+    elevatorMain.configure(mainConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    slaveConfig
+      .follow(elevatorMain)
+      .idleMode(IdleMode.kBrake)
+      .inverted(false)
+      .smartCurrentLimit(Constants.ELEVATOR.AMP_LIMIT);
+    elevatorSlave.configure(slaveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    //toHome();
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Elevator Encoder", GetElevatorEncoder());
+    SmartDashboard.putNumber("Slave Encoder", elevatorSlave.getEncoder().getPosition());
+    //System.out.println(GetElevatorEncoder());
+    //System.out.println(elevatorSlave.getEncoder().getPosition());
   }
 
   private void setHeight(double in) {
@@ -49,7 +71,14 @@ public class ElevatorSys extends SubsystemBase {
     }
   }
 
+  private void setPosition(double count) {
+    if (count < Constants.ELEVATOR.ELEVATOR_MAX_HEIGHT && count > 0) {
+      elevatorController.setReference(count, ControlType.kPosition);
+    }
+  }
+
   private double inToEncoder(double in) {
+    System.out.println ((in / Constants.ELEVATOR.ELEVATOR_MAX_HEIGHT) * Constants.ELEVATOR.ELEVATOR_MAX_COUNTS + Constants.ELEVATOR.ELEVATOR_COUNT_OFFSET);
     return (in / Constants.ELEVATOR.ELEVATOR_MAX_HEIGHT) * Constants.ELEVATOR.ELEVATOR_MAX_COUNTS + Constants.ELEVATOR.ELEVATOR_COUNT_OFFSET;
   }
 
