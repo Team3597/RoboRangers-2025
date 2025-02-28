@@ -10,6 +10,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -36,11 +37,14 @@ public class ElevatorSys extends SubsystemBase {
 
     slaveConfig.follow(elevatorMain);
     elevatorSlave.configure(slaveConfig, null, null);
+
+    //toHome();
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Elevator Encoder", GetElevatorEncoder());
   }
 
   private void setHeight(double in) {

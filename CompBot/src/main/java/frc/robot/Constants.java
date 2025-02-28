@@ -47,10 +47,10 @@ public final class Constants {
     public static final int BACK_RIGHT_DRIVE = 7;
     public static final int BACK_RIGHT_ROT = 8;
 
-    public static final int ELEVATOR_MAIN = 9; //left
-    public static final int ELEVATOR_SLAVE = 10; //right
+    public static final int ELEVATOR_MAIN = 9; //left, - is up
+    public static final int ELEVATOR_SLAVE = 10; //right + is up
 
-    public static final int MANIPULATOR_PITCH = 11;
+    public static final int MANIPULATOR_PITCH = 11; // + is up
     public static final int ALGAE_MANIPULATOR = 12;
     public static final int CORAL_MANIPULATOR = 13;
   }
@@ -76,14 +76,14 @@ public final class Constants {
     public static final double ALGAE_I = 0;
     public static final double ALGAE_D = 0;
     public static final double ALGAE_FF = 0.002; // 1/KV, 1/473
-    public static final double ALGAE_MIN = -1;
-    public static final double ALGAE_MAX = 1;
+    public static final double ALGAE_MIN = -0.2;
+    public static final double ALGAE_MAX = 0.2;
     //figure out graphing my encoder data so i can tune these? since i can't observe velocity easily
 
     
-    public static final double PITCH_P = 0;
-    public static final double PITCH_I = 0;
-    public static final double PITCH_D = 0;
+    public static double PITCH_P = 3;
+    public static double PITCH_I = 0;
+    public static double PITCH_D = 0;
     public static final double PITCH_MIN = -1;
     public static final double PITCH_MAX = 1;
     public static final double ELEVATOR_P = 0;
@@ -123,6 +123,8 @@ public final class Constants {
   }
 
   public static class MANIPULATOR {
+    public static final int AMP_LIMIT = 20;
+
     public static final double NEO_CPR = 42;
     public static final double THROUGHBORE_CPR = 8192;
     public static final double MANIPULATOR_PIVOT_OFFSET = 0;

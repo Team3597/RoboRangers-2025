@@ -6,13 +6,25 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
+
+import java.util.Map;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.MANIPULATOR;
+import frc.robot.Constants.PID;
 
 public class ManipulatorPitchSys extends SubsystemBase {
   /** Creates a new ManipulatorPitch. */
@@ -25,7 +37,10 @@ public class ManipulatorPitchSys extends SubsystemBase {
 
   private static SparkMaxConfig pitchConfig = new SparkMaxConfig();
 
+  GenericEntry pitchP;
+
   public ManipulatorPitchSys() {
+
     pitchController = manipulatorPitch.getClosedLoopController();
     pitchEncoder = manipulatorPitch.getAbsoluteEncoder();
 
@@ -35,16 +50,49 @@ public class ManipulatorPitchSys extends SubsystemBase {
       .i(Constants.PID.PITCH_I)
       .d(Constants.PID.PITCH_D)
       .outputRange(Constants.PID.PITCH_MIN, Constants.PID.PITCH_MAX);
+    pitchConfig
+      .idleMode(IdleMode.kBrake)
+      .inverted(false)
+      .smartCurrentLimit(MANIPULATOR.AMP_LIMIT);
     manipulatorPitch.configure(pitchConfig, null, null);
+
+    pitchController.setReference(0.65, ControlType.kPosition);
+
+    pitchP = Shuffleboard.getTab("Tuning").add("Pitch P Slider", 1).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 2)).getEntry();
+
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Manipulator Encoder", getEncoder());
   }
 
-  private void setPitch(double pitch) {
+  public void updatePID() {
+
+    Constants.PID.PITCH_P = pitchP.getDouble(0.5); //SmartDashboard.getNumber("Pitch P getnum", 0.5); 
+
+    pitchConfig.closedLoop
+      .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+      .p(Constants.PID.PITCH_P)
+      .i(Constants.PID.PITCH_I)
+      .d(Constants.PID.PITCH_D)
+      .outputRange(Constants.PID.PITCH_MIN, Constants.PID.PITCH_MAX);
+    pitchConfig
+      .idleMode(IdleMode.kBrake)
+      .inverted(false)
+      .smartCurrentLimit(MANIPULATOR.AMP_LIMIT);
+    manipulatorPitch.configure(pitchConfig, null, null);
+
+
+  }
+
+  public void setPitch(double pitch) {
     pitchController.setReference(degreeToEncoder(pitch), ControlType.kPosition);
+  }
+
+  public void setEncoder(double position) {
+    pitchController.setReference(position, ControlType.kPosition);
   }
 
   private double degreeToEncoder(double degrees) {
@@ -57,11 +105,11 @@ public class ManipulatorPitchSys extends SubsystemBase {
   }
 
   public double getEncoder() {
-    return manipulatorPitch.getEncoder().getPosition();
+    return manipulatorPitch.getAbsoluteEncoder().getPosition();
   }
 
   public double getPosition() {
-    return encoderToDegree(manipulatorPitch.getEncoder().getPosition());
+    return encoderToDegree(manipulatorPitch.getAbsoluteEncoder().getPosition());
   }
 
   public void toHome() {

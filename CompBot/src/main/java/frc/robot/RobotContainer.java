@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.UpdatePID;
+import frc.robot.commands.setManipulatorPitch;
 import frc.robot.subsystems.AlgaeManipulatorSys;
 import frc.robot.subsystems.CoralManipulatorSys;
 import frc.robot.subsystems.ElevatorSys;
@@ -39,8 +41,9 @@ import swervelib.SwerveInputStream;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-                                                                                "swerve"));
+  private final SwerveSubsystem drivebase = 
+    new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
+                                        "swerve"));
 
   private static final ExampleSys m_exampleSubsystem = new ExampleSys(); 
 
@@ -60,52 +63,57 @@ public class RobotContainer {
     /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
    */
-  SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                () -> m_controlController.getLeftY() * -1,
-                                                                () -> m_controlController.getLeftX() * -1)
-                                                            .withControllerRotationAxis(m_controlController::getRightX)
-                                                            .deadband(OperatorConstants.DEADBAND)
-                                                            .scaleTranslation(0.8)
-                                                            .allianceRelativeControl(true);
+  SwerveInputStream driveAngularVelocity = 
+    SwerveInputStream.of(drivebase.getSwerveDrive(),
+                          () -> m_controlController.getLeftY() * -1,
+                          () -> m_controlController.getLeftX() * -1)
+                      .withControllerRotationAxis(m_controlController::getRightX)
+                      .deadband(OperatorConstants.DEADBAND)
+                      .scaleTranslation(0.8)
+                      .allianceRelativeControl(true);
 
   /**
    * Clone's the angular velocity input stream and converts it to a fieldRelative input stream.
    */
-  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(m_controlController::getRightX,
-                                                                                             m_controlController::getRightY)
-                                                           .headingWhile(true);
+  SwerveInputStream driveDirectAngle = 
+    driveAngularVelocity.copy().withControllerHeadingAxis(m_controlController::getRightX,
+                                                          m_controlController::getRightY)
+                          .headingWhile(true);
 
   /**
    * Clone's the angular velocity input stream and converts it to a robotRelative input stream.
    */
-  SwerveInputStream driveRobotOriented = driveAngularVelocity.copy().robotRelative(true)
-                                                             .allianceRelativeControl(false);
+  SwerveInputStream driveRobotOriented = 
+    driveAngularVelocity.copy().robotRelative(true)
+                          .allianceRelativeControl(false);
 
-  SwerveInputStream driveAngularVelocityKeyboard = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                        () -> -m_controlController.getLeftY(),
-                                                                        () -> -m_controlController.getLeftX())
-                                                                    .withControllerRotationAxis(() -> m_controlController.getRawAxis(
-                                                                        2))
-                                                                    .deadband(OperatorConstants.DEADBAND)
-                                                                    .scaleTranslation(0.8)
-                                                                    .allianceRelativeControl(true);
+  SwerveInputStream driveAngularVelocityKeyboard 
+    = SwerveInputStream.of(drivebase.getSwerveDrive(),
+                            () -> -m_controlController.getLeftY(),
+                            () -> -m_controlController.getLeftX())
+                        .withControllerRotationAxis(() -> m_controlController.getRawAxis(
+                            2))
+                        .deadband(OperatorConstants.DEADBAND)
+                        .scaleTranslation(0.8)
+                        .allianceRelativeControl(true);
   // Derive the heading axis with math!
-  SwerveInputStream driveDirectAngleKeyboard     = driveAngularVelocityKeyboard.copy()
-                                                                               .withControllerHeadingAxis(() ->
-                                                                                                              Math.sin(
-                                                                                                                  m_controlController.getRawAxis(
-                                                                                                                      2) *
-                                                                                                                  Math.PI) *
-                                                                                                              (Math.PI *
-                                                                                                               2),
-                                                                                                          () ->
-                                                                                                              Math.cos(
-                                                                                                                  m_controlController.getRawAxis(
-                                                                                                                      2) *
-                                                                                                                  Math.PI) *
-                                                                                                              (Math.PI *
-                                                                                                               2))
-                                                                               .headingWhile(true);
+  SwerveInputStream driveDirectAngleKeyboard
+    = driveAngularVelocityKeyboard.copy()
+                                  .withControllerHeadingAxis(() ->
+                                                                Math.sin(
+                                                                    m_controlController.getRawAxis(
+                                                                        2) *
+                                                                    Math.PI) *
+                                                                (Math.PI *
+                                                                  2),
+                                                            () ->
+                                                                Math.cos(
+                                                                    m_controlController.getRawAxis(
+                                                                        2) *
+                                                                    Math.PI) *
+                                                                (Math.PI *
+                                                                  2))
+                                  .headingWhile(true);
 
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -180,6 +188,10 @@ public class RobotContainer {
       m_controlController.back().whileTrue(Commands.none());
       m_controlController.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       m_controlController.rightBumper().onTrue(Commands.none());
+
+      m_controlController.b().onTrue(new setManipulatorPitch(m_manpulatorPitchSys, 0.9));
+      m_controlController.x().onTrue(new setManipulatorPitch(m_manpulatorPitchSys, 0.7));
+      m_controlController.a().onTrue(new UpdatePID(m_manpulatorPitchSys));
     }
 
   }

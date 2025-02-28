@@ -10,6 +10,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -37,6 +38,7 @@ public class AlgaeManipulatorSys extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Algae Wheel Velocity", getEncoder());
   }
 
   public void intakeAlgae(double velocity) {
@@ -48,10 +50,10 @@ public class AlgaeManipulatorSys extends SubsystemBase {
   }
 
   public double getEncoder() {
-    return algaeManipulator.getEncoder().getPosition();
+    return algaeManipulator.getEncoder().getVelocity();
   }
 
   public double Velocity() {
-    return algaeManipulator.getEncoder().getPosition();
+    return algaeManipulator.getEncoder().getVelocity();
   }
 }
