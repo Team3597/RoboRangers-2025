@@ -33,6 +33,8 @@ public class StateMonitorSys extends SubsystemBase {
 
   /** Creates a new StateMonitorSys. */
   public StateMonitorSys() {
+    manipulatorState = ManipulatorState.HOME;
+    climbState = ClimbState.HOME;
   }
 
   public void setManipulatorState(ManipulatorState newState) {

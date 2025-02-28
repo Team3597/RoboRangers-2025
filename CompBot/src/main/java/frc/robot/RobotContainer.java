@@ -44,6 +44,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.GLOBAL;
@@ -74,7 +75,6 @@ public class RobotContainer {
   private static final VisionSys m_visionSys = new VisionSys();
   private static final StateMonitorSys m_stateMonitorSys = new StateMonitorSys();
 
-  private static DigitalInput m_coralLimit = new DigitalInput(Constants.DIO.CORAL_LIMIT);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_controlController = new CommandXboxController(Constants.OPERATOR.CONTROL_CONTROLLER_PORT);
@@ -143,6 +143,7 @@ public class RobotContainer {
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
+  
   }
 
   /**
@@ -172,28 +173,33 @@ public class RobotContainer {
       m_controlController.pov(90).onTrue(new ToCL3(m_elevatorSys, m_manpulatorPitchSys)); // right
       m_controlController.pov(180).onTrue(new ToCL1(m_elevatorSys, m_manpulatorPitchSys)); // down
       m_controlController.pov(270).onTrue(new ToCL2(m_elevatorSys, m_manpulatorPitchSys)); // left
-      m_controlController.leftStick().onTrue(new ToHome(m_elevatorSys, m_manpulatorPitchSys)); // left stick button
+      m_controlController.button(9).onTrue(new ToHome(m_elevatorSys, m_manpulatorPitchSys)); // left stick button
       m_controlController.leftBumper().whileTrue(new ManipulateObject(m_algaeManipulatorSys, m_coralManipulatorSys)); // left bumper
 
       // algae controls
+      // CONTROLLER MAPS WEIRD BUTTONS IN .[BUTTON]() AREN'T SAME AS CONTROLLER
+    //  m_controlController.button(10).onTrue((new ToAGround(m_elevatorSys, m_manpulatorPitchSys))); // start (REAL BUTTONS)
       m_controlController.y().onTrue(new ToANet(m_elevatorSys, m_manpulatorPitchSys)); // y
-      m_controlController.b().onTrue(new ToAL2(m_elevatorSys, m_manpulatorPitchSys)); // b
-      m_controlController.a().onTrue(new ToAProcessor(m_elevatorSys, m_manpulatorPitchSys)); // a
-      m_controlController.x().onTrue(new ToAL1(m_elevatorSys, m_manpulatorPitchSys)); // x
-      m_controlController.start().onTrue(new ToAGround(m_elevatorSys, m_manpulatorPitchSys)); // start
+      m_controlController.x().onTrue(new ToAL2(m_elevatorSys, m_manpulatorPitchSys)); // b
+      m_controlController.b().onTrue(new ToAProcessor(m_elevatorSys, m_manpulatorPitchSys)); // a
+      m_controlController.a().onTrue(new ToAL1(m_elevatorSys, m_manpulatorPitchSys)); // x
+      m_controlController.button(10).onTrue(new ToAGround(m_elevatorSys, m_manpulatorPitchSys)); // start
 
 
       // climb controls
       if (StateMonitorSys.climbState == ClimbState.READY) { // back (toggles between climb home and ready)
-        m_controlController.back().onTrue(new ToClimbHome(m_climbSys));
+        m_controlController.rightTrigger().onTrue(new ToClimbHome(m_climbSys));
       } else if (StateMonitorSys.climbState == ClimbState.HOME) {
-        m_controlController.back().onTrue(new ToClimbReady(m_climbSys));
+        m_controlController.rightTrigger().onTrue(new ToClimbReady(m_climbSys));
       }
-      // missing method to read center logitech button
-      // m_controlController.centerLogitechButton().onTrue(new ToClimbLatched(m_climbSys)); // center logitech button
+      m_controlController.rightBumper().onTrue(new ToClimbLatched(m_climbSys)); // center logitech button
     } else {
       m_controlController.rightStick().onTrue(new ToClimbHome(m_climbSys)); // Unlocks controls and resets climb if accidentally pressed (temporarily right stick button)
     }
+
+    //autodrive tests
+    Trigger button7 = new JoystickButton(driveJoystick, 7);
+    button7.whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
 
 
 
@@ -250,9 +256,9 @@ public class RobotContainer {
       m_controlController.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       m_controlController.rightBumper().onTrue(Commands.none());
 
-      m_controlController.b().onTrue(new setManipulatorPitch(m_manpulatorPitchSys, 0.9));
-      m_controlController.x().onTrue(new setManipulatorPitch(m_manpulatorPitchSys, 0.7));
-      m_controlController.a().onTrue(new UpdatePID(m_manpulatorPitchSys));
+      // m_controlController.b().onTrue(new setManipulatorPitch(m_manpulatorPitchSys, 0.9));
+      // m_controlController.x().onTrue(new setManipulatorPitch(m_manpulatorPitchSys, 0.7));
+      // m_controlController.a().onTrue(new UpdatePID(m_manpulatorPitchSys));
     }
 
   }

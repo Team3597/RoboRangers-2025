@@ -32,7 +32,9 @@ public class ToAGround extends Command {
   public void initialize() {
     if (StateMonitorSys.manipulatorState == ManipulatorState.HOME) {
       elevatorSys.toClear(); //move up
-      while (elevatorSys.GetElevatorPosition() < ELEVATOR.CLEAR - ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
+      if (!GLOBAL.DISABLE_ELEVATOR) {
+       // while (elevatorSys.GetElevatorPosition() < ELEVATOR.CLEAR - ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
+      }
       manipulatorPitchSys.toAGround(); //flip out
       while (manipulatorPitchSys.getEncoder() < MANIPULATOR.AGROUND - MANIPULATOR.DEADBAND) {} // waits until manipulator is at safe pitch
       elevatorSys.toHome(); //move back down

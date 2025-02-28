@@ -30,7 +30,7 @@ public class ToCL4 extends Command {
   @Override
   public void initialize() {
     elevatorSys.toCL4();
-    while (elevatorSys.GetElevatorPosition() < Constants.ELEVATOR.CLEAR - Constants.ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
+    //while (elevatorSys.GetElevatorPosition() < Constants.ELEVATOR.CLEAR - Constants.ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
     manipulatorPitchSys.toCHigh();
     StateMonitorSys.manipulatorState = ManipulatorState.CL4;
     //lower drive speed

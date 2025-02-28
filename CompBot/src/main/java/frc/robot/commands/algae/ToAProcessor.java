@@ -31,7 +31,7 @@ public class ToAProcessor extends Command {
   public void initialize() {
       if (StateMonitorSys.manipulatorState == ManipulatorState.HOME) {
         elevatorSys.toClear(); //move up
-        while (elevatorSys.GetElevatorPosition() < Constants.ELEVATOR.CLEAR - Constants.ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
+        //while (elevatorSys.GetElevatorPosition() < Constants.ELEVATOR.CLEAR - Constants.ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
         manipulatorPitchSys.toAProcessor(); //flip out
         elevatorSys.toHome(); //move back down
         if (GLOBAL.DEBUG_MODE) {

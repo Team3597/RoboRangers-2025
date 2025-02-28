@@ -30,7 +30,7 @@ public class ToANet extends Command {
   @Override
  public void initialize() {
     elevatorSys.toANet(); //start moving
-    while (elevatorSys.GetElevatorPosition() < Constants.ELEVATOR.CLEAR - Constants.ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
+    //while (elevatorSys.GetElevatorPosition() < Constants.ELEVATOR.CLEAR - Constants.ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
     manipulatorPitchSys.toANet(); //only move out once clear
     if (GLOBAL.DEBUG_MODE) {
       System.out.println("ToANet");

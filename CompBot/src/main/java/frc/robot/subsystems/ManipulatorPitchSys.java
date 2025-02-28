@@ -18,6 +18,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.GLOBAL;
 import frc.robot.Constants.MANIPULATOR;
 
 public class ManipulatorPitchSys extends SubsystemBase {
@@ -48,7 +49,9 @@ public class ManipulatorPitchSys extends SubsystemBase {
       .smartCurrentLimit(MANIPULATOR.AMP_LIMIT);
     manipulatorPitch.configure(pitchConfig, ResetMode.kResetSafeParameters, null);
 
-    //pitchController.setReference(0.65, ControlType.kPosition);
+    if (!GLOBAL.DISABLE_MANIPULATOR_PITCH) {
+      pitchController.setReference(MANIPULATOR.HOME, ControlType.kPosition);
+    }
 
     //pitchP = Shuffleboard.getTab("Tuning").add("Pitch P Slider", 1).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 2)).getEntry();
 
@@ -80,11 +83,16 @@ public class ManipulatorPitchSys extends SubsystemBase {
   }
 
   public void setPitch(double pitch) {
-    pitchController.setReference(degreeToEncoder(pitch), ControlType.kPosition);
+    if (!GLOBAL.DISABLE_MANIPULATOR_PITCH) {
+      pitchController.setReference(degreeToEncoder(pitch), ControlType.kPosition);
+      System.out.println("Setting pitch to " + pitch);
+    }
   }
 
   public void setEncoder(double position) {
-    pitchController.setReference(position, ControlType.kPosition);
+    if (!GLOBAL.DISABLE_MANIPULATOR_PITCH) {
+      pitchController.setReference(position, ControlType.kPosition);
+    }
   }
 
   private double degreeToEncoder(double degrees) {
@@ -105,34 +113,34 @@ public class ManipulatorPitchSys extends SubsystemBase {
   }
 
   public void toHome() {
-    setPitch(Constants.MANIPULATOR.HOME);
+    setEncoder(Constants.MANIPULATOR.HOME);
   }
 
   public void toUnstick() {
-    setPitch(Constants.MANIPULATOR.UNSTICK);
+    setEncoder(Constants.MANIPULATOR.UNSTICK);
   }
 
   public void toAGround() {
-    setPitch(Constants.MANIPULATOR.AGROUND);
+    setEncoder(Constants.MANIPULATOR.AGROUND);
   }
 
   public void toAProcessor() {
-    setPitch(Constants.MANIPULATOR.APROCESSOR);
+    setEncoder(Constants.MANIPULATOR.APROCESSOR);
   }
 
   public void toAReef() {
-    setPitch(Constants.MANIPULATOR.AREEF);
+    setEncoder(Constants.MANIPULATOR.AREEF);
   }
 
   public void toANet() {
-    setPitch(Constants.MANIPULATOR.ANET);
+    setEncoder(Constants.MANIPULATOR.ANET);
   }
 
   public void toCLow() {
-    setPitch(Constants.MANIPULATOR.CLOW);
+    setEncoder(Constants.MANIPULATOR.CLOW);
   }
 
   public void toCHigh() {
-    setPitch(Constants.MANIPULATOR.CHIGH);
+    setEncoder(Constants.MANIPULATOR.CHIGH);
   }
 }

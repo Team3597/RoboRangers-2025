@@ -30,7 +30,7 @@ public class ToCL3 extends Command {
   @Override
   public void initialize() {
     elevatorSys.toCL3();
-    while (elevatorSys.GetElevatorPosition() < Constants.ELEVATOR.CLEAR - Constants.ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
+    //while (elevatorSys.GetElevatorPosition() < Constants.ELEVATOR.CLEAR - Constants.ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
     manipulatorPitchSys.toCLow();
     StateMonitorSys.manipulatorState = ManipulatorState.CL3;
     if (GLOBAL.DEBUG_MODE) {

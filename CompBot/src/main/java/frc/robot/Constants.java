@@ -19,8 +19,11 @@ import swervelib.math.Matter;
 public final class Constants {
 
   public static class GLOBAL {
-    public static boolean DEBUG_MODE = true; //enables debug sysouts
+    public static boolean DEBUG_MODE = false; //enables debug sysouts
     public static boolean MANIPULATOR_CLEAR = false; //are we good to change manipulator pitch?
+
+    public static boolean DISABLE_ELEVATOR = false;
+    public static boolean DISABLE_MANIPULATOR_PITCH = false;
   }
 
   public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
@@ -57,7 +60,7 @@ public final class Constants {
     public static final int ELEVATOR_SLAVE = 10; //right + is up
 
     public static final int MANIPULATOR_PITCH = 11; // + is up
-    public static final int ALGAE_MANIPULATOR = 12;
+    public static final int ALGAE_MANIPULATOR = 12; // + is in
     public static final int CORAL_MANIPULATOR = 13;
 
     public static final int CLIMB = 14;
@@ -70,35 +73,38 @@ public final class Constants {
   }
 
   public static class MOTION {
-    public static final double ALGAE_INTAKE_RPM = 60;
-    public static final double ALGAE_OUTTAKE_RPM = 60;
+    public static final double ALGAE_INTAKE_RPM = 1500;
+    public static final double ALGAE_OUTTAKE_RPM = -1500;
+    public static final double ALGAE_INTAKE_SPEED = -0.5;
+    public static final double ALGAE_OUTTAKE_SPEED = 0.5;
     //potentially differ speeds for different levels later
-    public static final double CORAL_INTAKE_SPEED = 0.2;
-    public static final double CORAL_FRONT_OUTTAKE_SPEED = 0.2;
-    public static final double CORAL_BACK_OUTTAKE_SPEED = 0.2;
+    public static final double CORAL_INTAKE_SPEED = 1;
+    public static final double CORAL_FRONT_OUTTAKE_SPEED = 1;
+    public static final double CORAL_BACK_OUTTAKE_SPEED = -1;
+    public static final double ALGAE_HOLD_SPEED = 0.2;
   }
 
   public static class PID {
-    public static final double ALGAE_P = 0.1;
+    public static final double ALGAE_P = 0.00001;
     public static final double ALGAE_I = 0;
-    public static final double ALGAE_D = 0;
+    public static final double ALGAE_D = 0.008;
     public static final double ALGAE_FF = 0.002; // 1/KV, 1/473
-    public static final double ALGAE_MIN = -0.2;
-    public static final double ALGAE_MAX = 0.2;
+    public static final double ALGAE_MIN = -1;
+    public static final double ALGAE_MAX = 1;
     //figure out graphing my encoder data so i can tune these? since i can't observe velocity easily
 
     
-    public static double PITCH_P = 3;
+    public static double PITCH_P = 2;
     public static double PITCH_I = 0;
     public static double PITCH_D = 0;
-    public static final double PITCH_MIN = -1;
-    public static final double PITCH_MAX = 1;
+    public static final double PITCH_MIN = -0.5;
+    public static final double PITCH_MAX = 0.8;
 
     public static final double ELEVATOR_P = 0.5;
     public static final double ELEVATOR_I = 0;
     public static final double ELEVATOR_D = 0.01;
-    public static final double ELEVATOR_MIN = -0.5;
-    public static final double ELEVATOR_MAX = 0.5;
+    public static final double ELEVATOR_MIN = -0.2;
+    public static final double ELEVATOR_MAX = 0.3;
     public static final double ELEVATOR_FF = 0;
 
     public static final double CLIMB_P = 0;
@@ -142,6 +148,8 @@ public final class Constants {
 
   public static class MANIPULATOR {
     public static final int AMP_LIMIT = 20;
+    public static final int CORAL_AMP_LIMIT = 40;
+    public static final int ALGAE_AMP_LIMIT = 30;
 
     public static final double NEO_CPR = 42;
     public static final double THROUGHBORE_CPR = 8192;
@@ -150,7 +158,7 @@ public final class Constants {
     public static final double MANIPULATOR_MIN_PITCH = 0.57;
     public static final double MANIPULATOR_MAX_PITCH = 0.99;
 
-    public static final double HOME = 0.57; // home pitch
+    public static final double HOME = 0.565; // home pitch
     public static final double UNSTICK = 0.6; // pitch to unstick coral
 
     public static final double AGROUND = 0.7; // algae ground, processor, reef (l1, l2), net

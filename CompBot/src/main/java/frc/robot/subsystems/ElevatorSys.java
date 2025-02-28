@@ -17,6 +17,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.GLOBAL;
 
 public class ElevatorSys extends SubsystemBase {
   /** Creates a new Elevator. */
@@ -66,13 +67,18 @@ public class ElevatorSys extends SubsystemBase {
 
   private void setHeight(double in) {
     if (in < Constants.ELEVATOR.ELEVATOR_MAX_HEIGHT && in > 0) {
-      elevatorController.setReference(inToEncoder(in), ControlType.kPosition);
+      if (!GLOBAL.DISABLE_ELEVATOR) {
+        elevatorController.setReference(inToEncoder(in), ControlType.kPosition);
+        System.out.println("Setting position to " + in);
+      }
     }
   }
 
   private void setPosition(double count) {
     if (count < Constants.ELEVATOR.ELEVATOR_MAX_HEIGHT && count > 0) {
-      elevatorController.setReference(count, ControlType.kPosition);
+      if (!GLOBAL.DISABLE_ELEVATOR) {
+        elevatorController.setReference(count, ControlType.kPosition);
+      }
     }
   }
 
