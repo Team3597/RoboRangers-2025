@@ -62,7 +62,13 @@ public class ElevatorSys extends SubsystemBase {
 
   private void setHeight(double in) {
     if (in < Constants.ELEVATOR.ELEVATOR_MAX_HEIGHT && in > 0) {
-      elevatorController.setReference(inToEncoder(in), ControlType.kPosition);
+      elevatorController.setReference(-inToEncoder(in), ControlType.kPosition);
+    }
+  }
+
+  private void setPosition(double count) {
+    if (count < Constants.ELEVATOR.ELEVATOR_MAX_HEIGHT && count > 0) {
+      elevatorController.setReference(-count, ControlType.kPosition);
     }
   }
 

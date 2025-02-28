@@ -15,7 +15,10 @@ public class CoralManipulatorSys extends SubsystemBase {
 
   private static SparkMax coralManipulator = new SparkMax(Constants.CAN.CORAL_MANIPULATOR, MotorType.kBrushed);
   
-  public CoralManipulatorSys() {}
+  public CoralManipulatorSys() {
+
+    
+  }
 
   @Override
   public void periodic() {

@@ -5,17 +5,25 @@
 package frc.robot.commands.coral;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.ElevatorSys;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ToCL1 extends Command {
   /** Creates a new ToCL1. */
-  public ToCL1() {
+
+  private ElevatorSys elevatorSys;
+
+  public ToCL1(ElevatorSys elevator) {
+    this.elevatorSys = elevator;
+    addRequirements(elevatorSys);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    elevatorSys.toCL1();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

@@ -57,7 +57,7 @@ public class ManipulatorPitchSys extends SubsystemBase {
       .smartCurrentLimit(MANIPULATOR.AMP_LIMIT);
     manipulatorPitch.configure(pitchConfig, ResetMode.kResetSafeParameters, null);
 
-    pitchController.setReference(0.65, ControlType.kPosition);
+    //pitchController.setReference(0.65, ControlType.kPosition);
 
     pitchP = Shuffleboard.getTab("Tuning").add("Pitch P Slider", 1).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 2)).getEntry();
 
@@ -97,12 +97,12 @@ public class ManipulatorPitchSys extends SubsystemBase {
   }
 
   private double degreeToEncoder(double degrees) {
-    return (degrees/360)*Constants.MANIPULATOR.THROUGHBORE_CPR + Constants.MANIPULATOR.MANIPULATOR_PIVOT_OFFSET;
+    return (degrees/360) + Constants.MANIPULATOR.MANIPULATOR_PIVOT_OFFSET;
     //add factor and constant for setpoint in testing
   }
 
   private double encoderToDegree(double counts) {
-    return ((counts + Constants.MANIPULATOR.MANIPULATOR_PIVOT_OFFSET)/Constants.MANIPULATOR.THROUGHBORE_CPR) * 360;
+    return (counts + Constants.MANIPULATOR.MANIPULATOR_PIVOT_OFFSET) * 360;
   }
 
   public double getEncoder() {

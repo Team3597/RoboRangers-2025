@@ -53,6 +53,8 @@ public final class Constants {
     public static final int MANIPULATOR_PITCH = 11; // + is up
     public static final int ALGAE_MANIPULATOR = 12;
     public static final int CORAL_MANIPULATOR = 13;
+
+    public static final int CLIMB = 14;
   }
 
   public static class DIO {
@@ -89,9 +91,14 @@ public final class Constants {
     public static final double ELEVATOR_P = 0;
     public static final double ELEVATOR_I = 0;
     public static final double ELEVATOR_D = 0;
-    public static final double ELEVATOR_MIN = 0;
-    public static final double ELEVATOR_MAX = 0;
+    public static final double ELEVATOR_MIN = 0.1;
+    public static final double ELEVATOR_MAX = 0.1;
     public static final double ELEVATOR_FF = 0;
+    public static final double CLIMB_P = 0;
+    public static final double CLIMB_I = 0;
+    public static final double CLIMB_D = 0;
+    public static final double CLIMB_MIN = 0;
+    public static final double CLIMB_MAX = 0;
   }
 
   public static class UTIL {
@@ -104,11 +111,11 @@ public final class Constants {
   }
 
   public static class ELEVATOR {
-    public static final int AMP_LIMIT = 20;
+    public static final int AMP_LIMIT = 10;
 
     public static final double ELEVATOR_COUNT_OFFSET = 0;
-    public static final double ELEVATOR_MAX_HEIGHT = 30;
-    public static final double ELEVATOR_MAX_COUNTS = 8000;
+    public static final double ELEVATOR_MAX_HEIGHT = 53;
+    public static final double ELEVATOR_MAX_COUNTS = 0.38;
 
     public static final double HOME = 0; // home height
     public static final double CLEAR = 0; // clearance height for manipulator
@@ -118,7 +125,7 @@ public final class Constants {
     public static final double AL2 = 0;
     public static final double ANET = 0;
 
-    public static final double CL1 = 0; // coral l1, l2, l3, l4
+    public static final double CL1 = 0.3; // coral l1, l2, l3, l4
     public static final double CL2 = 0;
     public static final double CL3 = 0;
     public static final double CL4 = 0;
@@ -144,5 +151,17 @@ public final class Constants {
 
     public static final double CLOW = 0; // coral low (l1, l2, l3), high (l4)
     public static final double CHIGH = 0;
+  }
+
+  public static class CLIMB {
+    public static final int AMP_LIMIT = 10;
+    
+    public static final double CLIMB_MIN_PITCH = 0;
+    public static final double CLIMB_MAX_PITCH = 1;
+
+    public static final double HOME = 0;
+    public static final double LATCHED = 0;
+    public static final double READY = 0;
+
   }
 }
