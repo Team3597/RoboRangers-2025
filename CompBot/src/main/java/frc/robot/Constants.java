@@ -42,7 +42,6 @@ public final class Constants {
     public static final double CORAL_INTAKE_SPEED = 0.2;
     public static final double CORAL_FRONT_OUTTAKE_SPEED = 0.2;
     public static final double CORAL_BACK_OUTTAKE_SPEED = 0.2;
-    
   }
 
   public static class PID {
@@ -88,6 +87,8 @@ public final class Constants {
     public static final double CL2 = 0;
     public static final double CL3 = 0;
     public static final double CL4 = 0;
+    
+    public static final double DEADBAND = 0;
   }
 
   public static class MANIPULATOR {
@@ -108,5 +109,11 @@ public final class Constants {
 
     public static final double CLOW = 0; // coral low (l1, l2, l3), high (l4)
     public static final double CHIGH = 0;
+
+    public static final double DEADBAND = 0;
+  }
+
+  public static class GLOBAL {
+    public static String manipulatorPos = "HOME";
   }
 }

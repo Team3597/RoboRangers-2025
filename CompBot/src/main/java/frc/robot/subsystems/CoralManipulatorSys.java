@@ -35,4 +35,8 @@ public class CoralManipulatorSys extends SubsystemBase {
   public void backOuttakeCoral(double speed) {
     coralManipulator.set(-speed);
   }
+
+  public void stop() {
+    coralManipulator.stopMotor();;
+  }
 }

@@ -46,4 +46,8 @@ public class AlgaeManipulatorSys extends SubsystemBase {
   public void outtakeAlgae(double velocity) {
     algaeVelocityController.setReference(velocity, ControlType.kVelocity);
   }
+
+  public void stop() {
+    algaeVelocityController.setReference(0, ControlType.kVelocity);
+  }
 }
