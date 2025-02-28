@@ -6,7 +6,7 @@ package frc.robot.commands.coral;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.GLOBAL;
-import frc.robot.Constants.Motion;
+import frc.robot.Constants.MOTION;
 import frc.robot.subsystems.CoralManipulatorSys;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -25,9 +25,9 @@ public class ScoreC extends Command {
   @Override
   public void initialize() {
     if (GLOBAL.manipulatorPos.equals("CL4")) { // checks if manipulator is at CL4
-      coralManipulatorSys.backOuttakeCoral(Motion.CORAL_BACK_OUTTAKE_SPEED);
+      coralManipulatorSys.backOuttakeCoral(MOTION.CORAL_BACK_OUTTAKE_SPEED);
     } else {
-      coralManipulatorSys.frontOuttakeCoral(Motion.CORAL_FRONT_OUTTAKE_SPEED);
+      coralManipulatorSys.frontOuttakeCoral(MOTION.CORAL_FRONT_OUTTAKE_SPEED);
     }
   }
 

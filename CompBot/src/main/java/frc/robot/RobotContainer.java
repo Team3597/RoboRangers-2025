@@ -151,9 +151,9 @@ public class RobotContainer {
     //m_controlController.button(7).whileTrue(new IntakeC(m_coralManipulatorSys));
 
     m_controlController.pov(0).onTrue(new ToCL4(m_elevatorSys, m_manpulatorPitchSys)); //up
-    m_controlController.pov(90).onTrue(new ToCL3(m_elevatorSys)); //right
-    m_controlController.pov(180).onTrue(new ToCL1(m_elevatorSys)); //down
-    m_controlController.pov(270).onTrue(new ToCL2(m_elevatorSys)); //left
+    m_controlController.pov(90).onTrue(new ToCL3(m_elevatorSys, m_manpulatorPitchSys)); //right
+    m_controlController.pov(180).onTrue(new ToCL1(m_elevatorSys, m_manpulatorPitchSys)); //down
+    m_controlController.pov(270).onTrue(new ToCL2(m_elevatorSys, m_manpulatorPitchSys)); //left
     m_controlController.leftStick().onTrue(new ToHome(m_elevatorSys, m_manpulatorPitchSys)); //stick button
 
 
