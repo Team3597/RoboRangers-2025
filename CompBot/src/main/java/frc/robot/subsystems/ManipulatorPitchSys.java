@@ -59,7 +59,7 @@ public class ManipulatorPitchSys extends SubsystemBase {
 
     //pitchController.setReference(0.65, ControlType.kPosition);
 
-    pitchP = Shuffleboard.getTab("Tuning").add("Pitch P Slider", 1).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 2)).getEntry();
+    //pitchP = Shuffleboard.getTab("Tuning").add("Pitch P Slider", 1).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 2)).getEntry();
 
   }
 

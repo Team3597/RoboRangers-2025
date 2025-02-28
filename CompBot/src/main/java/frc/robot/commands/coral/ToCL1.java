@@ -22,7 +22,8 @@ public class ToCL1 extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elevatorSys.toCL1();
+    //elevatorSys.toCL1();
+    System.out.println("toCL1");
   }
 
   // Called every time the scheduler runs while the command is scheduled.

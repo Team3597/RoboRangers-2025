@@ -31,10 +31,10 @@ public final class Constants {
   {
 
     // Joystick Deadband
-    public static final double DEADBAND        = 0.1;
+    public static final double DEADBAND        = 0.3;
     public static final double LEFT_Y_DEADBAND = 0.1;
     public static final double RIGHT_X_DEADBAND = 0.1;
-    public static final double TURN_CONSTANT    = 6;
+    public static final double TURN_CONSTANT    = 3; // was 6
   }
 
   public static class CAN {
@@ -88,12 +88,14 @@ public final class Constants {
     public static double PITCH_D = 0;
     public static final double PITCH_MIN = -1;
     public static final double PITCH_MAX = 1;
-    public static final double ELEVATOR_P = 0;
+
+    public static final double ELEVATOR_P = 0.5;
     public static final double ELEVATOR_I = 0;
-    public static final double ELEVATOR_D = 0;
-    public static final double ELEVATOR_MIN = 0.1;
-    public static final double ELEVATOR_MAX = 0.1;
+    public static final double ELEVATOR_D = 0.01;
+    public static final double ELEVATOR_MIN = -0.5;
+    public static final double ELEVATOR_MAX = 0.5;
     public static final double ELEVATOR_FF = 0;
+
     public static final double CLIMB_P = 0;
     public static final double CLIMB_I = 0;
     public static final double CLIMB_D = 0;
@@ -111,11 +113,11 @@ public final class Constants {
   }
 
   public static class ELEVATOR {
-    public static final int AMP_LIMIT = 10;
+    public static final int AMP_LIMIT = 30;
 
     public static final double ELEVATOR_COUNT_OFFSET = 0;
     public static final double ELEVATOR_MAX_HEIGHT = 53;
-    public static final double ELEVATOR_MAX_COUNTS = 0.38;
+    public static final double ELEVATOR_MAX_COUNTS = 56;
 
     public static final double HOME = 0; // home height
     public static final double CLEAR = 0; // clearance height for manipulator
@@ -125,10 +127,10 @@ public final class Constants {
     public static final double AL2 = 0;
     public static final double ANET = 0;
 
-    public static final double CL1 = 0.3; // coral l1, l2, l3, l4
-    public static final double CL2 = 0;
-    public static final double CL3 = 0;
-    public static final double CL4 = 0;
+    public static final double CL1 = 10; // coral l1, l2, l3, l4
+    public static final double CL2 = 20;
+    public static final double CL3 = 30;
+    public static final double CL4 = 40;
   }
 
   public static class MANIPULATOR {
@@ -138,19 +140,19 @@ public final class Constants {
     public static final double THROUGHBORE_CPR = 8192;
     public static final double MANIPULATOR_PIVOT_OFFSET = 0;
 
-    public static final double MANIPULATOR_MIN_PITCH = 0;
-    public static final double MANIPULATOR_MAX_PITCH = 1;
+    public static final double MANIPULATOR_MIN_PITCH = 0.57;
+    public static final double MANIPULATOR_MAX_PITCH = 0.99;
 
-    public static final double HOME = 0; // home pitch
-    public static final double UNSTICK = 0; // pitch to unstick coral
+    public static final double HOME = 0.57; // home pitch
+    public static final double UNSTICK = 0.6; // pitch to unstick coral
 
-    public static final double AGROUND = 0; // algae ground, processor, reef (l1, l2), net
-    public static final double APROCESSOR = 0;
-    public static final double AREEF = 0;
-    public static final double ANET = 0;
+    public static final double AGROUND = 0.7; // algae ground, processor, reef (l1, l2), net
+    public static final double APROCESSOR = 0.75;
+    public static final double AREEF = 0.75;
+    public static final double ANET = 0.99;
 
-    public static final double CLOW = 0; // coral low (l1, l2, l3), high (l4)
-    public static final double CHIGH = 0;
+    public static final double CLOW = HOME; // coral low (l1, l2, l3), high (l4)
+    public static final double CHIGH = 0.99;
   }
 
   public static class CLIMB {

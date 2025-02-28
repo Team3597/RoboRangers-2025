@@ -14,8 +14,13 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ToHome;
 import frc.robot.commands.UpdatePID;
 import frc.robot.commands.setManipulatorPitch;
+import frc.robot.commands.coral.ToCL1;
+import frc.robot.commands.coral.ToCL2;
+import frc.robot.commands.coral.ToCL3;
+import frc.robot.commands.coral.ToCL4;
 import frc.robot.subsystems.AlgaeManipulatorSys;
 import frc.robot.subsystems.CoralManipulatorSys;
 import frc.robot.subsystems.ElevatorSys;
@@ -27,6 +32,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -142,6 +148,23 @@ public class RobotContainer {
     // cancelling on release.
     //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     
+    //m_controlController.button(7).whileTrue(new IntakeC(m_coralManipulatorSys));
+
+    m_controlController.pov(0).onTrue(new ToCL4(m_elevatorSys, m_manpulatorPitchSys)); //up
+    m_controlController.pov(90).onTrue(new ToCL3(m_elevatorSys)); //right
+    m_controlController.pov(180).onTrue(new ToCL1(m_elevatorSys)); //down
+    m_controlController.pov(270).onTrue(new ToCL2(m_elevatorSys)); //left
+    m_controlController.leftStick().onTrue(new ToHome(m_elevatorSys, m_manpulatorPitchSys)); //stick button
+
+
+
+
+    // POVButton upPov = new POVButton(m_controlController.getHID(), 0);
+    // POVButton leftPov = new POVButton(m_controlController.getHID(), 270);
+    // POVButton rightPov = new POVButton(m_controlController.getHID(), 90);
+    // POVButton downPov = new POVButton(m_controlController.getHID(), 180);
+
+
     // Command driveFieldOrientedDirectAngle      = drivebase.driveFieldOriented(driveDirectAngle);
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
     Command driveRobotOrientedAngularVelocity  = drivebase.driveFieldOriented(driveRobotOriented);
