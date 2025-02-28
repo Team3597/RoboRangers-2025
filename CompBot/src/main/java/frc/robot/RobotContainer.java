@@ -173,8 +173,7 @@ public class RobotContainer {
       m_controlController.pov(180).onTrue(new ToCL1(m_elevatorSys, m_manpulatorPitchSys)); // down
       m_controlController.pov(270).onTrue(new ToCL2(m_elevatorSys, m_manpulatorPitchSys)); // left
       m_controlController.leftStick().onTrue(new ToHome(m_elevatorSys, m_manpulatorPitchSys)); // left stick button
-      // m_controlController.leftBumper().whileTrue(new ScoreC(m_coralManipulatorSys)); // left bumper
-      // m_controlController.leftTrigger().whileTrue(new IntakeC(m_coralManipulatorSys)); // left bumper
+      m_controlController.leftBumper().whileTrue(new ManipulateObject(m_algaeManipulatorSys, m_coralManipulatorSys)); // left bumper
 
       // algae controls
       m_controlController.y().onTrue(new ToANet(m_elevatorSys, m_manpulatorPitchSys)); // y
@@ -182,8 +181,7 @@ public class RobotContainer {
       m_controlController.a().onTrue(new ToAProcessor(m_elevatorSys, m_manpulatorPitchSys)); // a
       m_controlController.x().onTrue(new ToAL1(m_elevatorSys, m_manpulatorPitchSys)); // x
       m_controlController.start().onTrue(new ToAGround(m_elevatorSys, m_manpulatorPitchSys)); // start
-      // m_controlController.rightBumper().whileTrue(new ScoreA(m_algaeManipulatorSys)); // left bumper
-      // m_controlController.rightTrigger().whileTrue(new ManipulateObject(m_algaeManipulatorSys)); // left bumper
+
 
       // climb controls
       if (StateMonitorSys.climbState == ClimbState.READY) { // back (toggles between climb home and ready)

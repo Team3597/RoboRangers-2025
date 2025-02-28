@@ -8,9 +8,6 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.ResetMode;
 
-import java.util.Map;
-
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -18,21 +15,16 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.MANIPULATOR;
-import frc.robot.Constants.PID;
 
 public class ManipulatorPitchSys extends SubsystemBase {
   /** Creates a new ManipulatorPitch. */
 
   private static SparkMax manipulatorPitch = new SparkMax(Constants.CAN.MANIPULATOR_PITCH, MotorType.kBrushless);
   private static SparkClosedLoopController pitchController;
-  private static AbsoluteEncoder pitchEncoder;
 
   //private static final AbsoluteEncoder manipulatorEncoder = manipulatorPitch.getAbsoluteEncoder();
 
@@ -43,7 +35,6 @@ public class ManipulatorPitchSys extends SubsystemBase {
   public ManipulatorPitchSys() {
 
     pitchController = manipulatorPitch.getClosedLoopController();
-    pitchEncoder = manipulatorPitch.getAbsoluteEncoder();
 
     pitchConfig.closedLoop
       .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)

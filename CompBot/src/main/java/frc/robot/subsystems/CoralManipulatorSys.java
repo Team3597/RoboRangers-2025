@@ -7,28 +7,32 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.DIO;
 import frc.robot.Constants.MOTION;
 
 public class CoralManipulatorSys extends SubsystemBase {
   /** Creates a new CoralManipulator. */
 
   private static SparkMax coralManipulator = new SparkMax(Constants.CAN.CORAL_MANIPULATOR, MotorType.kBrushed);
-  
-  public CoralManipulatorSys() {
+  DigitalInput coralLimitSwitch = new DigitalInput(DIO.CORAL_LIMIT);
 
-    
+  public CoralManipulatorSys() {
   }
 
   @Override
   public void periodic() {
-    
+    SmartDashboard.putBoolean("Coral Limit Switch", coralLimitSwitch.get());
     // This method will be called once per scheduler run
   }
 
   public void intakeCoral() {
-    coralManipulator.set(MOTION.CORAL_INTAKE_SPEED);
+    while (!coralLimitSwitch.get()) {
+      coralManipulator.set(MOTION.CORAL_INTAKE_SPEED);
+    }
   }
 
   //for scoring L1-L3
