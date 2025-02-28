@@ -5,9 +5,12 @@
 package frc.robot.commands.algae;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.Constants.GLOBAL;
 import frc.robot.subsystems.ElevatorSys;
 import frc.robot.subsystems.ManipulatorPitchSys;
+import frc.robot.subsystems.StateMonitorSys;
+import frc.robot.subsystems.StateMonitorSys.ManipulatorState;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ToAProcessor extends Command {
@@ -26,10 +29,23 @@ public class ToAProcessor extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elevatorSys.toAProcessor();
-    manipulatorPitchSys.toAProcessor();
-    GLOBAL.manipulatorPos = "APROCESSOR";
-  }
+      if (StateMonitorSys.manipulatorState == ManipulatorState.HOME) {
+        elevatorSys.toClear(); //move up
+        while (elevatorSys.GetElevatorPosition() < Constants.ELEVATOR.CLEAR - Constants.ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
+        manipulatorPitchSys.toAProcessor(); //flip out
+        elevatorSys.toHome(); //move back down
+        if (GLOBAL.DEBUG_MODE) {
+          System.out.println("ToAProcessor w/ clear");
+        }
+      } else {
+        manipulatorPitchSys.toAProcessor();
+        elevatorSys.toHome();
+        if (GLOBAL.DEBUG_MODE) {
+          System.out.println("ToAProcessor w/o clear");
+        }
+      }
+      StateMonitorSys.manipulatorState = ManipulatorState.APROCESSOR;
+    }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

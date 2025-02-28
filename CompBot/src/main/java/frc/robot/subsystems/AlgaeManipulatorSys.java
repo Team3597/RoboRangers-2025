@@ -13,6 +13,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.MOTION;
 
 public class AlgaeManipulatorSys extends SubsystemBase {
   /** Creates a new AlgaeManipulator. */
@@ -41,12 +42,12 @@ public class AlgaeManipulatorSys extends SubsystemBase {
     SmartDashboard.putNumber("Algae Wheel Velocity", getEncoder());
   }
 
-  public void intakeAlgae(double velocity) {
-    algaeVelocityController.setReference(velocity, ControlType.kVelocity);
+  public void intakeAlgae() {
+    algaeVelocityController.setReference(MOTION.ALGAE_INTAKE_RPM, ControlType.kVelocity);
   }
 
-  public void outtakeAlgae(double velocity) {
-    algaeVelocityController.setReference(velocity, ControlType.kVelocity);
+  public void outtakeAlgae() {
+    algaeVelocityController.setReference(MOTION.ALGAE_OUTTAKE_RPM, ControlType.kVelocity);
   }
 
   public void stop() {

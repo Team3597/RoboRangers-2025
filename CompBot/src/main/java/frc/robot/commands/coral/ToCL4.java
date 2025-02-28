@@ -5,9 +5,12 @@
 package frc.robot.commands.coral;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.Constants.GLOBAL;
 import frc.robot.subsystems.ElevatorSys;
 import frc.robot.subsystems.ManipulatorPitchSys;
+import frc.robot.subsystems.StateMonitorSys;
+import frc.robot.subsystems.StateMonitorSys.ManipulatorState;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ToCL4 extends Command {
@@ -27,8 +30,13 @@ public class ToCL4 extends Command {
   @Override
   public void initialize() {
     elevatorSys.toCL4();
+    while (elevatorSys.GetElevatorPosition() < Constants.ELEVATOR.CLEAR - Constants.ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
     manipulatorPitchSys.toCHigh();
-    GLOBAL.manipulatorPos = "CL4";
+    StateMonitorSys.manipulatorState = ManipulatorState.CL4;
+    //lower drive speed
+    if (GLOBAL.DEBUG_MODE) {
+     System.out.println("To CL4");
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.

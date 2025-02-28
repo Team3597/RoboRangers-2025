@@ -9,6 +9,8 @@ import frc.robot.Constants;
 import frc.robot.Constants.GLOBAL;
 import frc.robot.subsystems.ElevatorSys;
 import frc.robot.subsystems.ManipulatorPitchSys;
+import frc.robot.subsystems.StateMonitorSys;
+import frc.robot.subsystems.StateMonitorSys.ManipulatorState;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ToAGround extends Command {
@@ -27,11 +29,22 @@ public class ToAGround extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elevatorSys.toClear();
-    while (elevatorSys.GetElevatorPosition() < Constants.ELEVATOR.CLEAR - Constants.ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
-    manipulatorPitchSys.toAGround();
-    elevatorSys.toHome();
-    GLOBAL.manipulatorPos = "AGROUND";
+    if (StateMonitorSys.manipulatorState == ManipulatorState.HOME) {
+      elevatorSys.toClear(); //move up
+      while (elevatorSys.GetElevatorPosition() < Constants.ELEVATOR.CLEAR - Constants.ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
+      manipulatorPitchSys.toAGround(); //flip out
+      elevatorSys.toHome(); //move back down
+      if (GLOBAL.DEBUG_MODE) {
+        System.out.println("ToAGround w/ clear");
+      }
+    } else {
+      manipulatorPitchSys.toAGround();
+      elevatorSys.toHome();
+      if (GLOBAL.DEBUG_MODE) {
+        System.out.println("ToAGround w/o clear");
+      }
+    }
+    StateMonitorSys.manipulatorState = ManipulatorState.AGROUND;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
