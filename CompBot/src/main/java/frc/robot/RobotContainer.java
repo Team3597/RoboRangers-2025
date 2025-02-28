@@ -17,11 +17,24 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ToHome;
 import frc.robot.commands.UpdatePID;
 import frc.robot.commands.setManipulatorPitch;
+import frc.robot.commands.algae.IntakeA;
+import frc.robot.commands.algae.ScoreA;
+import frc.robot.commands.algae.ToAGround;
+import frc.robot.commands.algae.ToAL1;
+import frc.robot.commands.algae.ToAL2;
+import frc.robot.commands.algae.ToANet;
+import frc.robot.commands.algae.ToAProcessor;
+import frc.robot.commands.climb.ToClimbHome;
+import frc.robot.commands.climb.ToClimbLatched;
+import frc.robot.commands.climb.ToClimbReady;
+import frc.robot.commands.coral.IntakeC;
+import frc.robot.commands.coral.ScoreC;
 import frc.robot.commands.coral.ToCL1;
 import frc.robot.commands.coral.ToCL2;
 import frc.robot.commands.coral.ToCL3;
 import frc.robot.commands.coral.ToCL4;
 import frc.robot.subsystems.AlgaeManipulatorSys;
+import frc.robot.subsystems.ClimbSys;
 import frc.robot.subsystems.CoralManipulatorSys;
 import frc.robot.subsystems.ElevatorSys;
 import frc.robot.subsystems.ExampleSys;
@@ -34,6 +47,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.GLOBAL;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
@@ -57,6 +71,7 @@ public class RobotContainer {
   private static final CoralManipulatorSys m_coralManipulatorSys = new CoralManipulatorSys();
   private static final ElevatorSys m_elevatorSys = new ElevatorSys();
   private static final ManipulatorPitchSys m_manpulatorPitchSys = new ManipulatorPitchSys();
+  private static final ClimbSys m_climbSys = new ClimbSys();
   private static final VisionSys m_visionSys = new VisionSys();
 
   private static DigitalInput m_coralLimit = new DigitalInput(Constants.DIO.CORAL_LIMIT);
@@ -150,11 +165,38 @@ public class RobotContainer {
     
     //m_controlController.button(7).whileTrue(new IntakeC(m_coralManipulatorSys));
 
-    m_controlController.pov(0).onTrue(new ToCL4(m_elevatorSys, m_manpulatorPitchSys)); //up
-    m_controlController.pov(90).onTrue(new ToCL3(m_elevatorSys, m_manpulatorPitchSys)); //right
-    m_controlController.pov(180).onTrue(new ToCL1(m_elevatorSys, m_manpulatorPitchSys)); //down
-    m_controlController.pov(270).onTrue(new ToCL2(m_elevatorSys, m_manpulatorPitchSys)); //left
-    m_controlController.leftStick().onTrue(new ToHome(m_elevatorSys, m_manpulatorPitchSys)); //stick button
+    
+    if (!GLOBAL.climbPos.equals("LATCHED")) {
+      // coral controls
+      m_controlController.pov(0).onTrue(new ToCL4(m_elevatorSys, m_manpulatorPitchSys)); // up
+      m_controlController.pov(90).onTrue(new ToCL3(m_elevatorSys, m_manpulatorPitchSys)); // right
+      m_controlController.pov(180).onTrue(new ToCL1(m_elevatorSys, m_manpulatorPitchSys)); // down
+      m_controlController.pov(270).onTrue(new ToCL2(m_elevatorSys, m_manpulatorPitchSys)); // left
+      m_controlController.leftStick().onTrue(new ToHome(m_elevatorSys, m_manpulatorPitchSys)); // left stick button
+      m_controlController.leftBumper().whileTrue(new ScoreC(m_coralManipulatorSys)); // left bumper
+      m_controlController.leftTrigger().whileTrue(new IntakeC(m_coralManipulatorSys)); // left bumper
+
+      // algae controls
+      m_controlController.y().onTrue(new ToANet(m_elevatorSys, m_manpulatorPitchSys)); // y
+      m_controlController.b().onTrue(new ToAL2(m_elevatorSys, m_manpulatorPitchSys)); // b
+      m_controlController.a().onTrue(new ToAProcessor(m_elevatorSys, m_manpulatorPitchSys)); // a
+      m_controlController.x().onTrue(new ToAL1(m_elevatorSys, m_manpulatorPitchSys)); // x
+      m_controlController.start().onTrue(new ToAGround(m_elevatorSys, m_manpulatorPitchSys)); // start
+      m_controlController.rightBumper().whileTrue(new ScoreA(m_algaeManipulatorSys)); // left bumper
+      m_controlController.rightTrigger().whileTrue(new IntakeA(m_algaeManipulatorSys)); // left bumper
+
+      // climb controls
+      if (GLOBAL.climbPos.equals("READY")) { // back (toggles between climb home and ready)
+        m_controlController.back().onTrue(new ToClimbHome(m_climbSys));
+      } else if (GLOBAL.climbPos.equals("HOME")) {
+        m_controlController.back().onTrue(new ToClimbReady(m_climbSys));
+      }
+      // missing method to read center logitech button
+      // m_controlController.centerLogitechButton().onTrue(new ToClimbLatched(m_climbSys)); // center logitech button
+    } else {
+      m_controlController.rightStick().onTrue(new ToClimbHome(m_climbSys)); // Unlocks controls and resets climb if accidentally pressed (temporarily right stick button)
+    }
+
 
 
 

@@ -174,5 +174,6 @@ public final class Constants {
 
   public static class GLOBAL {
     public static String manipulatorPos = "HOME";
+    public static String climbPos = "HOME";
   }
 }
