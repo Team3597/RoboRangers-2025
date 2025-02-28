@@ -5,7 +5,7 @@
 package frc.robot.commands.algae;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
+import frc.robot.Constants.ELEVATOR;
 import frc.robot.Constants.GLOBAL;
 import frc.robot.subsystems.ElevatorSys;
 import frc.robot.subsystems.ManipulatorPitchSys;
@@ -31,7 +31,7 @@ public class ToAGround extends Command {
   public void initialize() {
     if (StateMonitorSys.manipulatorState == ManipulatorState.HOME) {
       elevatorSys.toClear(); //move up
-      while (elevatorSys.GetElevatorPosition() < Constants.ELEVATOR.CLEAR - Constants.ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
+      while (elevatorSys.GetElevatorPosition() < ELEVATOR.CLEAR - ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
       manipulatorPitchSys.toAGround(); //flip out
       elevatorSys.toHome(); //move back down
       if (GLOBAL.DEBUG_MODE) {

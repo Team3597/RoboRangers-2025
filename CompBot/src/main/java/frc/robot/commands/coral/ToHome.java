@@ -30,7 +30,7 @@ public class ToHome extends Command {
   @Override
   public void initialize() {
     manipulatorPitchSys.toHome();
-    while (manipulatorPitchSys.getEncoder() < MANIPULATOR.HOME + MANIPULATOR.DEADBAND) {} // waits until elevator is at clear height
+    while (manipulatorPitchSys.getEncoder() < MANIPULATOR.HOME + MANIPULATOR.DEADBAND) {} // waits until manipulator is safely stowed
     elevatorSys.toHome();
     StateMonitorSys.manipulatorState = ManipulatorState.HOME;
     if (GLOBAL.DEBUG_MODE) {
