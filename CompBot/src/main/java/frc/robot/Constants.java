@@ -104,6 +104,8 @@ public final class Constants {
   }
 
   public static class ELEVATOR {
+    public static final int AMP_LIMIT = 20;
+
     public static final double ELEVATOR_COUNT_OFFSET = 0;
     public static final double ELEVATOR_MAX_HEIGHT = 30;
     public static final double ELEVATOR_MAX_COUNTS = 8000;

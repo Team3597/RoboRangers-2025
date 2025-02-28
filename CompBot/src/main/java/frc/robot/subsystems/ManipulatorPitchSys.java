@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.ResetMode;
 
 import java.util.Map;
 
@@ -54,7 +55,7 @@ public class ManipulatorPitchSys extends SubsystemBase {
       .idleMode(IdleMode.kBrake)
       .inverted(false)
       .smartCurrentLimit(MANIPULATOR.AMP_LIMIT);
-    manipulatorPitch.configure(pitchConfig, null, null);
+    manipulatorPitch.configure(pitchConfig, ResetMode.kResetSafeParameters, null);
 
     pitchController.setReference(0.65, ControlType.kPosition);
 

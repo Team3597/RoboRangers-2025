@@ -8,7 +8,10 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,21 +25,30 @@ public class ElevatorSys extends SubsystemBase {
 
   private static SparkClosedLoopController elevatorController = elevatorMain.getClosedLoopController();
 
-  private static SparkMaxConfig elevatorConfig = new SparkMaxConfig();
+  private static SparkMaxConfig mainConfig = new SparkMaxConfig();
   private static SparkMaxConfig slaveConfig = new SparkMaxConfig();
 
-  public ElevatorSys() {
-    elevatorConfig.closedLoop
-    .p(Constants.PID.ELEVATOR_P)
-    .i(Constants.PID.ELEVATOR_I)
-    .d(Constants.PID.ELEVATOR_D)
-    .outputRange(Constants.PID.ELEVATOR_MIN, Constants.PID.ELEVATOR_MAX)
-    //includes feedforward due to gravity
-    .velocityFF(Constants.PID.ELEVATOR_FF);
-    elevatorMain.configure(elevatorConfig, null, null);
 
-    slaveConfig.follow(elevatorMain);
-    elevatorSlave.configure(slaveConfig, null, null);
+  public ElevatorSys() {
+    mainConfig.closedLoop
+      .p(Constants.PID.ELEVATOR_P)
+      .i(Constants.PID.ELEVATOR_I)
+      .d(Constants.PID.ELEVATOR_D)
+      .outputRange(Constants.PID.ELEVATOR_MIN, Constants.PID.ELEVATOR_MAX)
+      //includes feedforward due to gravity
+      .velocityFF(Constants.PID.ELEVATOR_FF);
+    mainConfig
+      .idleMode(IdleMode.kBrake)
+      .inverted(true)
+      .smartCurrentLimit(Constants.ELEVATOR.AMP_LIMIT);
+    elevatorMain.configure(mainConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    slaveConfig
+      .follow(elevatorMain)
+      .idleMode(IdleMode.kBrake)
+      .inverted(false)
+      .smartCurrentLimit(Constants.ELEVATOR.AMP_LIMIT);
+    elevatorSlave.configure(slaveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     //toHome();
   }
@@ -45,6 +57,7 @@ public class ElevatorSys extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Elevator Encoder", GetElevatorEncoder());
+    SmartDashboard.putNumber("Slave Encoder", elevatorSlave.getEncoder().getPosition());
   }
 
   private void setHeight(double in) {
