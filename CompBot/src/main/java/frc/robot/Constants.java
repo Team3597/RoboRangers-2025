@@ -37,6 +37,7 @@ public final class Constants {
   public static class OPERATOR {
     public static final int DRIVE_CONTROLLER_PORT = 0;
     public static final int CONTROL_CONTROLLER_PORT = 1;
+    public static final int DRIVE_CONTROLLER_PORT_2 = 2;
   }
 
   public static class OperatorConstants

@@ -46,6 +46,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -83,6 +84,7 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_controlController = new CommandXboxController(Constants.OPERATOR.CONTROL_CONTROLLER_PORT);
+  private final CommandXboxController m_driver2 = new CommandXboxController(Constants.OPERATOR.DRIVE_CONTROLLER_PORT_2);
 
   private final Joystick driveJoystick = new Joystick(Constants.OPERATOR.DRIVE_CONTROLLER_PORT);
 
@@ -91,13 +93,13 @@ public class RobotContainer {
    */
   SwerveInputStream driveAngularVelocity = 
     SwerveInputStream.of(drivebase.getSwerveDrive(),
-                          () -> driveJoystick.getY() * -1,
-                          () -> driveJoystick.getX() * -1)
-                      .withControllerRotationAxis(driveJoystick::getZ)
+                          () -> m_driver2.getLeftY() * 1, //LY, 1
+                          () -> m_driver2.getLeftX() * 1) //LX, 0
+                      .withControllerRotationAxis(m_driver2::getRightX) //Rotate 2
                       .deadband(OperatorConstants.DEADBAND)
                       .scaleTranslation(0.8)
-                      .scaleRotation(0.4)
-                      .allianceRelativeControl(true);
+                      .scaleRotation(0-0.4)
+                      .allianceRelativeControl(false);
 
   /**
    * Clone's the angular velocity input stream and converts it to a fieldRelative input stream.
@@ -176,7 +178,7 @@ public class RobotContainer {
     
     //if (StateMonitorSys.climbState != ClimbState.LATCHED) {
       // coral controls
-      m_controlController.pov(0).onTrue(new ToCL4(m_elevatorSys, m_manpulatorPitchSys)); // up
+      //m_controlController.pov(0).onTrue(new ToCL4(m_elevatorSys, m_manpulatorPitchSys)); // up
       m_controlController.pov(90).onTrue(new ToCL3(m_elevatorSys, m_manpulatorPitchSys)); // right
       m_controlController.pov(180).onTrue(new ToCL1(m_elevatorSys, m_manpulatorPitchSys)); // down
       m_controlController.pov(270).onTrue(new ToCL2(m_elevatorSys, m_manpulatorPitchSys)); // left
@@ -185,7 +187,7 @@ public class RobotContainer {
 
       m_controlController.leftBumper().whileTrue(new CManipulate(m_coralManipulatorSys, MOTION.CORAL_INTAKE_SPEED)); // left bumper
       m_controlController.button(7).whileTrue(new CManipulate(m_coralManipulatorSys, MOTION.CORAL_FRONT_OUTTAKE_SPEED));
-      m_controlController.button(11).whileTrue(new CManipulate(m_coralManipulatorSys, -MOTION.CORAL_BACK_OUTTAKE_SPEED));
+      m_controlController.button(11).whileTrue(new CManipulate(m_coralManipulatorSys, -MOTION.CORAL_BACK_OUTTAKE_SPEED));//left stick
 
       m_controlController.rightBumper().whileTrue(new AManipulate(m_algaeManipulatorSys, MOTION.ALGAE_INTAKE_RPM)); // left bumper
       m_controlController.button(8).whileTrue(new AManipulate(m_algaeManipulatorSys, -MOTION.ALGAE_OUTTAKE_RPM));
@@ -193,7 +195,7 @@ public class RobotContainer {
       m_algaeManipulatorSys.setDefaultCommand(new AManipulate(m_algaeManipulatorSys, 0));
 
       // algae controls
-     // m_controlController.button(4).onTrue(new ToANet(m_elevatorSys, m_manpulatorPitchSys)); // y
+    //  m_controlController.button(4).onTrue(new ToANet(m_elevatorSys, m_manpulatorPitchSys)); // y
       m_controlController.button(1).onTrue(new ToAL1(m_elevatorSys, m_manpulatorPitchSys)); // x
       m_controlController.button(3).onTrue(new ToAL2(m_elevatorSys, m_manpulatorPitchSys)); // b
       m_controlController.button(2).onTrue(new ToAProcessor(m_elevatorSys, m_manpulatorPitchSys)); // a
@@ -290,7 +292,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
   //  return new SequentialCommandGroup( 
-     return drivebase.driveToDistanceCommand(1.4, 1.5).withTimeout(2);
+     return drivebase.driveToDistanceCommand(5, 1.5).withTimeout(2);
     //   new ToCL3(m_elevatorSys, m_manpulatorPitchSys),
     //   drivebase.driveToDistanceCommand(0.2, -0.5).withTimeout(2),
     //   new CManipulate(m_coralManipulatorSys, MOTION.CORAL_FRONT_OUTTAKE_SPEED)
