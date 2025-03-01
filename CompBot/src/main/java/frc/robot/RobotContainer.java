@@ -213,14 +213,18 @@ public class RobotContainer {
     // } else {
     //   m_controlController.rightStick().onTrue(new ToClimbHome(m_climbSys)); // Unlocks controls and resets climb if accidentally pressed (temporarily right stick button)
 
-      Trigger joystick3 = new JoystickButton(driveJoystick, 3);
-      joystick3.onTrue(new ToClimbHome(m_climbSys));
+    m_driver2.button(0).onTrue(new ToClimbHome(m_climbSys)); //A
+    m_driver2.button(1).onTrue(new ToClimbReady(m_climbSys)); //B
+    m_driver2.button(4).onTrue(new ToClimbLatched(m_climbSys)); //Y
 
-      Trigger joystick5 = new JoystickButton(driveJoystick, 5);
-      joystick5.onTrue(new ToClimbReady(m_climbSys));
+      // Trigger joystick3 = new JoystickButton(driveJoystick, 3);
+      // joystick3.onTrue(new ToClimbHome(m_climbSys));
 
-      Trigger joystick6 = new JoystickButton(driveJoystick, 6);
-      joystick6.onTrue(new ToClimbLatched(m_climbSys));
+      // Trigger joystick5 = new JoystickButton(driveJoystick, 5);
+      // joystick5.onTrue(new ToClimbReady(m_climbSys));
+
+      // Trigger joystick6 = new JoystickButton(driveJoystick, 6);
+      // joystick6.onTrue(new ToClimbLatched(m_climbSys));
    // }
     
 
