@@ -30,9 +30,9 @@ public class ToAL1 extends Command {
   @Override
   public void initialize() {
     elevatorSys.toAL1(); //start moving
-    if (!GLOBAL.DISABLE_ELEVATOR) {
-      //while (elevatorSys.GetElevatorPosition() < Constants.ELEVATOR.CLEAR - Constants.ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
-    }
+    // if (!GLOBAL.DISABLE_ELEVATOR) {
+    //   //while (elevatorSys.GetElevatorPosition() < Constants.ELEVATOR.CLEAR - Constants.ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
+    // }
     manipulatorPitchSys.toAReef(); //only move out once past clear
     if (GLOBAL.DEBUG_MODE) {
       System.out.println("ToAL1");

@@ -5,9 +5,13 @@
 package frc.robot.commands.algae;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ELEVATOR;
 import frc.robot.Constants.GLOBAL;
 import frc.robot.Constants.MANIPULATOR;
+import frc.robot.commands.ToClear;
 import frc.robot.subsystems.ElevatorSys;
 import frc.robot.subsystems.ManipulatorPitchSys;
 import frc.robot.subsystems.StateMonitorSys;
@@ -31,12 +35,19 @@ public class ToAGround extends Command {
   @Override
   public void initialize() {
     if (StateMonitorSys.manipulatorState == ManipulatorState.HOME) {
-      elevatorSys.toClear(); //move up
-      if (!GLOBAL.DISABLE_ELEVATOR) {
-       // while (elevatorSys.GetElevatorPosition() < ELEVATOR.CLEAR - ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
-      }
+      // elevatorSys.toClear(); //move up
+      // if (!GLOBAL.DISABLE_ELEVATOR) {
+      //  // while (elevatorSys.GetElevatorPosition() < ELEVATOR.CLEAR - ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
+      // }
+
+      new SequentialCommandGroup(
+        new ToClear(manipulatorPitchSys,elevatorSys),
+        new InstantCommand(() -> manipulatorPitchSys.toAGround()),
+        new InstantCommand(() -> elevatorSys.toHome())
+      );
+
       manipulatorPitchSys.toAGround(); //flip out
-      while (manipulatorPitchSys.getEncoder() < MANIPULATOR.AGROUND - MANIPULATOR.DEADBAND) {} // waits until manipulator is at safe pitch
+      //while (manipulatorPitchSys.getEncoder() < MANIPULATOR.AGROUND - MANIPULATOR.DEADBAND) {} // waits until manipulator is at safe pitch
       elevatorSys.toHome(); //move back down
       if (GLOBAL.DEBUG_MODE) {
         System.out.println("ToAGround w/ clear");

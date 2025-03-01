@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ManipulateObject;
+import frc.robot.commands.ToClear;
 import frc.robot.commands.UpdatePID;
 import frc.robot.commands.setManipulatorPitch;
 import frc.robot.commands.algae.ToAGround;
@@ -175,6 +176,7 @@ public class RobotContainer {
       m_controlController.pov(270).onTrue(new ToCL2(m_elevatorSys, m_manpulatorPitchSys)); // left
       m_controlController.button(9).onTrue(new ToHome(m_elevatorSys, m_manpulatorPitchSys)); // left stick button
       m_controlController.leftBumper().whileTrue(new ManipulateObject(m_algaeManipulatorSys, m_coralManipulatorSys)); // left bumper
+      m_controlController.leftTrigger().onTrue(new ToClear(m_manpulatorPitchSys,m_elevatorSys));
 
       // algae controls
       // CONTROLLER MAPS WEIRD BUTTONS IN .[BUTTON]() AREN'T SAME AS CONTROLLER

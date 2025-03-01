@@ -175,12 +175,12 @@ public final class Constants {
   public static class CLIMB {
     public static final int AMP_LIMIT = 10;
     
-    public static final double CLIMB_MIN_PITCH = 0;
-    public static final double CLIMB_MAX_PITCH = 1;
+    public static final double CLIMB_MIN_PITCH = 0.44;
+    public static final double CLIMB_MAX_PITCH = 0.44;
 
-    public static final double HOME = 0;
-    public static final double LATCHED = 0;
-    public static final double READY = 0;
+    public static final double HOME = 0.375;
+    public static final double LATCHED = 0.435;
+    public static final double READY = 0.075;
 
     public static final double CLOW = 0; // coral low (l1, l2, l3), high (l4)
     public static final double CHIGH = 0;

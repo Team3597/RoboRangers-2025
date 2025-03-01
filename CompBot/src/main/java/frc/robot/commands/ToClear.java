@@ -2,42 +2,35 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.algae;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
-import frc.robot.Constants.GLOBAL;
+import frc.robot.Constants.ELEVATOR;
+import frc.robot.Constants.MANIPULATOR;
 import frc.robot.subsystems.ElevatorSys;
 import frc.robot.subsystems.ManipulatorPitchSys;
-import frc.robot.subsystems.StateMonitorSys;
-import frc.robot.subsystems.StateMonitorSys.ManipulatorState;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ToAL2 extends Command {
+public class ToClear extends Command {
+  /** Creates a new ToClear. */
 
-  private final ElevatorSys elevatorSys;
-  private final ManipulatorPitchSys manipulatorPitchSys;
+  private static ManipulatorPitchSys manipulatorPitchSys;
+  private static ElevatorSys elevatorSys;
+  
+  public ToClear(ManipulatorPitchSys pitch, ElevatorSys elevator) {
+    this.manipulatorPitchSys = pitch;
+    this.elevatorSys = elevator;
 
-  /** Creates a new ToAL2. */
-  public ToAL2(ElevatorSys elevatorSys, ManipulatorPitchSys manipulatorPitchSys) {
-    this.elevatorSys = elevatorSys;
-    this.manipulatorPitchSys = manipulatorPitchSys;
+    addRequirements(manipulatorPitchSys, elevatorSys);
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(elevatorSys, manipulatorPitchSys);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elevatorSys.toAL2(); //start moving
-    // if (!GLOBAL.DISABLE_ELEVATOR) {
-    //   //while (elevatorSys.GetElevatorPosition() < Constants.ELEVATOR.CLEAR - Constants.ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
-    // }
-    manipulatorPitchSys.toAReef(); //only move out once clear
-    if (GLOBAL.DEBUG_MODE) {
-      System.out.println("ToAL2");
-    }
-    StateMonitorSys.manipulatorState = ManipulatorState.AL2;
+    manipulatorPitchSys.toHome();
+    elevatorSys.toClear();;
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
