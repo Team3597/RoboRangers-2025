@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ELEVATOR;
+import frc.robot.Constants.GLOBAL;
 
 public class ElevatorSys extends SubsystemBase {
   /** Creates a new Elevator. */
@@ -96,38 +97,47 @@ public class ElevatorSys extends SubsystemBase {
 
   public void toHome() {
     setHeight(Constants.ELEVATOR.HOME);
+    if (GLOBAL.DEBUG_MODE) System.out.println("elev toHome");
   }
 
   public void toClear() {
     setHeight(Constants.ELEVATOR.CLEAR);
+    if (GLOBAL.DEBUG_MODE) System.out.println("elev toClear");
   }
 
   public void toAL1() {
     setHeight(Constants.ELEVATOR.AL1);
+    if (GLOBAL.DEBUG_MODE) System.out.println("elev toAL1");
   }
 
   public void toAL2() {
     setHeight(Constants.ELEVATOR.AL2);
+    if (GLOBAL.DEBUG_MODE) System.out.println("elev toAL2");
   }
 
   public void toANet() {
     setHeight(Constants.ELEVATOR.ANET);
+    if (GLOBAL.DEBUG_MODE) System.out.println("elev toANet");
   }
 
   public void toCL1() {
     setHeight(Constants.ELEVATOR.CL1);
+    if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL1");
   }
 
   public void toCL2() {
     setHeight(Constants.ELEVATOR.CL2);
+    if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL2");
   }
 
   public void toCL3() {
     setHeight(Constants.ELEVATOR.CL3);
+    if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL3");
   }
 
   public void toCL4() {
     setHeight(Constants.ELEVATOR.CL4);
+    if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL4");
   }
 
   public boolean isHome() {

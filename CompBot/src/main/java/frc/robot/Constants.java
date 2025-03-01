@@ -142,7 +142,7 @@ public final class Constants {
     public static final double CL3 = 30;
     public static final double CL4 = 40;
     
-    public static final double DEADBAND = 0;
+    public static final double DEADBAND = 1;
   }
 
   public static class MANIPULATOR {
@@ -166,7 +166,7 @@ public final class Constants {
     public static final double CLOW = HOME; // coral low (l1, l2, l3), high (l4)
     public static final double CHIGH = 0.99;
 
-    public static final double DEADBAND = 0;
+    public static final double DEADBAND = 0.05;
   }
 
   public static class CLIMB {
@@ -179,7 +179,7 @@ public final class Constants {
     public static final double LATCHED = 0;
     public static final double READY = 0;
 
-    public static final double DEADBAND = 0;
+    public static final double DEADBAND = 0.5;
   }
 
   public static class CAMERA {

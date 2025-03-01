@@ -18,6 +18,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.GLOBAL;
 import frc.robot.Constants.MANIPULATOR;
 
 public class ManipulatorPitchSys extends SubsystemBase {
@@ -106,34 +107,42 @@ public class ManipulatorPitchSys extends SubsystemBase {
 
   public void toHome() {
     setPitch(Constants.MANIPULATOR.HOME);
+    if (GLOBAL.DEBUG_MODE) System.out.println("manip toHome");
   }
 
   public void toUnstick() {
     setPitch(Constants.MANIPULATOR.UNSTICK);
+    if (GLOBAL.DEBUG_MODE) System.out.println("manip toUnstick");
   }
 
   public void toAGround() {
     setPitch(Constants.MANIPULATOR.AGROUND);
+    if (GLOBAL.DEBUG_MODE) System.out.println("manip toAGround");
   }
 
   public void toAProcessor() {
     setPitch(Constants.MANIPULATOR.APROCESSOR);
+    if (GLOBAL.DEBUG_MODE) System.out.println("manip toAProcessor");
   }
 
   public void toAReef() {
     setPitch(Constants.MANIPULATOR.AREEF);
+    if (GLOBAL.DEBUG_MODE) System.out.println("manip toAReef");
   }
 
   public void toANet() {
     setPitch(Constants.MANIPULATOR.ANET);
+    if (GLOBAL.DEBUG_MODE) System.out.println("manip toANet");
   }
 
   public void toCLow() {
     setPitch(Constants.MANIPULATOR.CLOW);
+    if (GLOBAL.DEBUG_MODE) System.out.println("manip toCLow");
   }
 
   public void toCHigh() {
     setPitch(Constants.MANIPULATOR.CHIGH);
+    if (GLOBAL.DEBUG_MODE) System.out.println("manip toCHigh");
   }
 
   public boolean isHome() {
