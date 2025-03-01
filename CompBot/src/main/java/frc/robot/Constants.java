@@ -4,6 +4,12 @@
 
 package frc.robot;
 
+import org.photonvision.PhotonPoseEstimator;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
@@ -126,7 +132,7 @@ public final class Constants {
 
     public static final double HOME = 0; // home height
     public static final double CLEAR = 0; // clearance height for manipulator
-    
+
     public static final double AL1 = 0; // algae l1, l2, net
     public static final double AL2 = 0;
     public static final double ANET = 0;
@@ -177,10 +183,22 @@ public final class Constants {
   }
 
   public static class CAMERA {
-    public static final String CAMERA_NICKNAME = "2597Camera"; // camera nickname (needs to be updated)
+    public static final String CAMERA_NICKNAME = "Team3597Camera"; // camera nickname (needs to be updated)
     
-    public static final double CAMERA_HEIGHT = 0;
-    public static final double CAMERA_PITCH = 0;
+    public static final double CAMERA_X_FROM_ROBOT_CENTER_INCHES = 0; // the sign of these might have to be experimented with
+    public static final double CAMERA_Y_FROM_ROBOT_CENTER_INCHES = 0;
+    public static final double CAMERA_HEIGHT_INCHES = 0;
+    public static final Translation3d CAMERA_TRANSLATION_3D = new Translation3d(Units.inchesToMeters(CAMERA_X_FROM_ROBOT_CENTER_INCHES), Units.inchesToMeters(CAMERA_Y_FROM_ROBOT_CENTER_INCHES), Units.inchesToMeters(CAMERA_HEIGHT_INCHES));
+    
+    public static final double CAMERA_ROLL_DEGREES = 0; // (spin clockwise/counterclockwise facing camera)
+    public static final double CAMERA_PITCH_DEGREES = 0; // (tilt up/down)
+    public static final double CAMERA_YAW_DEGREES = 0; // (angle left/right)
+    public static final Rotation3d CAMERA_ROTATION_3D = new Rotation3d(Units.degreesToRadians(CAMERA_ROLL_DEGREES), Units.degreesToRadians(CAMERA_PITCH_DEGREES), Units.degreesToRadians(CAMERA_YAW_DEGREES));
 
+    public static final Transform3d CAMERA_TRANSFORM_3D = new Transform3d(CAMERA_TRANSLATION_3D, CAMERA_ROTATION_3D);
+
+    public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+
+    public static final PhotonPoseEstimator PHOTON_POSE_ESTIMATOR = new PhotonPoseEstimator(CAMERA.APRIL_TAG_FIELD_LAYOUT, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, CAMERA.CAMERA_TRANSFORM_3D);
   }
 }

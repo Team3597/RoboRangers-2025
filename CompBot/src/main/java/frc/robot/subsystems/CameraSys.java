@@ -4,12 +4,10 @@
 
 package frc.robot.subsystems;
 
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAMERA;
 
@@ -24,13 +22,13 @@ public class CameraSys extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  /** Returns a Pose2d object representing the position of the robot in the field (to be used in addVisionMeasurement method).
+  /** Returns an EstimatedRobotPose object representing the position of the robot in the field (to be used in addVisionMeasurement method).
    * 
-   * Returns null if not targets are found. */
-  /* public Pose2d getPose2D() {
+   * Returns null if not targets are found by the camera. */
+  public EstimatedRobotPose getEstimatedRobotPose() {
     PhotonPipelineResult result = camera.getLatestResult();
     if (!result.hasTargets()) return null;
-    PhotonTrackedTarget target = result.getBestTarget();
-    return PhotonUtils.estimateFieldToRobot(CAMERA.CAMERA_HEIGHT)
-  } */
+    if (CAMERA.PHOTON_POSE_ESTIMATOR.update(result).isPresent()) return CAMERA.PHOTON_POSE_ESTIMATOR.update(result).get();
+    return null;
+  }
 }
