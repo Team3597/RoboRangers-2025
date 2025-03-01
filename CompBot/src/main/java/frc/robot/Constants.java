@@ -126,9 +126,8 @@ public final class Constants {
 
     public static final double HOME = 0; // home height
     public static final double CLEAR = 0; // clearance height for manipulator
-
-    public static final double APROCESSOR = 0; // algae processor, l1, l2, net
-    public static final double AL1 = 0;
+    
+    public static final double AL1 = 0; // algae l1, l2, net
     public static final double AL2 = 0;
     public static final double ANET = 0;
 
@@ -174,10 +173,14 @@ public final class Constants {
     public static final double LATCHED = 0;
     public static final double READY = 0;
 
-    public static final double CLOW = 0; // coral low (l1, l2, l3), high (l4)
-    public static final double CHIGH = 0;
-
     public static final double DEADBAND = 0;
   }
 
+  public static class CAMERA {
+    public static final String CAMERA_NICKNAME = "2597Camera"; // camera nickname (needs to be updated)
+    
+    public static final double CAMERA_HEIGHT = 0;
+    public static final double CAMERA_PITCH = 0;
+
+  }
 }

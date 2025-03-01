@@ -17,6 +17,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.ELEVATOR;
 
 public class ElevatorSys extends SubsystemBase {
   /** Creates a new Elevator. */
@@ -101,10 +102,6 @@ public class ElevatorSys extends SubsystemBase {
     setHeight(Constants.ELEVATOR.CLEAR);
   }
 
-  public void toAProcessor() {
-    setHeight(Constants.ELEVATOR.APROCESSOR);
-  }
-
   public void toAL1() {
     setHeight(Constants.ELEVATOR.AL1);
   }
@@ -131,5 +128,50 @@ public class ElevatorSys extends SubsystemBase {
 
   public void toCL4() {
     setHeight(Constants.ELEVATOR.CL4);
+  }
+
+  public boolean isHome() {
+    if (GetElevatorPosition() <= ELEVATOR.HOME + ELEVATOR.DEADBAND) return true;
+    return false;
+  }
+  
+  public boolean isClear() {
+    if (GetElevatorPosition() >= ELEVATOR.CLEAR - ELEVATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtAL1() {
+    if (GetElevatorPosition() >= ELEVATOR.AL1 - ELEVATOR.DEADBAND && GetElevatorPosition() <= ELEVATOR.AL1 + ELEVATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtAL2() {
+    if (GetElevatorPosition() >= ELEVATOR.AL2 - ELEVATOR.DEADBAND && GetElevatorPosition() <= ELEVATOR.AL2 + ELEVATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtANet() {
+    if (GetElevatorPosition() >= ELEVATOR.ANET - ELEVATOR.DEADBAND && GetElevatorPosition() <= ELEVATOR.ANET + ELEVATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtCL1() {
+    if (GetElevatorPosition() >= ELEVATOR.CL1 - ELEVATOR.DEADBAND && GetElevatorPosition() <= ELEVATOR.CL1 + ELEVATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtCL2() {
+    if (GetElevatorPosition() >= ELEVATOR.CL2 - ELEVATOR.DEADBAND && GetElevatorPosition() <= ELEVATOR.CL2 + ELEVATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtCL3() {
+    if (GetElevatorPosition() >= ELEVATOR.CL3 - ELEVATOR.DEADBAND && GetElevatorPosition() <= ELEVATOR.CL3 + ELEVATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtCL4() {
+    if (GetElevatorPosition() >= ELEVATOR.CL4 - ELEVATOR.DEADBAND && GetElevatorPosition() <= ELEVATOR.CL4 + ELEVATOR.DEADBAND) return true;
+    return false;
   }
 }

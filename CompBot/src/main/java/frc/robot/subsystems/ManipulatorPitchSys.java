@@ -135,4 +135,44 @@ public class ManipulatorPitchSys extends SubsystemBase {
   public void toCHigh() {
     setPitch(Constants.MANIPULATOR.CHIGH);
   }
+
+  public boolean isHome() {
+    if (getEncoder() <= MANIPULATOR.HOME + MANIPULATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtUnstick() {
+    if (getEncoder() >= MANIPULATOR.UNSTICK - MANIPULATOR.DEADBAND && getEncoder() <= MANIPULATOR.UNSTICK + MANIPULATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtAGround() {
+    if (getEncoder() >= MANIPULATOR.AGROUND - MANIPULATOR.DEADBAND && getEncoder() <= MANIPULATOR.AGROUND + MANIPULATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtAProcessor() {
+    if (getEncoder() >= MANIPULATOR.APROCESSOR - MANIPULATOR.DEADBAND && getEncoder() <= MANIPULATOR.APROCESSOR + MANIPULATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtAReef() {
+    if (getEncoder() >= MANIPULATOR.AREEF - MANIPULATOR.DEADBAND && getEncoder() <= MANIPULATOR.AREEF + MANIPULATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtANet() {
+    if (getEncoder() >= MANIPULATOR.ANET - MANIPULATOR.DEADBAND && getEncoder() <= MANIPULATOR.ANET + MANIPULATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtCLow() {
+    if (getEncoder() >= MANIPULATOR.CLOW - MANIPULATOR.DEADBAND && getEncoder() <= MANIPULATOR.CLOW + MANIPULATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtCHigh() {
+    if (getEncoder() >= MANIPULATOR.CHIGH - MANIPULATOR.DEADBAND && getEncoder() <= MANIPULATOR.CHIGH + MANIPULATOR.DEADBAND) return true;
+    return false;
+  }
 }

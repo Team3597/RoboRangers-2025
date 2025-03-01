@@ -5,7 +5,6 @@
 package frc.robot.commands.coral;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.Constants.GLOBAL;
 import frc.robot.subsystems.ElevatorSys;
 import frc.robot.subsystems.ManipulatorPitchSys;
@@ -29,26 +28,26 @@ public class ToCL3 extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elevatorSys.toCL3();
-    while (elevatorSys.GetElevatorPosition() < Constants.ELEVATOR.CLEAR - Constants.ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
-    manipulatorPitchSys.toCLow();
-    StateMonitorSys.manipulatorState = ManipulatorState.CL3;
-    if (GLOBAL.DEBUG_MODE) {
-      System.out.println("To CL3");
-    }
+    if (GLOBAL.DEBUG_MODE) System.out.println("To CL3");
+    elevatorSys.toCL3(); // elevator to cl3
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if (elevatorSys.isClear()) manipulatorPitchSys.toCLow(); // manipulator to clow once elevator is clear
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    StateMonitorSys.manipulatorState = ManipulatorState.CL3;
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (elevatorSys.isAtCL3() && manipulatorPitchSys.isAtCLow()) return true; // ends command once system is set
     return false;
   }
 }

@@ -5,7 +5,6 @@
 package frc.robot.commands.algae;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.Constants.GLOBAL;
 import frc.robot.subsystems.ElevatorSys;
 import frc.robot.subsystems.ManipulatorPitchSys;
@@ -29,26 +28,26 @@ public class ToAL2 extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elevatorSys.toAL2(); //start moving
-    while (elevatorSys.GetElevatorPosition() < Constants.ELEVATOR.CLEAR - Constants.ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
-    manipulatorPitchSys.toAReef(); //only move out once clear
-    if (GLOBAL.DEBUG_MODE) {
-      System.out.println("ToAL2");
-    }
-    StateMonitorSys.manipulatorState = ManipulatorState.AL2;
+    if (GLOBAL.DEBUG_MODE) System.out.println("To AL2");
+    elevatorSys.toAL2(); // elevator to al2
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if (elevatorSys.isClear()) manipulatorPitchSys.toAReef(); // manipulator to areef once elevator is clear
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    StateMonitorSys.manipulatorState = ManipulatorState.AL2;
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (elevatorSys.isAtAL2() && manipulatorPitchSys.isAtAReef()) return true; // ends command once system is set
     return false;
   }
 }
