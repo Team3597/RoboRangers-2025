@@ -17,6 +17,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ManipulateObject;
 import frc.robot.commands.UpdatePID;
 import frc.robot.commands.setManipulatorPitch;
+import frc.robot.commands.algae.AManipulate;
 import frc.robot.commands.algae.ToAGround;
 import frc.robot.commands.algae.ToAL1;
 import frc.robot.commands.algae.ToAL2;
@@ -25,6 +26,7 @@ import frc.robot.commands.algae.ToAProcessor;
 import frc.robot.commands.climb.ToClimbHome;
 import frc.robot.commands.climb.ToClimbLatched;
 import frc.robot.commands.climb.ToClimbReady;
+import frc.robot.commands.coral.CManipulate;
 import frc.robot.commands.coral.ToCL1;
 import frc.robot.commands.coral.ToCL2;
 import frc.robot.commands.coral.ToCL3;
@@ -44,9 +46,11 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.GLOBAL;
+import frc.robot.Constants.MOTION;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
@@ -74,7 +78,7 @@ public class RobotContainer {
   private static final VisionSys m_visionSys = new VisionSys();
   private static final StateMonitorSys m_stateMonitorSys = new StateMonitorSys();
 
-  private static DigitalInput m_coralLimit = new DigitalInput(Constants.DIO.CORAL_LIMIT);
+  //private static DigitalInput m_coralLimit = new DigitalInput(Constants.DIO.CORAL_LIMIT);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_controlController = new CommandXboxController(Constants.OPERATOR.CONTROL_CONTROLLER_PORT);
@@ -91,6 +95,7 @@ public class RobotContainer {
                       .withControllerRotationAxis(driveJoystick::getZ)
                       .deadband(OperatorConstants.DEADBAND)
                       .scaleTranslation(0.8)
+                      .scaleRotation(0.4)
                       .allianceRelativeControl(true);
 
   /**
@@ -141,6 +146,8 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
+    
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
   }
@@ -166,34 +173,53 @@ public class RobotContainer {
     //m_controlController.button(7).whileTrue(new IntakeC(m_coralManipulatorSys));
 
     
-    if (StateMonitorSys.climbState != ClimbState.LATCHED) {
+    //if (StateMonitorSys.climbState != ClimbState.LATCHED) {
       // coral controls
       m_controlController.pov(0).onTrue(new ToCL4(m_elevatorSys, m_manpulatorPitchSys)); // up
       m_controlController.pov(90).onTrue(new ToCL3(m_elevatorSys, m_manpulatorPitchSys)); // right
       m_controlController.pov(180).onTrue(new ToCL1(m_elevatorSys, m_manpulatorPitchSys)); // down
       m_controlController.pov(270).onTrue(new ToCL2(m_elevatorSys, m_manpulatorPitchSys)); // left
-      m_controlController.leftStick().onTrue(new ToHome(m_elevatorSys, m_manpulatorPitchSys)); // left stick button
-      m_controlController.leftBumper().whileTrue(new ManipulateObject(m_algaeManipulatorSys, m_coralManipulatorSys)); // left bumper
+      m_controlController.button(9).onTrue(new ToHome(m_elevatorSys, m_manpulatorPitchSys)); // left stick button
+
+
+      m_controlController.leftBumper().whileTrue(new CManipulate(m_coralManipulatorSys, MOTION.CORAL_INTAKE_SPEED)); // left bumper
+      m_controlController.button(7).whileTrue(new CManipulate(m_coralManipulatorSys, MOTION.CORAL_FRONT_OUTTAKE_SPEED));
+      m_controlController.button(11).whileTrue(new CManipulate(m_coralManipulatorSys, -MOTION.CORAL_BACK_OUTTAKE_SPEED));
+
+      m_controlController.rightBumper().whileTrue(new AManipulate(m_algaeManipulatorSys, MOTION.ALGAE_INTAKE_RPM)); // left bumper
+      m_controlController.button(8).whileTrue(new AManipulate(m_algaeManipulatorSys, -MOTION.ALGAE_OUTTAKE_RPM));
+     
+      m_algaeManipulatorSys.setDefaultCommand(new AManipulate(m_algaeManipulatorSys, 0));
 
       // algae controls
-      m_controlController.y().onTrue(new ToANet(m_elevatorSys, m_manpulatorPitchSys)); // y
-      m_controlController.b().onTrue(new ToAL2(m_elevatorSys, m_manpulatorPitchSys)); // b
-      m_controlController.a().onTrue(new ToAProcessor(m_elevatorSys, m_manpulatorPitchSys)); // a
-      m_controlController.x().onTrue(new ToAL1(m_elevatorSys, m_manpulatorPitchSys)); // x
-      m_controlController.start().onTrue(new ToAGround(m_elevatorSys, m_manpulatorPitchSys)); // start
+      m_controlController.button(4).onTrue(new ToANet(m_elevatorSys, m_manpulatorPitchSys)); // y
+      m_controlController.button(1).onTrue(new ToAL1(m_elevatorSys, m_manpulatorPitchSys)); // x
+      m_controlController.button(3).onTrue(new ToAL2(m_elevatorSys, m_manpulatorPitchSys)); // b
+      m_controlController.button(2).onTrue(new ToAProcessor(m_elevatorSys, m_manpulatorPitchSys)); // a
+      m_controlController.button(10).onTrue(new ToAGround(m_elevatorSys, m_manpulatorPitchSys)); // start
 
 
       // climb controls
-      if (StateMonitorSys.climbState == ClimbState.READY) { // back (toggles between climb home and ready)
-        m_controlController.back().onTrue(new ToClimbHome(m_climbSys));
-      } else if (StateMonitorSys.climbState == ClimbState.HOME) {
-        m_controlController.back().onTrue(new ToClimbReady(m_climbSys));
-      }
-      // missing method to read center logitech button
-      // m_controlController.centerLogitechButton().onTrue(new ToClimbLatched(m_climbSys)); // center logitech button
-    } else {
-      m_controlController.rightStick().onTrue(new ToClimbHome(m_climbSys)); // Unlocks controls and resets climb if accidentally pressed (temporarily right stick button)
-    }
+    //   if (StateMonitorSys.climbState == ClimbState.READY) { // back (toggles between climb home and ready)
+    //     m_controlController.back().onTrue(new ToClimbHome(m_climbSys));
+    //   } else if (StateMonitorSys.climbState == ClimbState.HOME) {
+    //     m_controlController.back().onTrue(new ToClimbReady(m_climbSys));
+    //   }
+    //   // missing method to read center logitech button
+    //   // m_controlController.centerLogitechButton().onTrue(new ToClimbLatched(m_climbSys)); // center logitech button
+    // } else {
+    //   m_controlController.rightStick().onTrue(new ToClimbHome(m_climbSys)); // Unlocks controls and resets climb if accidentally pressed (temporarily right stick button)
+
+      Trigger joystick3 = new JoystickButton(driveJoystick, 3);
+      joystick3.onTrue(new ToClimbHome(m_climbSys));
+
+      Trigger joystick5 = new JoystickButton(driveJoystick, 5);
+      joystick5.onTrue(new ToClimbReady(m_climbSys));
+
+      Trigger joystick6 = new JoystickButton(driveJoystick, 6);
+      joystick6.onTrue(new ToClimbLatched(m_climbSys));
+   // }
+    
 
 
 
@@ -250,9 +276,7 @@ public class RobotContainer {
       m_controlController.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       m_controlController.rightBumper().onTrue(Commands.none());
 
-      m_controlController.b().onTrue(new setManipulatorPitch(m_manpulatorPitchSys, 0.9));
-      m_controlController.x().onTrue(new setManipulatorPitch(m_manpulatorPitchSys, 0.7));
-      m_controlController.a().onTrue(new UpdatePID(m_manpulatorPitchSys));
+
     }
 
   }
@@ -264,7 +288,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return drivebase.driveToDistanceCommand(5, -1).withTimeout(2);
+    
+    //Autos.exampleAuto(m_exampleSubsystem);
   }
 
   public void setMotorBrake(boolean brake)

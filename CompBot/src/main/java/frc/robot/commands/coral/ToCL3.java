@@ -47,7 +47,11 @@ public class ToCL3 extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (elevatorSys.isAtCL3() && manipulatorPitchSys.isAtCLow()) return true; // ends command once system is set
-    return false;
+    if (elevatorSys.isAtCL3() && manipulatorPitchSys.isAtCLow()) {
+      if (GLOBAL.DEBUG_MODE) System.out.println("Stopping CL3");
+      return true; // ends command once system is set
+    } else {
+      return false;
+    }
   }
 }

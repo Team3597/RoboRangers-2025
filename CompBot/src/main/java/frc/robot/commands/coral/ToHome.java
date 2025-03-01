@@ -38,8 +38,10 @@ public class ToHome extends Command {
   public void execute() {
     if (elevatorSys.isClear()) manipulatorPitchSys.toHome(); // manipulator to home once elevator is clear
       if (GLOBAL.DEBUG_MODE) System.out.println("manip toHome");
-    if (manipulatorPitchSys.isAtCLow()) elevatorSys.toHome(); // elevator to home once manipulator is clear (at aground)
-    if (GLOBAL.DEBUG_MODE) System.out.println("elev toHome");
+    if (manipulatorPitchSys.isAtCLow()) {
+      elevatorSys.toHome(); // elevator to home once manipulator is clear (at aground)
+      if (GLOBAL.DEBUG_MODE) System.out.println("elev toHome");
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -49,7 +51,11 @@ public class ToHome extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (elevatorSys.isHome() && manipulatorPitchSys.isAtCLow()) return true; // ends command once system is set
+    if (elevatorSys.isHome() && manipulatorPitchSys.isAtCLow()) {
+      if (GLOBAL.DEBUG_MODE) System.out.println("Stopping ToHome");
+      return true; // ends command once system is set
+    } else {
     return false;
+    }
   }
 }

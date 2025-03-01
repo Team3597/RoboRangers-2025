@@ -47,7 +47,11 @@ public class ToCL4 extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (elevatorSys.isAtCL4() && manipulatorPitchSys.isAtCHigh()) return true; // ends command once system is set
-    return false;
+    if (elevatorSys.isAtCL4() && manipulatorPitchSys.isAtCHigh()) {
+      if (GLOBAL.DEBUG_MODE) System.out.println("Stopping CL4");
+      return true; // ends command once system is set
+    } else {
+      return false;
+    }
   }
 }

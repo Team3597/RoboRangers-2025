@@ -29,10 +29,12 @@ public class CoralManipulatorSys extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  public void manipulateCoral(double speed) {
+    coralManipulator.set(speed);
+  }
+
   public void intakeCoral() {
-    while (!coralLimitSwitch.get()) {
-      coralManipulator.set(MOTION.CORAL_INTAKE_SPEED);
-    }
+    coralManipulator.set(MOTION.CORAL_INTAKE_SPEED);
   }
 
   //for scoring L1-L3
@@ -46,6 +48,6 @@ public class CoralManipulatorSys extends SubsystemBase {
   }
 
   public void stop() {
-    coralManipulator.stopMotor();;
+    coralManipulator.stopMotor();
   }
 }

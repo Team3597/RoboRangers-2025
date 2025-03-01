@@ -146,8 +146,13 @@ public class ElevatorSys extends SubsystemBase {
   }
   
   public boolean isClear() {
-    if (GetElevatorPosition() >= ELEVATOR.CLEAR - ELEVATOR.DEADBAND) return true;
+    if (GetElevatorPosition() >= ELEVATOR.CLEAR - ELEVATOR.DEADBAND) {
+      System.out.println("IS CLEAR");
+      return true;
+    } else {
+      System.out.println("NOT CLEAR");
     return false;
+    }
   }
 
   public boolean isAtAL1() {

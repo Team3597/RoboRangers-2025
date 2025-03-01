@@ -25,7 +25,7 @@ import swervelib.math.Matter;
 public final class Constants {
 
   public static class GLOBAL {
-    public static boolean DEBUG_MODE = true; //enables debug sysouts
+    public static boolean DEBUG_MODE = false; //enables debug sysouts
     public static boolean MANIPULATOR_CLEAR = false; //are we good to change manipulator pitch?
   }
 
@@ -43,7 +43,7 @@ public final class Constants {
   {
 
     // Joystick Deadband
-    public static final double DEADBAND        = 0.3;
+    public static final double DEADBAND        = 0.2;
     public static final double LEFT_Y_DEADBAND = 0.1;
     public static final double RIGHT_X_DEADBAND = 0.1;
     public static final double TURN_CONSTANT    = 3; // was 6
@@ -76,18 +76,18 @@ public final class Constants {
   }
 
   public static class MOTION {
-    public static final double ALGAE_INTAKE_RPM = 60;
-    public static final double ALGAE_OUTTAKE_RPM = 60;
+    public static final double ALGAE_INTAKE_RPM = 6000;
+    public static final double ALGAE_OUTTAKE_RPM = 6000;
     //potentially differ speeds for different levels later
-    public static final double CORAL_INTAKE_SPEED = 0.2;
-    public static final double CORAL_FRONT_OUTTAKE_SPEED = 0.2;
-    public static final double CORAL_BACK_OUTTAKE_SPEED = 0.2;
+    public static final double CORAL_INTAKE_SPEED = 1;
+    public static final double CORAL_FRONT_OUTTAKE_SPEED = 1;
+    public static final double CORAL_BACK_OUTTAKE_SPEED = 1;
   }
 
   public static class PID {
-    public static final double ALGAE_P = 0.1;
+    public static final double ALGAE_P = 0.001;
     public static final double ALGAE_I = 0;
-    public static final double ALGAE_D = 0;
+    public static final double ALGAE_D = 0.01;
     public static final double ALGAE_FF = 0.002; // 1/KV, 1/473
     public static final double ALGAE_MIN = -0.2;
     public static final double ALGAE_MAX = 0.2;
@@ -96,22 +96,22 @@ public final class Constants {
     
     public static double PITCH_P = 3;
     public static double PITCH_I = 0;
-    public static double PITCH_D = 0;
-    public static final double PITCH_MIN = -1;
-    public static final double PITCH_MAX = 1;
+    public static double PITCH_D = 0.01;
+    public static final double PITCH_MIN = -0.5;
+    public static final double PITCH_MAX = 0.5;
 
     public static final double ELEVATOR_P = 0.5;
     public static final double ELEVATOR_I = 0;
     public static final double ELEVATOR_D = 0.01;
-    public static final double ELEVATOR_MIN = -0.5;
-    public static final double ELEVATOR_MAX = 0.5;
+    public static final double ELEVATOR_MIN = -0.1;
+    public static final double ELEVATOR_MAX = 0.2;
     public static final double ELEVATOR_FF = 0;
 
-    public static final double CLIMB_P = 0;
+    public static final double CLIMB_P = 1;
     public static final double CLIMB_I = 0;
     public static final double CLIMB_D = 0;
-    public static final double CLIMB_MIN = 0;
-    public static final double CLIMB_MAX = 0;
+    public static final double CLIMB_MIN = -0.5;
+    public static final double CLIMB_MAX = 0.5;
   }
 
   public static class UTIL {
@@ -131,18 +131,19 @@ public final class Constants {
     public static final double ELEVATOR_MAX_COUNTS = 56;
 
     public static final double HOME = 0; // home height
-    public static final double CLEAR = 0; // clearance height for manipulator
+    public static final double CLEAR = 1.5; // clearance height for manipulator
 
-    public static final double AL1 = 0; // algae l1, l2, net
-    public static final double AL2 = 0;
-    public static final double ANET = 0;
+    public static final double AL1 = 26.5; // algae l1, l2, net
+    public static final double AL2 = 41;
+    public static final double ANET = 53;
+    public static final double APROCESSOR = 2;
 
-    public static final double CL1 = 10; // coral l1, l2, l3, l4
-    public static final double CL2 = 20;
-    public static final double CL3 = 30;
-    public static final double CL4 = 40;
+    public static final double CL1 = 14.5; // coral l1, l2, l3, l4
+    public static final double CL2 = 26.5;
+    public static final double CL3 = 42.8;
+    public static final double CL4 = 52;
     
-    public static final double DEADBAND = 1;
+    public static final double DEADBAND = 2;
   }
 
   public static class MANIPULATOR {
@@ -166,7 +167,7 @@ public final class Constants {
     public static final double CLOW = HOME; // coral low (l1, l2, l3), high (l4)
     public static final double CHIGH = 0.99;
 
-    public static final double DEADBAND = 0.05;
+    public static final double DEADBAND = 0.1;
   }
 
   public static class CLIMB {
@@ -175,9 +176,9 @@ public final class Constants {
     public static final double CLIMB_MIN_PITCH = 0;
     public static final double CLIMB_MAX_PITCH = 1;
 
-    public static final double HOME = 0;
-    public static final double LATCHED = 0;
-    public static final double READY = 0;
+    public static final double HOME = 0.375;
+    public static final double LATCHED = 0.5;
+    public static final double READY = 0.1;
 
     public static final double DEADBAND = 0.5;
   }

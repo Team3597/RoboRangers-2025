@@ -74,14 +74,14 @@ public class ClimbSys extends SubsystemBase {
   }
 
   public void toHome() {
-    setPitch(CLIMB.HOME);
+    setEncoder(CLIMB.HOME);
   }
 
   public void toReady() {
-    setPitch(CLIMB.READY);
+    setEncoder(CLIMB.READY);
   }
 
   public void toLatched() {
-    setPitch(degreeToEncoder(CLIMB.LATCHED));
+    setEncoder(CLIMB.LATCHED);
   }
 }
