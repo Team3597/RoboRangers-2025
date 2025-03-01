@@ -13,8 +13,8 @@ import frc.robot.Constants.CAMERA;
 
 public class CameraSys extends SubsystemBase {
 
-  private static PhotonCamera camera = new PhotonCamera(CAMERA.CAMERA_NICKNAME);
-  
+  private static PhotonCamera camera = new PhotonCamera(CAMERA.CAMERA_NICKNAME); // camera is constant (not sure if this should be final?) so no need for initialization in constructor
+
   /** Creates a new CameraSys. */
   public CameraSys() {}
 
@@ -25,11 +25,11 @@ public class CameraSys extends SubsystemBase {
 
   /** Returns an EstimatedRobotPose object representing the position of the robot in the field (to be used in addVisionMeasurement method).
    * 
-   * Returns null if not targets are found by the camera. */
+   * Returns null if not targets are found by the camera (check for null to avoid a nullPointerException error). */
   public EstimatedRobotPose getEstimatedRobotPose() {
-    PhotonPipelineResult result = camera.getLatestResult();
-    if (!result.hasTargets()) return null;
-    if (CAMERA.PHOTON_POSE_ESTIMATOR.update(result).isPresent()) return CAMERA.PHOTON_POSE_ESTIMATOR.update(result).get();
-    return null;
+    PhotonPipelineResult result = camera.getLatestResult(); // gets result from the camera
+    if (!result.hasTargets()) return null; // checks if result has targets
+    if (CAMERA.PHOTON_POSE_ESTIMATOR.update(result).isPresent()) return CAMERA.PHOTON_POSE_ESTIMATOR.update(result).get(); // returns an EstimatedRobotPose if available from targets
+    return null; // returns null otherwise
   }
 }
