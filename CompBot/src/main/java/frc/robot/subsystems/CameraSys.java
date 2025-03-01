@@ -14,6 +14,7 @@ import frc.robot.Constants.CAMERA;
 public class CameraSys extends SubsystemBase {
 
   private static PhotonCamera camera = new PhotonCamera(CAMERA.CAMERA_NICKNAME);
+  
   /** Creates a new CameraSys. */
   public CameraSys() {}
 
