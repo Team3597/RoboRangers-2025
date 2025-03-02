@@ -108,11 +108,17 @@ public final class Constants {
     public static final double ELEVATOR_MAX = 0.2;
     public static final double ELEVATOR_FF = 0;
 
-    public static final double CLIMB_P = 3;
-    public static final double CLIMB_I = 0.1;
-    public static final double CLIMB_D = 0;
-    public static final double CLIMB_MIN = -1;
-    public static final double CLIMB_MAX = 1;
+    public static final double CLIMB_P_POS = 2;
+    public static final double CLIMB_I_POS = 0;
+    public static final double CLIMB_D_POS = 0;
+    public static final double CLIMB_MIN_POS = -1;
+    public static final double CLIMB_MAX_POS = 1;
+
+    public static final double CLIMB_P_CLIMB = 0.1;
+    public static final double CLIMB_I_CLIMB = 0;
+    public static final double CLIMB_D_CLIMB = 0;
+    public static final double CLIMB_MIN_CLIMB = -1;
+    public static final double CLIMB_MAX_CLIMB = 1;
   }
 
   public static class UTIL {
