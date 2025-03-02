@@ -86,7 +86,7 @@ public class RobotContainer {
   private final CommandXboxController m_controlController = new CommandXboxController(Constants.OPERATOR.CONTROL_CONTROLLER_PORT);
   private final CommandXboxController m_driver2 = new CommandXboxController(Constants.OPERATOR.DRIVE_CONTROLLER_PORT_2);
 
-  private final Joystick driveJoystick = new Joystick(Constants.OPERATOR.DRIVE_CONTROLLER_PORT);
+ // private final Joystick driveJoystick = new Joystick(Constants.OPERATOR.DRIVE_CONTROLLER_PORT);
 
     /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
@@ -189,13 +189,13 @@ public class RobotContainer {
       m_controlController.button(7).whileTrue(new CManipulate(m_coralManipulatorSys, MOTION.CORAL_FRONT_OUTTAKE_SPEED));
       m_controlController.button(11).whileTrue(new CManipulate(m_coralManipulatorSys, -MOTION.CORAL_BACK_OUTTAKE_SPEED));//left stick
 
-      m_controlController.rightBumper().whileTrue(new AManipulate(m_algaeManipulatorSys, MOTION.ALGAE_INTAKE_RPM)); // left bumper
-      m_controlController.button(8).whileTrue(new AManipulate(m_algaeManipulatorSys, -MOTION.ALGAE_OUTTAKE_RPM));
+      m_controlController.rightBumper().whileTrue(new AManipulate(m_algaeManipulatorSys, 0.3)); // left bumper
+      m_controlController.button(8).whileTrue(new AManipulate(m_algaeManipulatorSys, -1));
      
       m_algaeManipulatorSys.setDefaultCommand(new AManipulate(m_algaeManipulatorSys, 0));
 
       // algae controls
-    //  m_controlController.button(4).onTrue(new ToANet(m_elevatorSys, m_manpulatorPitchSys)); // y
+      m_controlController.button(4).onTrue(new ToANet(m_elevatorSys, m_manpulatorPitchSys)); // y
       m_controlController.button(1).onTrue(new ToAL1(m_elevatorSys, m_manpulatorPitchSys)); // x
       m_controlController.button(3).onTrue(new ToAL2(m_elevatorSys, m_manpulatorPitchSys)); // b
       m_controlController.button(2).onTrue(new ToAProcessor(m_elevatorSys, m_manpulatorPitchSys)); // a
@@ -213,8 +213,8 @@ public class RobotContainer {
     // } else {
     //   m_controlController.rightStick().onTrue(new ToClimbHome(m_climbSys)); // Unlocks controls and resets climb if accidentally pressed (temporarily right stick button)
 
-    m_driver2.button(0).onTrue(new ToClimbHome(m_climbSys)); //A
-    m_driver2.button(1).onTrue(new ToClimbReady(m_climbSys)); //B
+    m_driver2.button(1).onTrue(new ToClimbHome(m_climbSys)); //A
+    m_driver2.button(2).onTrue(new ToClimbReady(m_climbSys)); //B
     m_driver2.button(4).onTrue(new ToClimbLatched(m_climbSys)); //Y
 
       // Trigger joystick3 = new JoystickButton(driveJoystick, 3);

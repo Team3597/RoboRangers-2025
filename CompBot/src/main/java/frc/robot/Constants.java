@@ -44,7 +44,7 @@ public final class Constants {
   {
 
     // Joystick Deadband
-    public static final double DEADBAND        = 0.2;
+    public static final double DEADBAND        = 0.05;
     public static final double LEFT_Y_DEADBAND = 0.1;
     public static final double RIGHT_X_DEADBAND = 0.1;
     public static final double TURN_CONSTANT    = 3; // was 6
@@ -108,11 +108,11 @@ public final class Constants {
     public static final double ELEVATOR_MAX = 0.2;
     public static final double ELEVATOR_FF = 0;
 
-    public static final double CLIMB_P = 1;
-    public static final double CLIMB_I = 0;
+    public static final double CLIMB_P = 3;
+    public static final double CLIMB_I = 0.1;
     public static final double CLIMB_D = 0;
-    public static final double CLIMB_MIN = -0.5;
-    public static final double CLIMB_MAX = 0.5;
+    public static final double CLIMB_MIN = -1;
+    public static final double CLIMB_MAX = 1;
   }
 
   public static class UTIL {
@@ -136,7 +136,7 @@ public final class Constants {
 
     public static final double AL1 = 26.5; // algae l1, l2, net
     public static final double AL2 = 41;
-    public static final double ANET = 53;
+    public static final double ANET = 52.5;
     public static final double APROCESSOR = 2;
 
     public static final double CL1 = 14.5; // coral l1, l2, l3, l4
@@ -172,14 +172,14 @@ public final class Constants {
   }
 
   public static class CLIMB {
-    public static final int AMP_LIMIT = 10;
+    public static final int AMP_LIMIT = 40;
     
     public static final double CLIMB_MIN_PITCH = 0;
     public static final double CLIMB_MAX_PITCH = 1;
 
     public static final double HOME = 0.375;
     public static final double LATCHED = 0.5;
-    public static final double READY = 0.1;
+    public static final double READY = 0.125;
 
     public static final double DEADBAND = 0.5;
   }

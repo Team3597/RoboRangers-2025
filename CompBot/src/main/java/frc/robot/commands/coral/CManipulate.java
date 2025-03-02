@@ -37,7 +37,13 @@ public class CManipulate extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-   coralManipulatorSys.stop(); 
+    if (speed > 0.05) {
+      System.out.println("running slow");
+      coralManipulatorSys.manipulateCoral(0.05);
+    } else {
+      System.out.println("stopping");
+      coralManipulatorSys.stop();
+    }
   }
 
   // Returns true when the command should end.

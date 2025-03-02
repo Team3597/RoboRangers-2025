@@ -29,7 +29,7 @@ public class ToANet extends Command {
   @Override
  public void initialize() {
   if (GLOBAL.DEBUG_MODE) System.out.println("To ANET");
-  elevatorSys.toANet(); // elevator to anet
+    elevatorSys.toANet(); // elevator to anet
   }
 
   // Called every time the scheduler runs while the command is scheduled.
