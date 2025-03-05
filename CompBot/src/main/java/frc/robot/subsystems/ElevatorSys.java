@@ -41,6 +41,10 @@ public class ElevatorSys extends SubsystemBase {
       //includes feedforward due to gravity
       .velocityFF(ELEVATOR.PID.FF)
       .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+    mainConfig.closedLoop.maxMotion
+    .maxVelocity(6000) //RPM by default
+    .maxAcceleration( 2000) //RPM/S by default
+    .allowedClosedLoopError(1);
     mainConfig
       .idleMode(IdleMode.kBrake)
       .inverted(false)
