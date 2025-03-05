@@ -34,12 +34,12 @@ public class ElevatorSys extends SubsystemBase {
 
   public ElevatorSys() {
     mainConfig.closedLoop
-      .p(Constants.PID.ELEVATOR_P)
-      .i(Constants.PID.ELEVATOR_I)
-      .d(Constants.PID.ELEVATOR_D)
-      .outputRange(Constants.PID.ELEVATOR_MIN, Constants.PID.ELEVATOR_MAX)
+      .p(ELEVATOR.PID.P)
+      .i(ELEVATOR.PID.I)
+      .d(ELEVATOR.PID.D)
+      .outputRange(ELEVATOR.PID.MIN, ELEVATOR.PID.MAX)
       //includes feedforward due to gravity
-      .velocityFF(Constants.PID.ELEVATOR_FF)
+      .velocityFF(ELEVATOR.PID.FF)
       .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     mainConfig
       .idleMode(IdleMode.kBrake)
@@ -67,24 +67,24 @@ public class ElevatorSys extends SubsystemBase {
   }
 
   private void setHeight(double in) {
-    if (in < Constants.ELEVATOR.ELEVATOR_MAX_HEIGHT && in > 0) {
+    if (in < ELEVATOR.MAX_HEIGHT && in > 0) {
       elevatorController.setReference(inToEncoder(in), ControlType.kPosition);
     }
   }
 
   private void setPosition(double count) {
-    if (count < Constants.ELEVATOR.ELEVATOR_MAX_HEIGHT && count > 0) {
+    if (count < ELEVATOR.MAX_HEIGHT && count > 0) {
       elevatorController.setReference(count, ControlType.kPosition);
     }
   }
 
   private double inToEncoder(double in) {
-    System.out.println ((in / Constants.ELEVATOR.ELEVATOR_MAX_HEIGHT) * Constants.ELEVATOR.ELEVATOR_MAX_COUNTS + Constants.ELEVATOR.ELEVATOR_COUNT_OFFSET);
-    return (in / Constants.ELEVATOR.ELEVATOR_MAX_HEIGHT) * Constants.ELEVATOR.ELEVATOR_MAX_COUNTS + Constants.ELEVATOR.ELEVATOR_COUNT_OFFSET;
+    System.out.println ((in / ELEVATOR.MAX_HEIGHT) * ELEVATOR.MAX_COUNTS + ELEVATOR.COUNT_OFFSET);
+    return (in / ELEVATOR.MAX_HEIGHT) * ELEVATOR.MAX_COUNTS + ELEVATOR.COUNT_OFFSET;
   }
 
   private double encoderToIn(double counts) {
-    return ((counts + Constants.ELEVATOR.ELEVATOR_COUNT_OFFSET) / Constants.ELEVATOR.ELEVATOR_MAX_HEIGHT) * Constants.ELEVATOR.ELEVATOR_MAX_HEIGHT;
+    return ((counts + ELEVATOR.COUNT_OFFSET) / ELEVATOR.MAX_HEIGHT) * ELEVATOR.MAX_HEIGHT;
   }
 
   public double GetElevatorEncoder() {

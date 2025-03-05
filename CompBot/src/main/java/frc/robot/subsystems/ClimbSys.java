@@ -32,10 +32,10 @@ public class ClimbSys extends SubsystemBase {
 
     pitchConfig.closedLoop
       .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-      .p(Constants.PID.CLIMB_P)
-      .i(Constants.PID.CLIMB_I)
-      .d(Constants.PID.CLIMB_D)
-      .outputRange(Constants.PID.CLIMB_MIN, Constants.PID.CLIMB_MAX);
+      .p(CLIMB.PID.P)
+      .i(CLIMB.PID.I)
+      .d(CLIMB.PID.D)
+      .outputRange(CLIMB.PID.MIN, CLIMB.PID.MAX);
     pitchConfig
       .idleMode(IdleMode.kBrake)
       .inverted(false)
@@ -61,17 +61,17 @@ public class ClimbSys extends SubsystemBase {
     //add factor and constant for setpoint in testing
   }
 
-  private double encoderToDegree(double counts) {
-    return ((counts + Constants.MANIPULATOR.MANIPULATOR_PIVOT_OFFSET)/Constants.MANIPULATOR.THROUGHBORE_CPR) * 360;
-  }
+  // private double encoderToDegree(double counts) {
+  //   return ((counts + Constants.MANIPULATOR.MANIPULATOR_PIVOT_OFFSET)/Constants.MANIPULATOR.THROUGHBORE_CPR) * 360;
+  // }
 
   public double getEncoder() {
     return climbPitch.getAbsoluteEncoder().getPosition();
   }
 
-  public double getPosition() {
-    return encoderToDegree(climbPitch.getAbsoluteEncoder().getPosition());
-  }
+  // public double getPosition() {
+  //   return encoderToDegree(climbPitch.getAbsoluteEncoder().getPosition());
+  // }
 
   public void toHome() {
     setEncoder(CLIMB.HOME);
