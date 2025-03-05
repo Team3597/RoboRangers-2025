@@ -29,25 +29,24 @@ public final class Constants {
     public static boolean MANIPULATOR_CLEAR = false; //are we good to change manipulator pitch?
   }
 
-  public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
-  public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
-  public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
-  public static final double MAX_SPEED  = Units.feetToMeters(14.5);
+  public static class PROPERTIES {
+    public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
+    public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
+    public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
+    public static final double MAX_SPEED  = Units.feetToMeters(14.5);
+    // Hold time on motor brakes when disabled
+    public static final double WHEEL_LOCK_TIME = 10; // seconds
+  }
 
   public static class OPERATOR {
     public static final int DRIVE_CONTROLLER_PORT = 0;
     public static final int CONTROL_CONTROLLER_PORT = 1;
     public static final int DRIVE_CONTROLLER_PORT_2 = 2;
-  }
-
-  public static class OperatorConstants
-  {
-
-    // Joystick Deadband
-    public static final double DEADBAND        = 0.05;
+    
+    public static final double DEADBAND = 0.05;
     public static final double LEFT_Y_DEADBAND = 0.1;
     public static final double RIGHT_X_DEADBAND = 0.1;
-    public static final double TURN_CONSTANT    = 3; // was 6
+    public static final double TURN_CONSTANT = 3; // was 6
   }
 
   public static class CAN {
@@ -71,71 +70,45 @@ public final class Constants {
   }
 
   public static class DIO {
-
     public static final int CORAL_LIMIT = 0;
-    
   }
 
-  public static class MOTION {
-    public static final double ALGAE_INTAKE_RPM = 6000;
-    public static final double ALGAE_OUTTAKE_RPM = 6000;
+  public static class ALGAE {
+    public static class PID {
+      public static final double P = 0.001;
+      public static final double I = 0;
+      public static final double D = 0.01;
+      public static final double FF = 0.002; // 1/KV, 1/473
+      public static final double MIN = -0.2;
+      public static final double MAX = 0.2;
+    }
+
+    public static final double INTAKE_RPM = 6000;
+    public static final double OUTTAKE_RPM = 6000;
+  }
+
+  public static class CORAL {
     //potentially differ speeds for different levels later
-    public static final double CORAL_INTAKE_SPEED = 1;
-    public static final double CORAL_FRONT_OUTTAKE_SPEED = 1;
-    public static final double CORAL_BACK_OUTTAKE_SPEED = 1;
-  }
-
-  public static class PID {
-    public static final double ALGAE_P = 0.001;
-    public static final double ALGAE_I = 0;
-    public static final double ALGAE_D = 0.01;
-    public static final double ALGAE_FF = 0.002; // 1/KV, 1/473
-    public static final double ALGAE_MIN = -0.2;
-    public static final double ALGAE_MAX = 0.2;
-    //figure out graphing my encoder data so i can tune these? since i can't observe velocity easily
-
-    
-    public static double PITCH_P = 3;
-    public static double PITCH_I = 0;
-    public static double PITCH_D = 0.01;
-    public static final double PITCH_MIN = -0.5;
-    public static final double PITCH_MAX = 0.5;
-
-    public static final double ELEVATOR_P = 0.5;
-    public static final double ELEVATOR_I = 0;
-    public static final double ELEVATOR_D = 0.01;
-    public static final double ELEVATOR_MIN = -0.1;
-    public static final double ELEVATOR_MAX = 0.2;
-    public static final double ELEVATOR_FF = 0;
-
-    public static final double CLIMB_P_POS = 2;
-    public static final double CLIMB_I_POS = 0;
-    public static final double CLIMB_D_POS = 0;
-    public static final double CLIMB_MIN_POS = -1;
-    public static final double CLIMB_MAX_POS = 1;
-
-    public static final double CLIMB_P_CLIMB = 0.1;
-    public static final double CLIMB_I_CLIMB = 0;
-    public static final double CLIMB_D_CLIMB = 0;
-    public static final double CLIMB_MIN_CLIMB = -1;
-    public static final double CLIMB_MAX_CLIMB = 1;
-  }
-
-  public static class UTIL {
-  }
-
-  public static final class DrivebaseConstants
-  {
-    // Hold time on motor brakes when disabled
-    public static final double WHEEL_LOCK_TIME = 10; // seconds
+    public static final double INTAKE_SPEED = 1;
+    public static final double FRONT_OUTTAKE_SPEED = 1;
+    public static final double BACK_OUTTAKE_SPEED = 1;
   }
 
   public static class ELEVATOR {
     public static final int AMP_LIMIT = 30;
 
-    public static final double ELEVATOR_COUNT_OFFSET = 0;
-    public static final double ELEVATOR_MAX_HEIGHT = 53;
-    public static final double ELEVATOR_MAX_COUNTS = 56;
+    public static class PID {
+      public static final double P = 0.5;
+      public static final double I = 0;
+      public static final double D = 0.01;
+      public static final double MIN = -0.1;
+      public static final double MAX = 0.2;
+      public static final double FF = 0;
+    }
+
+    public static final double COUNT_OFFSET = 0;
+    public static final double MAX_HEIGHT = 53;
+    public static final double MAX_COUNTS = 56;
 
     public static final double HOME = 0; // home height
     public static final double CLEAR = 1.5; // clearance height for manipulator
@@ -156,8 +129,14 @@ public final class Constants {
   public static class MANIPULATOR {
     public static final int AMP_LIMIT = 20;
 
-    public static final double NEO_CPR = 42;
-    public static final double THROUGHBORE_CPR = 8192;
+    public static class PID {
+      public static double P = 3;
+      public static double I = 0;
+      public static double D = 0.01;
+      public static final double MIN = -0.5;
+      public static final double MAX = 0.5;
+    }
+
     public static final double MANIPULATOR_PIVOT_OFFSET = 0;
 
     public static final double MANIPULATOR_MIN_PITCH = 0.57;
@@ -179,6 +158,14 @@ public final class Constants {
 
   public static class CLIMB {
     public static final int AMP_LIMIT = 40;
+
+    public static class PID {
+      public static final double P = 3;
+      public static final double I = 0.1;
+      public static final double D = 0;
+      public static final double MIN = -1;
+      public static final double MAX = 1;
+    }
     
     public static final double CLIMB_MIN_PITCH = 0;
     public static final double CLIMB_MAX_PITCH = 1;

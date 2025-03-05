@@ -39,10 +39,10 @@ public class ManipulatorPitchSys extends SubsystemBase {
 
     pitchConfig.closedLoop
       .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-      .p(Constants.PID.PITCH_P)
-      .i(Constants.PID.PITCH_I)
-      .d(Constants.PID.PITCH_D)
-      .outputRange(Constants.PID.PITCH_MIN, Constants.PID.PITCH_MAX);
+      .p(MANIPULATOR.PID.P)
+      .i(MANIPULATOR.PID.I)
+      .d(MANIPULATOR.PID.D)
+      .outputRange(MANIPULATOR.PID.MIN, MANIPULATOR.PID.MAX);
     pitchConfig
       .idleMode(IdleMode.kBrake)
       .inverted(false)
@@ -59,25 +59,6 @@ public class ManipulatorPitchSys extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Manipulator Encoder", getEncoder());
-  }
-
-  public void updatePID() {
-
-    Constants.PID.PITCH_P = pitchP.getDouble(0.5); //SmartDashboard.getNumber("Pitch P getnum", 0.5); 
-
-    pitchConfig.closedLoop
-      .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-      .p(Constants.PID.PITCH_P)
-      .i(Constants.PID.PITCH_I)
-      .d(Constants.PID.PITCH_D)
-      .outputRange(Constants.PID.PITCH_MIN, Constants.PID.PITCH_MAX);
-    pitchConfig
-      .idleMode(IdleMode.kBrake)
-      .inverted(false)
-      .smartCurrentLimit(MANIPULATOR.AMP_LIMIT);
-    manipulatorPitch.configure(pitchConfig, null, null);
-
-
   }
 
   public void setPitch(double pitch) {

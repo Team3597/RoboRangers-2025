@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.CORAL;
 import frc.robot.Constants.DIO;
-import frc.robot.Constants.MOTION;
 
 public class CoralManipulatorSys extends SubsystemBase {
   /** Creates a new CoralManipulator. */
@@ -34,17 +34,17 @@ public class CoralManipulatorSys extends SubsystemBase {
   }
 
   public void intakeCoral() {
-    coralManipulator.set(MOTION.CORAL_INTAKE_SPEED);
+    coralManipulator.set(CORAL.INTAKE_SPEED);
   }
 
   //for scoring L1-L3
   public void frontOuttakeCoral() {
-    coralManipulator.set(MOTION.CORAL_FRONT_OUTTAKE_SPEED);
+    coralManipulator.set(CORAL.FRONT_OUTTAKE_SPEED);
   }
 
   //for scoring L4
   public void backOuttakeCoral() {
-    coralManipulator.set(MOTION.CORAL_BACK_OUTTAKE_SPEED);
+    coralManipulator.set(CORAL.BACK_OUTTAKE_SPEED);
   }
 
   public void stop() {

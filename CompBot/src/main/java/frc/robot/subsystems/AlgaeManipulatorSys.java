@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
@@ -14,7 +13,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.MOTION;
+import frc.robot.Constants.ALGAE;
 
 public class AlgaeManipulatorSys extends SubsystemBase {
   /** Creates a new AlgaeManipulator. */
@@ -28,13 +27,13 @@ public class AlgaeManipulatorSys extends SubsystemBase {
 
   public AlgaeManipulatorSys() {
     algaeConfig.closedLoop
-      .p(Constants.PID.ALGAE_P)
-      .i(Constants.PID.ALGAE_I)
-      .d(Constants.PID.ALGAE_D)
-      .outputRange(Constants.PID.ALGAE_MIN, Constants.PID.ALGAE_MAX)
+      .p(ALGAE.PID.P)
+      .i(ALGAE.PID.I)
+      .d(ALGAE.PID.D)
+      .outputRange(ALGAE.PID.MIN, ALGAE.PID.MAX)
       .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
       //includes feedforward due to constant control effort to rotate wheels
-      .velocityFF(Constants.PID.ALGAE_FF);
+      .velocityFF(ALGAE.PID.FF);
     algaeManipulator.configure(algaeConfig, null, null);
   }
 
