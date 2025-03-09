@@ -35,6 +35,7 @@ public class ToAL2 extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    elevatorSys.moveToHeight();
     if (elevatorSys.isClear()) manipulatorPitchSys.toAReef(); // manipulator to areef once elevator is clear
   }
 

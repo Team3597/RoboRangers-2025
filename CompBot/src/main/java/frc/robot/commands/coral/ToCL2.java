@@ -36,7 +36,7 @@ public class ToCL2 extends Command {
   @Override
   public void execute() {
     elevatorSys.moveToHeight();
-    //if (elevatorSys.isClear()) manipulatorPitchSys.toCLow(); // manipulator to clow once elevator is clear
+    if (elevatorSys.isClear()) manipulatorPitchSys.toCLow(); // manipulator to clow once elevator is clear
   }
 
   // Called once the command ends or is interrupted.

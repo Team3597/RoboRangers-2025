@@ -78,30 +78,17 @@ public class ElevatorSys extends SubsystemBase {
     SmartDashboard.putNumber("Elevator Amps", elevatorMain.getOutputCurrent() + elevatorSlave.getOutputCurrent());
   }
 
-  private void setHeight(double in, boolean ff) {
-    if (in < ELEVATOR.MAX_HEIGHT && in > 0) {
-      if (ff) {
-        elevatorController.setReference(inToEncoder(in), ControlType.kMAXMotionPositionControl,ClosedLoopSlot.kSlot0,ELEVATOR.PID.FF);
-      } else {
-        elevatorController.setReference(inToEncoder(in), ControlType.kMAXMotionPositionControl,ClosedLoopSlot.kSlot0);
-      }
-    }
-  }
 
   private void setHeight(double in) {
-    if (in < ELEVATOR.MAX_HEIGHT && in > 0) {
-        elevatorController.setReference(inToEncoder(in), ControlType.kMAXMotionPositionControl,ClosedLoopSlot.kSlot0,ELEVATOR.PID.FF);
-    }
+    // if (in < ELEVATOR.MAX_HEIGHT && in > 0) {
+    //     elevatorController.setReference(inToEncoder(in), ControlType.kMAXMotionPositionControl,ClosedLoopSlot.kSlot0,ELEVATOR.PID.FF);
+    // }
+    target = new TrapezoidProfile.State(in,0);
   }
 
   public void moveToHeight() {
     setpoint = motionProfile.calculate(0.02, setpoint, target);
     elevatorController.setReference(setpoint.position, ControlType.kPosition,ClosedLoopSlot.kSlot0,ELEVATOR.PID.FF);
-  }
-
-  public void directVoltage(double v) {
-    elevatorMain.set(v);
-    
   }
 
   private void setPosition(double count) {
@@ -155,30 +142,26 @@ public class ElevatorSys extends SubsystemBase {
   }
 
   public void toCL1() {
-    target = new TrapezoidProfile.State(ELEVATOR.CL1,0);
-    // setHeight(Constants.ELEVATOR.CL1);
-    // if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL1");
+    setHeight(Constants.ELEVATOR.CL1);
+    if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL1");
     SmartDashboard.putNumber("Setpoint",ELEVATOR.CL1);
   }
 
   public void toCL2() {
-    target = new TrapezoidProfile.State(ELEVATOR.CL2,0);
-    // setHeight(Constants.ELEVATOR.CL2);
-    // if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL2");
+    setHeight(Constants.ELEVATOR.CL2);
+    if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL2");
     SmartDashboard.putNumber("Setpoint",ELEVATOR.CL2);
   }
 
   public void toCL3() {
-    target = new TrapezoidProfile.State(ELEVATOR.CL3,0);
-    // setHeight(Constants.ELEVATOR.CL3);
-    // if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL3");
+    setHeight(Constants.ELEVATOR.CL3);
+    if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL3");
     SmartDashboard.putNumber("Setpoint",ELEVATOR.CL3);
   }
 
   public void toCL4() {
-    target = new TrapezoidProfile.State(ELEVATOR.CL4,0);
-    // setHeight(Constants.ELEVATOR.CL4);
-    // if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL4");
+    setHeight(Constants.ELEVATOR.CL4);
+    if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL4");
     SmartDashboard.putNumber("Setpoint",ELEVATOR.CL4);
   }
 

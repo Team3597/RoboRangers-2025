@@ -36,7 +36,7 @@ public class ToCL4 extends Command {
   @Override
   public void execute() {
     elevatorSys.moveToHeight();
-    //if (elevatorSys.isClear()) manipulatorPitchSys.toCHigh(); // manipulator to chigh once elevator is clear
+    if (elevatorSys.isClear()) manipulatorPitchSys.toCHigh(); // manipulator to chigh once elevator is clear
   }
 
   // Called once the command ends or is interrupted.

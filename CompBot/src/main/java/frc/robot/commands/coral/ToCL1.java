@@ -36,8 +36,8 @@ public class ToCL1 extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //if (elevatorSys.isClear()) manipulatorPitchSys.toCLow(); // manipulator to clow once elevator is clear
     elevatorSys.moveToHeight();
+    if (elevatorSys.isClear()) manipulatorPitchSys.toCLow(); // manipulator to clow once elevator is clear
   }
 
   // Called once the command ends or is interrupted.

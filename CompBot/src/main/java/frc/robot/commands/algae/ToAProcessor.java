@@ -35,6 +35,7 @@ public class ToAProcessor extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    elevatorSys.moveToHeight();
     if (elevatorSys.isClear()) manipulatorPitchSys.toAProcessor(); // manipulator to aprocessor once elevator is clear
     if (manipulatorPitchSys.isAtAProcessor()) elevatorSys.toHome(); // elevator to home once manipulator is clear (at aprocessor)
   }

@@ -35,6 +35,7 @@ public class ToAGround extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    elevatorSys.moveToHeight();
     if (elevatorSys.isClear()) manipulatorPitchSys.toAGround(); // manipulator to aground once elevator is clear
     if (manipulatorPitchSys.isAtAGround()) elevatorSys.toHome(); // elevator to home once manipulator is clear (at aground)
   }
