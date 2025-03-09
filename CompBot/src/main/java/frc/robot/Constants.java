@@ -27,6 +27,9 @@ public final class Constants {
   public static class GLOBAL {
     public static boolean DEBUG_MODE = false; //enables debug sysouts
     public static boolean MANIPULATOR_CLEAR = false; //are we good to change manipulator pitch?
+
+    public static boolean DISABLE_ELEVATOR = false;
+    public static boolean DISABLE_MANIPULATOR_PITCH = false;
   }
 
   public static class PROPERTIES {
@@ -63,7 +66,7 @@ public final class Constants {
     public static final int ELEVATOR_SLAVE = 10; //right + is up
 
     public static final int MANIPULATOR_PITCH = 11; // + is up
-    public static final int ALGAE_MANIPULATOR = 12;
+    public static final int ALGAE_MANIPULATOR = 12; // + is in
     public static final int CORAL_MANIPULATOR = 13;
 
     public static final int CLIMB = 14;
@@ -142,6 +145,8 @@ public final class Constants {
 
   public static class MANIPULATOR {
     public static final int AMP_LIMIT = 20;
+    public static final int CORAL_AMP_LIMIT = 40;
+    public static final int ALGAE_AMP_LIMIT = 30;
 
     public static class PID {
       public static double P = 3;
@@ -157,7 +162,8 @@ public final class Constants {
 
     public static final double MANIPULATOR_MIN_PITCH = 0.57;
     public static final double MANIPULATOR_MAX_PITCH = 0.99;
-
+    
+    
     public static final double HOME = 0.57; // home pitch
  
     public static final double UNSTICK = 0.6; // pitch to unstick coral
@@ -190,12 +196,13 @@ public final class Constants {
       public static final double MAX_CLIMB = 0;
     }
     
-    public static final double CLIMB_MIN_PITCH = 0;
-    public static final double CLIMB_MAX_PITCH = 1;
+    public static final double CLIMB_MIN_PITCH = 0.44;
+    public static final double CLIMB_MAX_PITCH = 0.44;
 
     public static final double HOME = 0.375;
     public static final double LATCHED = 0.5;
     public static final double READY = 0.125;
+
 
     public static final double DEADBAND = 0.5;
   }

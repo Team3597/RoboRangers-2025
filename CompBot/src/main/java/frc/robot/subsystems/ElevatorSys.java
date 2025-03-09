@@ -19,8 +19,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+
 import frc.robot.Constants.ELEVATOR;
-import frc.robot.Constants.GLOBAL;
 
 public class ElevatorSys extends SubsystemBase {
   /** Creates a new Elevator. */
@@ -80,6 +80,7 @@ public class ElevatorSys extends SubsystemBase {
 
 
   private void setHeight(double in) {
+
     // if (in < ELEVATOR.MAX_HEIGHT && in > 0) {
     //     elevatorController.setReference(inToEncoder(in), ControlType.kMAXMotionPositionControl,ClosedLoopSlot.kSlot0,ELEVATOR.PID.FF);
     // }
@@ -94,6 +95,7 @@ public class ElevatorSys extends SubsystemBase {
   private void setPosition(double count) {
     if (count < ELEVATOR.MAX_HEIGHT && count > 0) {
       elevatorController.setReference(count, ControlType.kPosition);
+
     }
   }
 

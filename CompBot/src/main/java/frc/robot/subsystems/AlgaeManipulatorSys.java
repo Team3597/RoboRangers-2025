@@ -4,15 +4,19 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+
 import frc.robot.Constants.ALGAE;
 
 public class AlgaeManipulatorSys extends SubsystemBase {
@@ -25,6 +29,8 @@ public class AlgaeManipulatorSys extends SubsystemBase {
   private static SparkMaxConfig algaeConfig = new SparkMaxConfig();
   //Updated config docs: https://docs.revrobotics.com/revlib/configuring-devices
 
+  //private static Ultrasonic algaeDistance = new Ultrasonic(null, null)
+
   public AlgaeManipulatorSys() {
     algaeConfig.closedLoop
       .p(ALGAE.PID.P)
@@ -33,14 +39,23 @@ public class AlgaeManipulatorSys extends SubsystemBase {
       .outputRange(ALGAE.PID.MIN, ALGAE.PID.MAX)
       .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
       //includes feedforward due to constant control effort to rotate wheels
+
       .velocityFF(ALGAE.PID.FF);
+
+    algaeConfig
+      .inverted(true)
+      .idleMode(IdleMode.kBrake)
+      .smartCurrentLimit(MANIPULATOR.ALGAE_AMP_LIMIT);
     algaeManipulator.configure(algaeConfig, null, null);
+
+    algaeVelocityController.setReference(0, ControlType.kVelocity);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Algae Wheel Velocity", getEncoder());
+    //System.out.println(algaeManipulator.getEncoder().getVelocity());
   }
 
   public void intakeAlgae() {

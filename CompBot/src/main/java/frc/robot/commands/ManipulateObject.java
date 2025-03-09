@@ -34,6 +34,7 @@ public class ManipulateObject extends Command {
         break;
       case APROCESSOR:
         algaeManipulatorSys.outtakeAlgae();
+        break;
       case AL1:
         algaeManipulatorSys.intakeAlgae();
         break;

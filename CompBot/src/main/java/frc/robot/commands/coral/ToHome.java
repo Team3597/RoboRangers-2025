@@ -30,6 +30,7 @@ public class ToHome extends Command {
   @Override
   public void initialize() {
     if (GLOBAL.DEBUG_MODE) System.out.println("toClear");
+
     elevatorSys.toHome();
   }
 

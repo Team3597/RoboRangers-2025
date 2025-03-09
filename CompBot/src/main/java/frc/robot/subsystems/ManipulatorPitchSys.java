@@ -51,7 +51,9 @@ public class ManipulatorPitchSys extends SubsystemBase {
       .smartCurrentLimit(MANIPULATOR.AMP_LIMIT);
     manipulatorPitch.configure(pitchConfig, ResetMode.kResetSafeParameters, null);
 
-    //pitchController.setReference(0.65, ControlType.kPosition);
+    if (!GLOBAL.DISABLE_MANIPULATOR_PITCH) {
+      pitchController.setReference(MANIPULATOR.HOME, ControlType.kPosition);
+    }
 
     //pitchP = Shuffleboard.getTab("Tuning").add("Pitch P Slider", 1).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 2)).getEntry();
 
@@ -64,6 +66,7 @@ public class ManipulatorPitchSys extends SubsystemBase {
   }
 
   public void setPitch(double pitch) {
+
     pitchController.setReference(pitch + MANIPULATOR.MANIPULATOR_PIVOT_OFFSET, ControlType.kPosition);
   }
 

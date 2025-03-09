@@ -28,8 +28,10 @@ public class ToAL2 extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
     if (GLOBAL.DEBUG_MODE) System.out.println("To AL2");
     elevatorSys.toAL2(); // elevator to al2
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.

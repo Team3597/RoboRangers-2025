@@ -27,6 +27,7 @@ public class ClimbSys extends SubsystemBase {
   private static SparkClosedLoopController pitchController;
 
   private static SparkMaxConfig pitchConfig = new SparkMaxConfig();
+  //+ is down on encoder
 
   public ClimbSys() {
     pitchController = climbPitch.getClosedLoopController();
@@ -89,6 +90,7 @@ public class ClimbSys extends SubsystemBase {
   }
 
   public void toLatched() {
+
     pitchController.setReference(CLIMB.LATCHED, ControlType.kPosition, ClosedLoopSlot.kSlot1);
   }
 }

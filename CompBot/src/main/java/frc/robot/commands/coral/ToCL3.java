@@ -30,6 +30,7 @@ public class ToCL3 extends Command {
   public void initialize() {
     if (GLOBAL.DEBUG_MODE) System.out.println("To CL3");
     elevatorSys.toCL3(); // elevator to cl3
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.

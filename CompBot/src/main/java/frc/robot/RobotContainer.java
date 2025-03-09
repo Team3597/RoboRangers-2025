@@ -94,6 +94,7 @@ public class RobotContainer {
     
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
+  
   }
 
   /**
@@ -113,6 +114,7 @@ public class RobotContainer {
       m_controlController.pov(180).onTrue(new ToCL1(m_elevatorSys, m_manpulatorPitchSys)); // down
       m_controlController.pov(270).onTrue(new ToCL2(m_elevatorSys, m_manpulatorPitchSys)); // left
       m_controlController.button(9).onTrue(new ToHome(m_elevatorSys, m_manpulatorPitchSys)); // left stick button
+
 
       // coral manipultion (replace with automatic single button)
       m_controlController.leftBumper().whileTrue(new CManipulate(m_coralManipulatorSys, CORAL.INTAKE_SPEED)); // left bumper
@@ -180,8 +182,6 @@ public class RobotContainer {
       m_controlController.back().whileTrue(Commands.none());
       m_controlController.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       m_controlController.rightBumper().onTrue(Commands.none());
-
-
 
     }
 

@@ -5,7 +5,11 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,9 +22,17 @@ public class CoralManipulatorSys extends SubsystemBase {
   /** Creates a new CoralManipulator. */
 
   private static SparkMax coralManipulator = new SparkMax(Constants.CAN.CORAL_MANIPULATOR, MotorType.kBrushed);
+
+  private static SparkMaxConfig coralConfig = new SparkMaxConfig();
+
   DigitalInput coralLimitSwitch = new DigitalInput(DIO.CORAL_LIMIT);
 
   public CoralManipulatorSys() {
+    coralConfig
+      .inverted(false)
+      .idleMode(IdleMode.kBrake)
+      .smartCurrentLimit(MANIPULATOR.CORAL_AMP_LIMIT);
+    coralManipulator.configure(coralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   @Override
@@ -34,17 +46,22 @@ public class CoralManipulatorSys extends SubsystemBase {
   }
 
   public void intakeCoral() {
+
     coralManipulator.set(CORAL.INTAKE_SPEED);
   }
 
   //for scoring L1-L3
   public void frontOuttakeCoral() {
+
     coralManipulator.set(CORAL.FRONT_OUTTAKE_SPEED);
+
   }
 
   //for scoring L4
   public void backOuttakeCoral() {
+
     coralManipulator.set(CORAL.BACK_OUTTAKE_SPEED);
+
   }
 
   public void stop() {

@@ -28,6 +28,7 @@ public class ToAProcessor extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
     if (GLOBAL.DEBUG_MODE) System.out.println("To APROCESSOR");
     elevatorSys.toClear(); // elevator to clear (either from above or from below)
     }
