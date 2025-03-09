@@ -64,11 +64,11 @@ public class ManipulatorPitchSys extends SubsystemBase {
   }
 
   public void setPitch(double pitch) {
-    pitchController.setReference(pitch, ControlType.kPosition);
+    pitchController.setReference(pitch + MANIPULATOR.MANIPULATOR_PIVOT_OFFSET, ControlType.kPosition);
   }
 
   public void setEncoder(double position) {
-    pitchController.setReference(position, ControlType.kPosition);
+    //pitchController.setReference(position, ControlType.kPosition);
   }
 
   private double degreeToEncoder(double degrees) {

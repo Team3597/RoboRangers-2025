@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.CAN;
 import frc.robot.Constants.CLIMB;
-import frc.robot.Constants.PID;
 
 public class ClimbSys extends SubsystemBase {
   /** Creates a new ClimbSys. */
@@ -34,15 +33,15 @@ public class ClimbSys extends SubsystemBase {
 
     pitchConfig.closedLoop
       .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-      .p(PID.CLIMB_P_POS)
-      .i(PID.CLIMB_I_POS)
-      .d(PID.CLIMB_D_POS)
-      .outputRange(PID.CLIMB_MIN_POS, PID.CLIMB_MAX_POS)
+      .p(CLIMB.PID.P)
+      .i(CLIMB.PID.I)
+      .d(CLIMB.PID.D)
+      .outputRange(CLIMB.PID.MIN, CLIMB.PID.MAX)
       
-      .p(PID.CLIMB_P_CLIMB, ClosedLoopSlot.kSlot1)
-      .i(PID.CLIMB_I_CLIMB, ClosedLoopSlot.kSlot1)
-      .d(PID.CLIMB_D_CLIMB, ClosedLoopSlot.kSlot1)
-      .outputRange(PID.CLIMB_MIN_CLIMB, PID.CLIMB_MAX_CLIMB);
+      .p(CLIMB.PID.P_CLIMB, ClosedLoopSlot.kSlot1)
+      .i(CLIMB.PID.I_CLIMB, ClosedLoopSlot.kSlot1)
+      .d(CLIMB.PID.D_CLIMB, ClosedLoopSlot.kSlot1)
+      .outputRange(CLIMB.PID.MIN_CLIMB, CLIMB.PID.MAX_CLIMB);
 
     pitchConfig
       .idleMode(IdleMode.kBrake)

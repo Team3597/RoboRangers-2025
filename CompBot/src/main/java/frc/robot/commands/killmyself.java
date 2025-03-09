@@ -2,49 +2,41 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.coral;
-
-import static edu.wpi.first.units.Units.RPM;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.CoralManipulatorSys;
+import frc.robot.subsystems.ElevatorSys;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class CManipulate extends Command {
-  /** Creates a new AManipulate. */
+public class killmyself extends Command {
+  /** Creates a new killmyself. */
 
-  private final CoralManipulatorSys coralManipulatorSys;
-  private double speed;
+  private ElevatorSys elevatorSys;
+  private double voltage;
 
-  public CManipulate(CoralManipulatorSys coral, double speed) {
-    this.speed = speed;
-    this.coralManipulatorSys = coral;
-    addRequirements(coralManipulatorSys);
+  public killmyself(ElevatorSys elevator, double v) {
+    this.elevatorSys = elevator;
+    this.voltage = v;
+    addRequirements(elevator);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-   coralManipulatorSys.manipulateCoral(speed);
+    System.out.println(elevatorSys.GetElevatorEncoder());
+    elevatorSys.directVoltage(voltage);
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // if (speed > 0.05) {
-    //   System.out.println("running slow");
-    //   coralManipulatorSys.manipulateCoral(0.05);
-    // } else {
-    //   System.out.println("stopping");
-    //   coralManipulatorSys.stop();
-    // }
-    coralManipulatorSys.stop();
+    elevatorSys.directVoltage(0);
   }
 
   // Returns true when the command should end.

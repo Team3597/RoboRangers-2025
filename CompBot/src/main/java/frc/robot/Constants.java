@@ -98,20 +98,34 @@ public final class Constants {
     public static final int AMP_LIMIT = 30;
 
     public static class PID {
-      public static final double P = 0.5;
-      public static final double I = 0;
-      public static final double D = 0.01;
-      public static final double MIN = -0.1;
-      public static final double MAX = 0.2;
-      public static final double FF = 0;
+      public static final double P = 0.25;
+      public static final double I = 0.0;
+      public static final double D = 0.02;
+      public static final double MIN = -1;
+      public static final double MAX = 1;
+      public static final double FF = 0.022;
+      //0.022
+      public static final double MAX_A = 400;
+      //618.55;
+      public static final double MAX_V = 30;
+      //25.08;
+
+      // public static final double P = 2;
+      // public static final double I = 0.001;
+      // public static final double D = 0.2;
+      // public static final double MIN = -1;
+      // public static final double MAX = 1;
+      // public static final double FF = 0.022;
+      // public static final double MAX_A = 3000;
+      // public static final double MAX_V = 10000;
     }
 
     public static final double COUNT_OFFSET = 0;
     public static final double MAX_HEIGHT = 53;
     public static final double MAX_COUNTS = 56;
 
-    public static final double HOME = 0; // home height
-    public static final double CLEAR = 1.5; // clearance height for manipulator
+    public static final double HOME = .5; // home height
+    public static final double CLEAR = 2; // clearance height for manipulator
 
     public static final double AL1 = 26.5; // algae l1, l2, net
     public static final double AL2 = 41;
@@ -135,14 +149,17 @@ public final class Constants {
       public static double D = 0.01;
       public static final double MIN = -0.5;
       public static final double MAX = 0.5;
+
     }
 
-    public static final double MANIPULATOR_PIVOT_OFFSET = 0;
+    public static final double MANIPULATOR_PIVOT_OFFSET = -0.57;
+    //encoder got screwed so zeroed + am lazy
 
     public static final double MANIPULATOR_MIN_PITCH = 0.57;
     public static final double MANIPULATOR_MAX_PITCH = 0.99;
 
     public static final double HOME = 0.57; // home pitch
+ 
     public static final double UNSTICK = 0.6; // pitch to unstick coral
 
     public static final double AGROUND = 0.7; // algae ground, processor, reef (l1, l2), net
@@ -165,6 +182,12 @@ public final class Constants {
       public static final double D = 0;
       public static final double MIN = -1;
       public static final double MAX = 1;
+
+      public static final double P_CLIMB = 0;
+      public static final double I_CLIMB = 0;
+      public static final double D_CLIMB = 0;
+      public static final double MIN_CLIMB = 0;
+      public static final double MAX_CLIMB = 0;
     }
     
     public static final double CLIMB_MIN_PITCH = 0;

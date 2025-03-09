@@ -4,6 +4,7 @@
 
 package frc.robot.commands.coral;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.GLOBAL;
 import frc.robot.subsystems.ElevatorSys;
@@ -35,7 +36,8 @@ public class ToCL1 extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (elevatorSys.isClear()) manipulatorPitchSys.toCLow(); // manipulator to clow once elevator is clear
+    //if (elevatorSys.isClear()) manipulatorPitchSys.toCLow(); // manipulator to clow once elevator is clear
+    elevatorSys.moveToHeight();
   }
 
   // Called once the command ends or is interrupted.

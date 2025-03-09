@@ -30,18 +30,20 @@ public class ToHome extends Command {
   @Override
   public void initialize() {
     if (GLOBAL.DEBUG_MODE) System.out.println("toClear");
-    elevatorSys.toClear();
+    elevatorSys.toHome();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (elevatorSys.isClear()) manipulatorPitchSys.toHome(); // manipulator to home once elevator is clear
-      if (GLOBAL.DEBUG_MODE) System.out.println("manip toHome");
-    if (manipulatorPitchSys.isHome()) { // this should be a manipulatorPitchSys.isHome()?
-      elevatorSys.toHome(); // elevator to home once manipulator is clear (at aground)
-      if (GLOBAL.DEBUG_MODE) System.out.println("elev toHome");
-    }
+    // if (elevatorSys.isClear()) manipulatorPitchSys.toHome(); // manipulator to home once elevator is clear
+    //   if (GLOBAL.DEBUG_MODE) System.out.println("manip toHome");
+    // if (manipulatorPitchSys.isHome()) { // this should be a manipulatorPitchSys.isHome()?
+    //   elevatorSys.toHome(); // elevator to home once manipulator is clear (at aground)
+    //   if (GLOBAL.DEBUG_MODE) System.out.println("elev toHome");
+    // }
+
+    elevatorSys.moveToHeight();
   }
 
   // Called once the command ends or is interrupted.

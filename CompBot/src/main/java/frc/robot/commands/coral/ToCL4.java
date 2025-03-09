@@ -35,7 +35,8 @@ public class ToCL4 extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (elevatorSys.isClear()) manipulatorPitchSys.toCHigh(); // manipulator to chigh once elevator is clear
+    elevatorSys.moveToHeight();
+    //if (elevatorSys.isClear()) manipulatorPitchSys.toCHigh(); // manipulator to chigh once elevator is clear
   }
 
   // Called once the command ends or is interrupted.

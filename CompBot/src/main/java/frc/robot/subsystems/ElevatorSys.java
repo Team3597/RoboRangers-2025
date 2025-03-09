@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
@@ -14,6 +15,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -31,6 +33,10 @@ public class ElevatorSys extends SubsystemBase {
   private static SparkMaxConfig mainConfig = new SparkMaxConfig();
   private static SparkMaxConfig slaveConfig = new SparkMaxConfig();
 
+  private final TrapezoidProfile motionProfile = 
+    new TrapezoidProfile(new TrapezoidProfile.Constraints(ELEVATOR.PID.MAX_V, ELEVATOR.PID.MAX_A));
+  private TrapezoidProfile.State target = new TrapezoidProfile.State();
+  private TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
 
   public ElevatorSys() {
     mainConfig.closedLoop
@@ -39,12 +45,12 @@ public class ElevatorSys extends SubsystemBase {
       .d(ELEVATOR.PID.D)
       .outputRange(ELEVATOR.PID.MIN, ELEVATOR.PID.MAX)
       //includes feedforward due to gravity
-      .velocityFF(ELEVATOR.PID.FF)
+      //.velocityFF(ELEVATOR.PID.FF)
       .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    mainConfig.closedLoop.maxMotion
-    .maxVelocity(6000) //RPM by default
-    .maxAcceleration( 2000) //RPM/S by default
-    .allowedClosedLoopError(1);
+    // mainConfig.closedLoop.maxMotion
+    // .maxVelocity(ELEVATOR.PID.MAX_V) //RPM by default
+    // .maxAcceleration(ELEVATOR.PID.MAX_A) //RPM/S by default
+    // .allowedClosedLoopError(1);
     mainConfig
       .idleMode(IdleMode.kBrake)
       .inverted(false)
@@ -66,14 +72,36 @@ public class ElevatorSys extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Elevator Encoder", GetElevatorEncoder());
     SmartDashboard.putNumber("Slave Encoder", elevatorSlave.getEncoder().getPosition());
-    //System.out.println(GetElevatorEncoder());
-    //System.out.println(elevatorSlave.getEncoder().getPosition());
+  //  System.out.println(GetElevatorEncoder());
+  //  System.out.println(elevatorSlave.getEncoder().getPosition());
+    SmartDashboard.putNumber("Elevator RPM", elevatorMain.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Elevator Amps", elevatorMain.getOutputCurrent() + elevatorSlave.getOutputCurrent());
+  }
+
+  private void setHeight(double in, boolean ff) {
+    if (in < ELEVATOR.MAX_HEIGHT && in > 0) {
+      if (ff) {
+        elevatorController.setReference(inToEncoder(in), ControlType.kMAXMotionPositionControl,ClosedLoopSlot.kSlot0,ELEVATOR.PID.FF);
+      } else {
+        elevatorController.setReference(inToEncoder(in), ControlType.kMAXMotionPositionControl,ClosedLoopSlot.kSlot0);
+      }
+    }
   }
 
   private void setHeight(double in) {
     if (in < ELEVATOR.MAX_HEIGHT && in > 0) {
-      elevatorController.setReference(inToEncoder(in), ControlType.kPosition);
+        elevatorController.setReference(inToEncoder(in), ControlType.kMAXMotionPositionControl,ClosedLoopSlot.kSlot0,ELEVATOR.PID.FF);
     }
+  }
+
+  public void moveToHeight() {
+    setpoint = motionProfile.calculate(0.02, setpoint, target);
+    elevatorController.setReference(setpoint.position, ControlType.kPosition,ClosedLoopSlot.kSlot0,ELEVATOR.PID.FF);
+  }
+
+  public void directVoltage(double v) {
+    elevatorMain.set(v);
+    
   }
 
   private void setPosition(double count) {
@@ -92,7 +120,7 @@ public class ElevatorSys extends SubsystemBase {
   }
 
   public double GetElevatorEncoder() {
-    return elevatorMain.getEncoder().getPosition();
+    return encoderToIn(elevatorMain.getEncoder().getPosition());
   }
 
   public double GetElevatorPosition() {
@@ -100,8 +128,10 @@ public class ElevatorSys extends SubsystemBase {
   }
 
   public void toHome() {
-    setHeight(Constants.ELEVATOR.HOME);
-    if (GLOBAL.DEBUG_MODE) System.out.println("elev toHome");
+    target = new TrapezoidProfile.State(ELEVATOR.HOME,0);
+    //setHeight(Constants.ELEVATOR.HOME,false);
+    //if (GLOBAL.DEBUG_MODE) System.out.println("elev toHome");
+    SmartDashboard.putNumber("Setpoint",ELEVATOR.HOME);
   }
 
   public void toClear() {
@@ -125,23 +155,31 @@ public class ElevatorSys extends SubsystemBase {
   }
 
   public void toCL1() {
-    setHeight(Constants.ELEVATOR.CL1);
-    if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL1");
+    target = new TrapezoidProfile.State(ELEVATOR.CL1,0);
+    // setHeight(Constants.ELEVATOR.CL1);
+    // if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL1");
+    SmartDashboard.putNumber("Setpoint",ELEVATOR.CL1);
   }
 
   public void toCL2() {
-    setHeight(Constants.ELEVATOR.CL2);
-    if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL2");
+    target = new TrapezoidProfile.State(ELEVATOR.CL2,0);
+    // setHeight(Constants.ELEVATOR.CL2);
+    // if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL2");
+    SmartDashboard.putNumber("Setpoint",ELEVATOR.CL2);
   }
 
   public void toCL3() {
-    setHeight(Constants.ELEVATOR.CL3);
-    if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL3");
+    target = new TrapezoidProfile.State(ELEVATOR.CL3,0);
+    // setHeight(Constants.ELEVATOR.CL3);
+    // if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL3");
+    SmartDashboard.putNumber("Setpoint",ELEVATOR.CL3);
   }
 
   public void toCL4() {
-    setHeight(Constants.ELEVATOR.CL4);
-    if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL4");
+    target = new TrapezoidProfile.State(ELEVATOR.CL4,0);
+    // setHeight(Constants.ELEVATOR.CL4);
+    // if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL4");
+    SmartDashboard.putNumber("Setpoint",ELEVATOR.CL4);
   }
 
   public boolean isHome() {
@@ -151,10 +189,10 @@ public class ElevatorSys extends SubsystemBase {
   
   public boolean isClear() {
     if (GetElevatorPosition() >= ELEVATOR.CLEAR - ELEVATOR.DEADBAND) {
-      System.out.println("IS CLEAR");
+     // System.out.println("IS CLEAR");
       return true;
     } else {
-      System.out.println("NOT CLEAR");
+     // System.out.println("NOT CLEAR");
     return false;
     }
   }
