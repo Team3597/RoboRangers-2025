@@ -26,12 +26,6 @@ public class ManipulateObject extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-
     // combined 4 individual controls into one state based control. 
     // automatically does appropriate action for position; scoring is now just confirming we are aligned
     switch (StateMonitorSys.manipulatorState) {
@@ -68,6 +62,10 @@ public class ManipulateObject extends Command {
         break;
     }
   }
+
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override

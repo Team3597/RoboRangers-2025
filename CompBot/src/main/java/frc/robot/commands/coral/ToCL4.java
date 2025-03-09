@@ -5,7 +5,6 @@
 package frc.robot.commands.coral;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.Constants.GLOBAL;
 import frc.robot.subsystems.ElevatorSys;
 import frc.robot.subsystems.ManipulatorPitchSys;
@@ -29,27 +28,31 @@ public class ToCL4 extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elevatorSys.toCL4();
-    //while (elevatorSys.GetElevatorPosition() < Constants.ELEVATOR.CLEAR - Constants.ELEVATOR.DEADBAND) {} // waits until elevator is at clear height
-    manipulatorPitchSys.toCHigh();
-    StateMonitorSys.manipulatorState = ManipulatorState.CL4;
-    //lower drive speed
-    if (GLOBAL.DEBUG_MODE) {
-     System.out.println("To CL4");
-    }
+    if (GLOBAL.DEBUG_MODE) System.out.println("To CL4");
+    elevatorSys.toCL4(); // elevator to cl4
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    elevatorSys.moveToHeight();
+    if (elevatorSys.isClear()) manipulatorPitchSys.toCHigh(); // manipulator to chigh once elevator is clear
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    StateMonitorSys.manipulatorState = ManipulatorState.CL4;
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (elevatorSys.isAtCL4() && manipulatorPitchSys.isAtCHigh()) {
+      if (GLOBAL.DEBUG_MODE) System.out.println("Stopping CL4");
+      return true; // ends command once system is set
+    } else {
+      return false;
+    }
   }
 }

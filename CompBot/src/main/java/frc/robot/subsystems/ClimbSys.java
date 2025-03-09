@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
@@ -33,10 +34,16 @@ public class ClimbSys extends SubsystemBase {
 
     pitchConfig.closedLoop
       .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-      .p(Constants.PID.CLIMB_P)
-      .i(Constants.PID.CLIMB_I)
-      .d(Constants.PID.CLIMB_D)
-      .outputRange(Constants.PID.CLIMB_MIN, Constants.PID.CLIMB_MAX);
+      .p(CLIMB.PID.P)
+      .i(CLIMB.PID.I)
+      .d(CLIMB.PID.D)
+      .outputRange(CLIMB.PID.MIN, CLIMB.PID.MAX)
+      
+      .p(CLIMB.PID.P_CLIMB, ClosedLoopSlot.kSlot1)
+      .i(CLIMB.PID.I_CLIMB, ClosedLoopSlot.kSlot1)
+      .d(CLIMB.PID.D_CLIMB, ClosedLoopSlot.kSlot1)
+      .outputRange(CLIMB.PID.MIN_CLIMB, CLIMB.PID.MAX_CLIMB);
+
     pitchConfig
       .idleMode(IdleMode.kBrake)
       .inverted(false)
@@ -54,7 +61,7 @@ public class ClimbSys extends SubsystemBase {
   }
 
   public void setEncoder(double position) {
-    pitchController.setReference(position, ControlType.kPosition);
+    pitchController.setReference(position, ControlType.kPosition, ClosedLoopSlot.kSlot0);
   }
 
   private double degreeToEncoder(double degrees) {
@@ -62,17 +69,17 @@ public class ClimbSys extends SubsystemBase {
     //add factor and constant for setpoint in testing
   }
 
-  private double encoderToDegree(double counts) {
-    return ((counts + Constants.MANIPULATOR.MANIPULATOR_PIVOT_OFFSET)/Constants.MANIPULATOR.THROUGHBORE_CPR) * 360;
-  }
+  // private double encoderToDegree(double counts) {
+  //   return ((counts + Constants.MANIPULATOR.MANIPULATOR_PIVOT_OFFSET)/Constants.MANIPULATOR.THROUGHBORE_CPR) * 360;
+  // }
 
   public double getEncoder() {
     return climbPitch.getAbsoluteEncoder().getPosition();
   }
 
-  public double getPosition() {
-    return encoderToDegree(climbPitch.getAbsoluteEncoder().getPosition());
-  }
+  // public double getPosition() {
+  //   return encoderToDegree(climbPitch.getAbsoluteEncoder().getPosition());
+  // }
 
   public void toHome() {
     setEncoder(CLIMB.HOME);
@@ -83,6 +90,7 @@ public class ClimbSys extends SubsystemBase {
   }
 
   public void toLatched() {
-    setEncoder(CLIMB.LATCHED);
+
+    pitchController.setReference(CLIMB.LATCHED, ControlType.kPosition, ClosedLoopSlot.kSlot1);
   }
 }

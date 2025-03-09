@@ -15,10 +15,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.CORAL;
 import frc.robot.Constants.DIO;
-import frc.robot.Constants.GLOBAL;
-import frc.robot.Constants.MANIPULATOR;
-import frc.robot.Constants.MOTION;
 
 public class CoralManipulatorSys extends SubsystemBase {
   /** Creates a new CoralManipulator. */
@@ -43,32 +41,30 @@ public class CoralManipulatorSys extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  public void manipulateCoral(double speed) {
+    coralManipulator.set(speed);
+  }
+
   public void intakeCoral() {
-    while (!coralLimitSwitch.get()) {
-      coralManipulator.set(MOTION.CORAL_INTAKE_SPEED);
-    }
-    if (GLOBAL.DEBUG_MODE) {
-      System.out.println("Intaking Coral");
-    }
+
+    coralManipulator.set(CORAL.INTAKE_SPEED);
   }
 
   //for scoring L1-L3
   public void frontOuttakeCoral() {
-    coralManipulator.set(MOTION.CORAL_FRONT_OUTTAKE_SPEED);
-    if (GLOBAL.DEBUG_MODE) {
-      System.out.println("frontOuttakeCoral");
-    }
+
+    coralManipulator.set(CORAL.FRONT_OUTTAKE_SPEED);
+
   }
 
   //for scoring L4
   public void backOuttakeCoral() {
-    coralManipulator.set(MOTION.CORAL_BACK_OUTTAKE_SPEED);
-    if (GLOBAL.DEBUG_MODE) {
-      System.out.println("backOuttakeCoral");
-    }
+
+    coralManipulator.set(CORAL.BACK_OUTTAKE_SPEED);
+
   }
 
   public void stop() {
-    coralManipulator.stopMotor();;
+    coralManipulator.stopMotor();
   }
 }

@@ -29,18 +29,23 @@ public class ToHome extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    manipulatorPitchSys.toHome();
-    //while (manipulatorPitchSys.getEncoder() < MANIPULATOR.HOME + MANIPULATOR.DEADBAND) {} // waits until manipulator is safely stowed
+    if (GLOBAL.DEBUG_MODE) System.out.println("toClear");
+
     elevatorSys.toHome();
-    StateMonitorSys.manipulatorState = ManipulatorState.HOME;
-    if (GLOBAL.DEBUG_MODE) {
-      System.out.println("To CHome");
-    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    elevatorSys.moveToHeight();
+    if (elevatorSys.isClear()) manipulatorPitchSys.toHome(); // manipulator to home once elevator is clear
+    if (GLOBAL.DEBUG_MODE) System.out.println("manip toHome");
+    // if (manipulatorPitchSys.isHome()) { // this should be a manipulatorPitchSys.isHome()?
+    //   elevatorSys.toHome(); // elevator to home once manipulator is clear (at aground)
+    //   if (GLOBAL.DEBUG_MODE) System.out.println("elev toHome");
+    // }
+
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -49,6 +54,11 @@ public class ToHome extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (elevatorSys.isHome() && manipulatorPitchSys.isHome()) { // this should be manipulatorPitchSys.isHome()?
+      if (GLOBAL.DEBUG_MODE) System.out.println("Stopping ToHome");
+      return true; // ends command once system is set
+    } else {
     return false;
+    }
   }
 }

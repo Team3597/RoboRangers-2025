@@ -4,6 +4,12 @@
 
 package frc.robot;
 
+import org.photonvision.PhotonPoseEstimator;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
@@ -26,24 +32,24 @@ public final class Constants {
     public static boolean DISABLE_MANIPULATOR_PITCH = false;
   }
 
-  public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
-  public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
-  public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
-  public static final double MAX_SPEED  = Units.feetToMeters(14.5);
+  public static class PROPERTIES {
+    public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
+    public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
+    public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
+    public static final double MAX_SPEED  = Units.feetToMeters(14.5);
+    // Hold time on motor brakes when disabled
+    public static final double WHEEL_LOCK_TIME = 10; // seconds
+  }
 
   public static class OPERATOR {
     public static final int DRIVE_CONTROLLER_PORT = 0;
     public static final int CONTROL_CONTROLLER_PORT = 1;
-  }
-
-  public static class OperatorConstants
-  {
-
-    // Joystick Deadband
-    public static final double DEADBAND        = 0.3;
+    public static final int DRIVE_CONTROLLER_PORT_2 = 2;
+    
+    public static final double DEADBAND = 0.05;
     public static final double LEFT_Y_DEADBAND = 0.1;
     public static final double RIGHT_X_DEADBAND = 0.1;
-    public static final double TURN_CONSTANT    = 3; // was 6
+    public static final double TURN_CONSTANT = 3; // was 6
   }
 
   public static class CAN {
@@ -67,83 +73,74 @@ public final class Constants {
   }
 
   public static class DIO {
-
     public static final int CORAL_LIMIT = 0;
-    
   }
 
-  public static class MOTION {
-    public static final double ALGAE_INTAKE_RPM = 1500;
-    public static final double ALGAE_OUTTAKE_RPM = -1500;
-    public static final double ALGAE_INTAKE_SPEED = -0.5;
-    public static final double ALGAE_OUTTAKE_SPEED = 0.5;
+  public static class ALGAE {
+    public static class PID {
+      public static final double P = 0.001;
+      public static final double I = 0;
+      public static final double D = 0.01;
+      public static final double FF = 0.002; // 1/KV, 1/473
+      public static final double MIN = -0.2;
+      public static final double MAX = 0.2;
+    }
+
+    public static final double INTAKE_RPM = 6000;
+    public static final double OUTTAKE_RPM = 6000;
+  }
+
+  public static class CORAL {
     //potentially differ speeds for different levels later
-    public static final double CORAL_INTAKE_SPEED = 1;
-    public static final double CORAL_FRONT_OUTTAKE_SPEED = 1;
-    public static final double CORAL_BACK_OUTTAKE_SPEED = -1;
-    public static final double ALGAE_HOLD_SPEED = 0.2;
-  }
-
-  public static class PID {
-    public static final double ALGAE_P = 0.00001;
-    public static final double ALGAE_I = 0;
-    public static final double ALGAE_D = 0.008;
-    public static final double ALGAE_FF = 0.002; // 1/KV, 1/473
-    public static final double ALGAE_MIN = -1;
-    public static final double ALGAE_MAX = 1;
-    //figure out graphing my encoder data so i can tune these? since i can't observe velocity easily
-
-    
-    public static double PITCH_P = 2;
-    public static double PITCH_I = 0;
-    public static double PITCH_D = 0;
-    public static final double PITCH_MIN = -0.5;
-    public static final double PITCH_MAX = 0.8;
-
-    public static final double ELEVATOR_P = 0.5;
-    public static final double ELEVATOR_I = 0;
-    public static final double ELEVATOR_D = 0.01;
-    public static final double ELEVATOR_MIN = -0.2;
-    public static final double ELEVATOR_MAX = 0.3;
-    public static final double ELEVATOR_FF = 0;
-
-    public static final double CLIMB_P = 0;
-    public static final double CLIMB_I = 0;
-    public static final double CLIMB_D = 0;
-    public static final double CLIMB_MIN = 0;
-    public static final double CLIMB_MAX = 0;
-  }
-
-  public static class UTIL {
-  }
-
-  public static final class DrivebaseConstants
-  {
-    // Hold time on motor brakes when disabled
-    public static final double WHEEL_LOCK_TIME = 10; // seconds
+    public static final double INTAKE_SPEED = 1;
+    public static final double FRONT_OUTTAKE_SPEED = 1;
+    public static final double BACK_OUTTAKE_SPEED = 1;
   }
 
   public static class ELEVATOR {
     public static final int AMP_LIMIT = 30;
 
-    public static final double ELEVATOR_COUNT_OFFSET = 0;
-    public static final double ELEVATOR_MAX_HEIGHT = 53;
-    public static final double ELEVATOR_MAX_COUNTS = 56;
+    public static class PID {
+      public static final double P = 0.25;
+      public static final double I = 0.0;
+      public static final double D = 0.02;
+      public static final double MIN = -1;
+      public static final double MAX = 1;
+      public static final double FF = 0.022;
+      //0.022
+      public static final double MAX_A = 400;
+      //618.55;
+      public static final double MAX_V = 30;
+      //25.08;
 
-    public static final double HOME = 0; // home height
-    public static final double CLEAR = 0; // clearance height for manipulator
+      // public static final double P = 2;
+      // public static final double I = 0.001;
+      // public static final double D = 0.2;
+      // public static final double MIN = -1;
+      // public static final double MAX = 1;
+      // public static final double FF = 0.022;
+      // public static final double MAX_A = 3000;
+      // public static final double MAX_V = 10000;
+    }
 
-    public static final double APROCESSOR = 0; // algae processor, l1, l2, net
-    public static final double AL1 = 0;
-    public static final double AL2 = 0;
-    public static final double ANET = 0;
+    public static final double COUNT_OFFSET = 0;
+    public static final double MAX_HEIGHT = 53;
+    public static final double MAX_COUNTS = 56;
 
-    public static final double CL1 = 10; // coral l1, l2, l3, l4
-    public static final double CL2 = 20;
-    public static final double CL3 = 30;
-    public static final double CL4 = 40;
+    public static final double HOME = .5; // home height
+    public static final double CLEAR = 2; // clearance height for manipulator
+
+    public static final double AL1 = 26.5; // algae l1, l2, net
+    public static final double AL2 = 41;
+    public static final double ANET = 52.5;
+    public static final double APROCESSOR = 2;
+
+    public static final double CL1 = 14.5; // coral l1, l2, l3, l4
+    public static final double CL2 = 26.5;
+    public static final double CL3 = 42.8;
+    public static final double CL4 = 52;
     
-    public static final double DEADBAND = 0;
+    public static final double DEADBAND = 2;
   }
 
   public static class MANIPULATOR {
@@ -151,14 +148,24 @@ public final class Constants {
     public static final int CORAL_AMP_LIMIT = 40;
     public static final int ALGAE_AMP_LIMIT = 30;
 
-    public static final double NEO_CPR = 42;
-    public static final double THROUGHBORE_CPR = 8192;
-    public static final double MANIPULATOR_PIVOT_OFFSET = 0;
+    public static class PID {
+      public static double P = 3;
+      public static double I = 0;
+      public static double D = 0.01;
+      public static final double MIN = -0.5;
+      public static final double MAX = 0.5;
+
+    }
+
+    public static final double MANIPULATOR_PIVOT_OFFSET = -0.57;
+    //encoder got screwed so zeroed + am lazy
 
     public static final double MANIPULATOR_MIN_PITCH = 0.57;
     public static final double MANIPULATOR_MAX_PITCH = 0.99;
-
-    public static final double HOME = 0.565; // home pitch
+    
+    
+    public static final double HOME = 0.57; // home pitch
+ 
     public static final double UNSTICK = 0.6; // pitch to unstick coral
 
     public static final double AGROUND = 0.7; // algae ground, processor, reef (l1, l2), net
@@ -169,23 +176,54 @@ public final class Constants {
     public static final double CLOW = HOME; // coral low (l1, l2, l3), high (l4)
     public static final double CHIGH = 0.99;
 
-    public static final double DEADBAND = 0;
+    public static final double DEADBAND = 0.1;
   }
 
   public static class CLIMB {
-    public static final int AMP_LIMIT = 10;
+    public static final int AMP_LIMIT = 40;
+
+    public static class PID {
+      public static final double P = 3;
+      public static final double I = 0.1;
+      public static final double D = 0;
+      public static final double MIN = -1;
+      public static final double MAX = 1;
+
+      public static final double P_CLIMB = 0;
+      public static final double I_CLIMB = 0;
+      public static final double D_CLIMB = 0;
+      public static final double MIN_CLIMB = 0;
+      public static final double MAX_CLIMB = 0;
+    }
     
     public static final double CLIMB_MIN_PITCH = 0.44;
     public static final double CLIMB_MAX_PITCH = 0.44;
 
     public static final double HOME = 0.375;
-    public static final double LATCHED = 0.435;
-    public static final double READY = 0.075;
+    public static final double LATCHED = 0.5;
+    public static final double READY = 0.125;
 
-    public static final double CLOW = 0; // coral low (l1, l2, l3), high (l4)
-    public static final double CHIGH = 0;
 
-    public static final double DEADBAND = 0;
+    public static final double DEADBAND = 0.5;
   }
 
+  public static class CAMERA {
+    public static final String CAMERA_NICKNAME = "Team3597Camera"; // camera nickname (needs to be updated)
+    
+    public static final double CAMERA_X_FROM_ROBOT_CENTER_INCHES = 0; // the sign of these might have to be experimented with
+    public static final double CAMERA_Y_FROM_ROBOT_CENTER_INCHES = 0;
+    public static final double CAMERA_HEIGHT_INCHES = 0;
+    public static final Translation3d CAMERA_TRANSLATION_3D = new Translation3d(Units.inchesToMeters(CAMERA_X_FROM_ROBOT_CENTER_INCHES), Units.inchesToMeters(CAMERA_Y_FROM_ROBOT_CENTER_INCHES), Units.inchesToMeters(CAMERA_HEIGHT_INCHES));
+    
+    public static final double CAMERA_ROLL_DEGREES = 0; // (spin clockwise/counterclockwise facing camera)
+    public static final double CAMERA_PITCH_DEGREES = 0; // (tilt up/down)
+    public static final double CAMERA_YAW_DEGREES = 0; // (angle left/right)
+    public static final Rotation3d CAMERA_ROTATION_3D = new Rotation3d(Units.degreesToRadians(CAMERA_ROLL_DEGREES), Units.degreesToRadians(CAMERA_PITCH_DEGREES), Units.degreesToRadians(CAMERA_YAW_DEGREES));
+
+    public static final Transform3d CAMERA_TRANSFORM_3D = new Transform3d(CAMERA_TRANSLATION_3D, CAMERA_ROTATION_3D);
+
+    public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+
+    public static final PhotonPoseEstimator PHOTON_POSE_ESTIMATOR = new PhotonPoseEstimator(CAMERA.APRIL_TAG_FIELD_LAYOUT, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, CAMERA.CAMERA_TRANSFORM_3D);
+  }
 }

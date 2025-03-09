@@ -39,10 +39,12 @@ public class ManipulatorPitchSys extends SubsystemBase {
 
     pitchConfig.closedLoop
       .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-      .p(Constants.PID.PITCH_P)
-      .i(Constants.PID.PITCH_I)
-      .d(Constants.PID.PITCH_D)
-      .outputRange(Constants.PID.PITCH_MIN, Constants.PID.PITCH_MAX);
+      .p(MANIPULATOR.PID.P)
+      .i(MANIPULATOR.PID.I)
+      .d(MANIPULATOR.PID.D)
+      .outputRange(MANIPULATOR.PID.MIN, MANIPULATOR.PID.MAX)
+      .positionWrappingEnabled(true)
+      .positionWrappingInputRange(0, 1);
     pitchConfig
       .idleMode(IdleMode.kBrake)
       .inverted(false)
@@ -63,36 +65,13 @@ public class ManipulatorPitchSys extends SubsystemBase {
     SmartDashboard.putNumber("Manipulator Encoder", getEncoder());
   }
 
-  public void updatePID() {
-
-    Constants.PID.PITCH_P = pitchP.getDouble(0.5); //SmartDashboard.getNumber("Pitch P getnum", 0.5); 
-
-    pitchConfig.closedLoop
-      .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-      .p(Constants.PID.PITCH_P)
-      .i(Constants.PID.PITCH_I)
-      .d(Constants.PID.PITCH_D)
-      .outputRange(Constants.PID.PITCH_MIN, Constants.PID.PITCH_MAX);
-    pitchConfig
-      .idleMode(IdleMode.kBrake)
-      .inverted(false)
-      .smartCurrentLimit(MANIPULATOR.AMP_LIMIT);
-    manipulatorPitch.configure(pitchConfig, null, null);
-
-
-  }
-
   public void setPitch(double pitch) {
-    if (!GLOBAL.DISABLE_MANIPULATOR_PITCH) {
-      pitchController.setReference(degreeToEncoder(pitch), ControlType.kPosition);
-      System.out.println("Setting pitch to " + pitch);
-    }
+
+    pitchController.setReference(pitch + MANIPULATOR.MANIPULATOR_PIVOT_OFFSET, ControlType.kPosition);
   }
 
   public void setEncoder(double position) {
-    if (!GLOBAL.DISABLE_MANIPULATOR_PITCH) {
-      pitchController.setReference(position, ControlType.kPosition);
-    }
+    //pitchController.setReference(position, ControlType.kPosition);
   }
 
   private double degreeToEncoder(double degrees) {
@@ -113,34 +92,82 @@ public class ManipulatorPitchSys extends SubsystemBase {
   }
 
   public void toHome() {
-    setEncoder(Constants.MANIPULATOR.HOME);
+    setPitch(Constants.MANIPULATOR.HOME);
+    if (GLOBAL.DEBUG_MODE) System.out.println("manip toHome");
   }
 
   public void toUnstick() {
-    setEncoder(Constants.MANIPULATOR.UNSTICK);
+    setPitch(Constants.MANIPULATOR.UNSTICK);
+    if (GLOBAL.DEBUG_MODE) System.out.println("manip toUnstick");
   }
 
   public void toAGround() {
-    setEncoder(Constants.MANIPULATOR.AGROUND);
+    setPitch(Constants.MANIPULATOR.AGROUND);
+    if (GLOBAL.DEBUG_MODE) System.out.println("manip toAGround");
   }
 
   public void toAProcessor() {
-    setEncoder(Constants.MANIPULATOR.APROCESSOR);
+    setPitch(Constants.MANIPULATOR.APROCESSOR);
+    if (GLOBAL.DEBUG_MODE) System.out.println("manip toAProcessor");
   }
 
   public void toAReef() {
-    setEncoder(Constants.MANIPULATOR.AREEF);
+    setPitch(Constants.MANIPULATOR.AREEF);
+    if (GLOBAL.DEBUG_MODE) System.out.println("manip toAReef");
   }
 
   public void toANet() {
-    setEncoder(Constants.MANIPULATOR.ANET);
+    setPitch(Constants.MANIPULATOR.ANET);
+    if (GLOBAL.DEBUG_MODE) System.out.println("manip toANet");
   }
 
   public void toCLow() {
-    setEncoder(Constants.MANIPULATOR.CLOW);
+    setPitch(Constants.MANIPULATOR.CLOW);
+    if (GLOBAL.DEBUG_MODE) System.out.println("manip toCLow");
   }
 
   public void toCHigh() {
-    setEncoder(Constants.MANIPULATOR.CHIGH);
+    setPitch(Constants.MANIPULATOR.CHIGH);
+    if (GLOBAL.DEBUG_MODE) System.out.println("manip toCHigh");
+  }
+
+  public boolean isHome() {
+    if (getEncoder() <= MANIPULATOR.HOME + MANIPULATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtUnstick() {
+    if (getEncoder() >= MANIPULATOR.UNSTICK - MANIPULATOR.DEADBAND && getEncoder() <= MANIPULATOR.UNSTICK + MANIPULATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtAGround() {
+    if (getEncoder() >= MANIPULATOR.AGROUND - MANIPULATOR.DEADBAND && getEncoder() <= MANIPULATOR.AGROUND + MANIPULATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtAProcessor() {
+    if (getEncoder() >= MANIPULATOR.APROCESSOR - MANIPULATOR.DEADBAND && getEncoder() <= MANIPULATOR.APROCESSOR + MANIPULATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtAReef() {
+    if (getEncoder() >= MANIPULATOR.AREEF - MANIPULATOR.DEADBAND && getEncoder() <= MANIPULATOR.AREEF + MANIPULATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtANet() {
+    if (getEncoder() >= MANIPULATOR.ANET - MANIPULATOR.DEADBAND && getEncoder() <= MANIPULATOR.ANET + MANIPULATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtCLow() {
+    if (getEncoder() >= MANIPULATOR.CLOW - MANIPULATOR.DEADBAND && getEncoder() <= MANIPULATOR.CLOW + MANIPULATOR.DEADBAND) return true;
+    return false;
+  }
+
+  public boolean isAtCHigh() {
+    if (getEncoder() >= MANIPULATOR.CHIGH - MANIPULATOR.DEADBAND && getEncoder() <= MANIPULATOR.CHIGH + MANIPULATOR.DEADBAND) return true;
+    return false;
   }
 }

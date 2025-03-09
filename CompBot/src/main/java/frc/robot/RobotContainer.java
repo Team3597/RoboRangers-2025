@@ -5,19 +5,12 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
-import frc.robot.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.ManipulateObject;
-import frc.robot.commands.ToClear;
-import frc.robot.commands.UpdatePID;
-import frc.robot.commands.setManipulatorPitch;
+import frc.robot.commands.algae.AManipulate;
 import frc.robot.commands.algae.ToAGround;
 import frc.robot.commands.algae.ToAL1;
 import frc.robot.commands.algae.ToAL2;
@@ -26,6 +19,7 @@ import frc.robot.commands.algae.ToAProcessor;
 import frc.robot.commands.climb.ToClimbHome;
 import frc.robot.commands.climb.ToClimbLatched;
 import frc.robot.commands.climb.ToClimbReady;
+import frc.robot.commands.coral.CManipulate;
 import frc.robot.commands.coral.ToCL1;
 import frc.robot.commands.coral.ToCL2;
 import frc.robot.commands.coral.ToCL3;
@@ -38,18 +32,13 @@ import frc.robot.subsystems.ElevatorSys;
 import frc.robot.subsystems.ExampleSys;
 import frc.robot.subsystems.ManipulatorPitchSys;
 import frc.robot.subsystems.StateMonitorSys;
-import frc.robot.subsystems.StateMonitorSys.ClimbState;
 import frc.robot.subsystems.VisionSys;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.GLOBAL;
-import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.CORAL;
+import frc.robot.Constants.OPERATOR;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 import swervelib.SwerveInputStream;
@@ -77,71 +66,32 @@ public class RobotContainer {
   private static final StateMonitorSys m_stateMonitorSys = new StateMonitorSys();
 
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_controlController = new CommandXboxController(Constants.OPERATOR.CONTROL_CONTROLLER_PORT);
+  private final CommandXboxController m_driver2 = new CommandXboxController(Constants.OPERATOR.DRIVE_CONTROLLER_PORT_2);
 
-  private final Joystick driveJoystick = new Joystick(Constants.OPERATOR.DRIVE_CONTROLLER_PORT);
+ // private final Joystick driveJoystick = new Joystick(Constants.OPERATOR.DRIVE_CONTROLLER_PORT);
 
-    /**
-   * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
-   */
+  //Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
   SwerveInputStream driveAngularVelocity = 
     SwerveInputStream.of(drivebase.getSwerveDrive(),
-                          () -> driveJoystick.getY() * -1,
-                          () -> driveJoystick.getX() * -1)
-                      .withControllerRotationAxis(driveJoystick::getZ)
-                      .deadband(OperatorConstants.DEADBAND)
+                          () -> m_driver2.getLeftY() * 1, //LY, 1
+                          () -> m_driver2.getLeftX() * 1) //LX, 0
+                      .withControllerRotationAxis(m_driver2::getRightX) //Rotate 2
+                      .deadband(OPERATOR.DEADBAND)
                       .scaleTranslation(0.8)
-                      .allianceRelativeControl(true);
+                      .scaleRotation(0-0.4)
+                      .allianceRelativeControl(false);
 
-  /**
-   * Clone's the angular velocity input stream and converts it to a fieldRelative input stream.
-   */
-  // SwerveInputStream driveDirectAngle = 
-  //   driveAngularVelocity.copy().withControllerHeadingAxis(m_controlController::getRightX,
-  //                                                         m_controlController::getRightY)
-  //                         .headingWhile(true);
-
-  /**
-   * Clone's the angular velocity input stream and converts it to a robotRelative input stream.
-   */
+  // Clones the angular velocity input stream and converts it to a robotRelative input stream.
   SwerveInputStream driveRobotOriented = 
     driveAngularVelocity.copy().robotRelative(true)
                           .allianceRelativeControl(false);
-
-  // SwerveInputStream driveAngularVelocityKeyboard 
-  //   = SwerveInputStream.of(drivebase.getSwerveDrive(),
-  //                           () -> -m_controlController.getLeftY(),
-  //                           () -> -m_controlController.getLeftX())
-  //                       .withControllerRotationAxis(() -> m_controlController.getRawAxis(
-  //                           2))
-  //                       .deadband(OperatorConstants.DEADBAND)
-  //                       .scaleTranslation(0.8)
-  //                       .allianceRelativeControl(true);
-  // // Derive the heading axis with math!
-  // SwerveInputStream driveDirectAngleKeyboard
-  //   = driveAngularVelocityKeyboard.copy()
-  //                                 .withControllerHeadingAxis(() ->
-  //                                                               Math.sin(
-  //                                                                   m_controlController.getRawAxis(
-  //                                                                       2) *
-  //                                                                   Math.PI) *
-  //                                                               (Math.PI *
-  //                                                                 2),
-  //                                                           () ->
-  //                                                               Math.cos(
-  //                                                                   m_controlController.getRawAxis(
-  //                                                                       2) *
-  //                                                                   Math.PI) *
-  //                                                               (Math.PI *
-  //                                                                 2))
-  //                                 .headingWhile(true);
-
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
   
@@ -157,61 +107,36 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    // new Trigger(m_exampleSubsystem::exampleCondition)
-    //     .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-    
-    //m_controlController.button(7).whileTrue(new IntakeC(m_coralManipulatorSys));
-
-    
-    if (StateMonitorSys.climbState != ClimbState.LATCHED) {
-      // coral controls
+      // coral position
       m_controlController.pov(0).onTrue(new ToCL4(m_elevatorSys, m_manpulatorPitchSys)); // up
       m_controlController.pov(90).onTrue(new ToCL3(m_elevatorSys, m_manpulatorPitchSys)); // right
       m_controlController.pov(180).onTrue(new ToCL1(m_elevatorSys, m_manpulatorPitchSys)); // down
       m_controlController.pov(270).onTrue(new ToCL2(m_elevatorSys, m_manpulatorPitchSys)); // left
       m_controlController.button(9).onTrue(new ToHome(m_elevatorSys, m_manpulatorPitchSys)); // left stick button
-      m_controlController.leftBumper().whileTrue(new ManipulateObject(m_algaeManipulatorSys, m_coralManipulatorSys)); // left bumper
-      m_controlController.leftTrigger().onTrue(new ToClear(m_manpulatorPitchSys,m_elevatorSys));
 
-      // algae controls
-      // CONTROLLER MAPS WEIRD BUTTONS IN .[BUTTON]() AREN'T SAME AS CONTROLLER
-    //  m_controlController.button(10).onTrue((new ToAGround(m_elevatorSys, m_manpulatorPitchSys))); // start (REAL BUTTONS)
-      m_controlController.y().onTrue(new ToANet(m_elevatorSys, m_manpulatorPitchSys)); // y
-      m_controlController.x().onTrue(new ToAL2(m_elevatorSys, m_manpulatorPitchSys)); // b
-      m_controlController.b().onTrue(new ToAProcessor(m_elevatorSys, m_manpulatorPitchSys)); // a
-      m_controlController.a().onTrue(new ToAL1(m_elevatorSys, m_manpulatorPitchSys)); // x
+
+      // coral manipultion (replace with automatic single button)
+      m_controlController.leftBumper().whileTrue(new CManipulate(m_coralManipulatorSys, CORAL.INTAKE_SPEED)); // left bumper
+      m_controlController.button(7).whileTrue(new CManipulate(m_coralManipulatorSys, CORAL.FRONT_OUTTAKE_SPEED));
+      m_controlController.button(11).whileTrue(new CManipulate(m_coralManipulatorSys, -CORAL.BACK_OUTTAKE_SPEED));//left stick
+
+      //algae manipulation
+      m_controlController.rightBumper().whileTrue(new AManipulate(m_algaeManipulatorSys, 0.3)); // left bumper
+      m_controlController.button(8).whileTrue(new AManipulate(m_algaeManipulatorSys, -1));
+      m_algaeManipulatorSys.setDefaultCommand(new AManipulate(m_algaeManipulatorSys, 0));
+
+      // algae position
+      m_controlController.button(4).onTrue(new ToANet(m_elevatorSys, m_manpulatorPitchSys)); // y
+      m_controlController.button(1).onTrue(new ToAL1(m_elevatorSys, m_manpulatorPitchSys)); // x
+      m_controlController.button(3).onTrue(new ToAL2(m_elevatorSys, m_manpulatorPitchSys)); // b
+      m_controlController.button(2).onTrue(new ToAProcessor(m_elevatorSys, m_manpulatorPitchSys)); // a
       m_controlController.button(10).onTrue(new ToAGround(m_elevatorSys, m_manpulatorPitchSys)); // start
 
 
-      // climb controls
-      if (StateMonitorSys.climbState == ClimbState.READY) { // back (toggles between climb home and ready)
-        m_controlController.rightTrigger().onTrue(new ToClimbHome(m_climbSys));
-      } else if (StateMonitorSys.climbState == ClimbState.HOME) {
-        m_controlController.rightTrigger().onTrue(new ToClimbReady(m_climbSys));
-      }
-      m_controlController.rightBumper().onTrue(new ToClimbLatched(m_climbSys)); // center logitech button
-    } else {
-      m_controlController.rightStick().onTrue(new ToClimbHome(m_climbSys)); // Unlocks controls and resets climb if accidentally pressed (temporarily right stick button)
-    }
-
-    //autodrive tests
-    Trigger button7 = new JoystickButton(driveJoystick, 7);
-    button7.whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
-
-
-
-
-
-    // POVButton upPov = new POVButton(m_controlController.getHID(), 0);
-    // POVButton leftPov = new POVButton(m_controlController.getHID(), 270);
-    // POVButton rightPov = new POVButton(m_controlController.getHID(), 90);
-    // POVButton downPov = new POVButton(m_controlController.getHID(), 180);
-
+    m_driver2.button(1).onTrue(new ToClimbHome(m_climbSys)); //A
+    m_driver2.button(2).onTrue(new ToClimbReady(m_climbSys)); //B
+    m_driver2.button(4).onTrue(new ToClimbLatched(m_climbSys)); //Y
 
     // Command driveFieldOrientedDirectAngle      = drivebase.driveFieldOriented(driveDirectAngle);
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
@@ -258,9 +183,6 @@ public class RobotContainer {
       m_controlController.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       m_controlController.rightBumper().onTrue(Commands.none());
 
-      // m_controlController.b().onTrue(new setManipulatorPitch(m_manpulatorPitchSys, 0.9));
-      // m_controlController.x().onTrue(new setManipulatorPitch(m_manpulatorPitchSys, 0.7));
-      // m_controlController.a().onTrue(new UpdatePID(m_manpulatorPitchSys));
     }
 
   }
@@ -272,7 +194,14 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+  //  return new SequentialCommandGroup( 
+     return drivebase.driveToDistanceCommand(5, 1.5).withTimeout(2);
+    //   new ToCL3(m_elevatorSys, m_manpulatorPitchSys),
+    //   drivebase.driveToDistanceCommand(0.2, -0.5).withTimeout(2),
+    //   new CManipulate(m_coralManipulatorSys, MOTION.CORAL_FRONT_OUTTAKE_SPEED)
+    // );
+    
+    //Autos.exampleAuto(m_exampleSubsystem);
   }
 
   public void setMotorBrake(boolean brake)
