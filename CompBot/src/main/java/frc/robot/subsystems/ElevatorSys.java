@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 import frc.robot.Constants.ELEVATOR;
+import frc.robot.Constants.GLOBAL;
 
 public class ElevatorSys extends SubsystemBase {
   /** Creates a new Elevator. */

@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.CORAL;
 import frc.robot.Constants.DIO;
+import frc.robot.Constants.MANIPULATOR;
 
 public class CoralManipulatorSys extends SubsystemBase {
   /** Creates a new CoralManipulator. */
