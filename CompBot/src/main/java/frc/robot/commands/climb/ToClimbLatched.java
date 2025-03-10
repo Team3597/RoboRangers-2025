@@ -7,8 +7,6 @@ package frc.robot.commands.climb;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.GLOBAL;
 import frc.robot.subsystems.ClimbSys;
-import frc.robot.subsystems.StateMonitorSys;
-import frc.robot.subsystems.StateMonitorSys.ClimbState;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ToClimbLatched extends Command {
@@ -25,14 +23,9 @@ public class ToClimbLatched extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (StateMonitorSys.climbState == ClimbState.READY) {
-      climbSys.toLatched();
-      if (GLOBAL.DEBUG_MODE) {
-        System.out.println("Climb Latched");
-      }
-      StateMonitorSys.climbState = ClimbState.LATCHED;
-    } else {
-      System.out.println("Move to ready before climbing");
+    climbSys.toLatched();
+    if (GLOBAL.DEBUG_MODE) {
+      System.out.println("Climb Latched");
     }
   }
 

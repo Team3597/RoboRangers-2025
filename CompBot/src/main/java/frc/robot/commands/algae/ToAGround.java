@@ -9,8 +9,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.GLOBAL;
 import frc.robot.subsystems.ElevatorSys;
 import frc.robot.subsystems.ManipulatorPitchSys;
-import frc.robot.subsystems.StateMonitorSys;
-import frc.robot.subsystems.StateMonitorSys.ManipulatorState;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ToAGround extends Command {
@@ -44,7 +42,6 @@ public class ToAGround extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    StateMonitorSys.manipulatorState = ManipulatorState.AGROUND;
   }
 
   // Returns true when the command should end.

@@ -28,7 +28,6 @@ public final class Constants {
 
   public static final double LOOPER_DELTA_DURATION = 0.01;
 
-
   public static class GLOBAL {
     public static boolean DEBUG_MODE = false; //enables debug sysouts
     public static boolean MANIPULATOR_CLEAR = false; //are we good to change manipulator pitch?
@@ -48,8 +47,7 @@ public final class Constants {
 
   public static class OPERATOR {
     public static final int DRIVE_CONTROLLER_PORT = 0;
-    public static final int CONTROL_CONTROLLER_PORT = 1;
-    public static final int DRIVE_CONTROLLER_PORT_2 = 2;
+    public static final int GUNNER_CONTROLLER_PORT = 1;
     
     public static final double DEADBAND = 0.05;
     public static final double LEFT_Y_DEADBAND = 0.1;
@@ -96,7 +94,6 @@ public final class Constants {
   }
 
   public static class CORAL {
-    //potentially differ speeds for different levels later
     public static final double INTAKE_SPEED = 1;
     public static final double FRONT_OUTTAKE_SPEED = 1;
     public static final double BACK_OUTTAKE_SPEED = 1;
@@ -112,20 +109,11 @@ public final class Constants {
       public static final double MIN = -1;
       public static final double MAX = 1;
       public static final double FF = 0.022;
-      //0.022
+      // 0.022 from recalc
       public static final double MAX_A = 400;
-      //618.55;
+      // 618.55;
       public static final double MAX_V = 30;
-      //25.08;
-
-      // public static final double P = 2;
-      // public static final double I = 0.001;
-      // public static final double D = 0.2;
-      // public static final double MIN = -1;
-      // public static final double MAX = 1;
-      // public static final double FF = 0.022;
-      // public static final double MAX_A = 3000;
-      // public static final double MAX_V = 10000;
+      // 25.08;
     }
 
     public static final double COUNT_OFFSET = 0;
@@ -162,16 +150,14 @@ public final class Constants {
 
     }
 
-    public static final double MANIPULATOR_PIVOT_OFFSET = -0.57;
-    //encoder got screwed so zeroed + am lazy
+    public static final double MANIPULATOR_PIVOT_OFFSET = 0;
 
     public static final double MANIPULATOR_MIN_PITCH = 0;
-    //0.57
+    // 0.57 pre zero
     public static final double MANIPULATOR_MAX_PITCH = 0.5;
-    //0.99
-
+    // 0.99
     public static final double HOME = 0; // home pitch
-    //0.57.
+    // 0.57.
  
     public static final double UNSTICK = 0.03; // pitch to unstick coral
 

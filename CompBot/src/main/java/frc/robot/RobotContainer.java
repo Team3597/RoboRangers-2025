@@ -31,7 +31,6 @@ import frc.robot.subsystems.CoralManipulatorSys;
 import frc.robot.subsystems.ElevatorSys;
 import frc.robot.subsystems.ExampleSys;
 import frc.robot.subsystems.ManipulatorPitchSys;
-import frc.robot.subsystems.StateMonitorSys;
 import frc.robot.subsystems.VisionSys;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -55,28 +54,25 @@ public class RobotContainer {
     new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                         "swerve"));
 
-  private static final ExampleSys m_exampleSubsystem = new ExampleSys(); 
-
   private static final AlgaeManipulatorSys m_algaeManipulatorSys = new AlgaeManipulatorSys();
   private static final CoralManipulatorSys m_coralManipulatorSys = new CoralManipulatorSys();
   private static final ElevatorSys m_elevatorSys = new ElevatorSys();
   private static final ManipulatorPitchSys m_manpulatorPitchSys = new ManipulatorPitchSys();
   private static final ClimbSys m_climbSys = new ClimbSys();
   private static final VisionSys m_visionSys = new VisionSys();
-  private static final StateMonitorSys m_stateMonitorSys = new StateMonitorSys();
 
 
-  private final CommandXboxController m_controlController = new CommandXboxController(Constants.OPERATOR.CONTROL_CONTROLLER_PORT);
-  private final CommandXboxController m_driver2 = new CommandXboxController(Constants.OPERATOR.DRIVE_CONTROLLER_PORT_2);
+  private final CommandXboxController m_gunnerController = new CommandXboxController(OPERATOR.GUNNER_CONTROLLER_PORT);
+  private final CommandXboxController m_driveController = new CommandXboxController(OPERATOR.DRIVE_CONTROLLER_PORT);
 
  // private final Joystick driveJoystick = new Joystick(Constants.OPERATOR.DRIVE_CONTROLLER_PORT);
 
   //Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
   SwerveInputStream driveAngularVelocity = 
     SwerveInputStream.of(drivebase.getSwerveDrive(),
-                          () -> m_driver2.getLeftY() * 1, //LY, 1
-                          () -> m_driver2.getLeftX() * 1) //LX, 0
-                      .withControllerRotationAxis(m_driver2::getRightX) //Rotate 2
+                          () -> m_driveController.getLeftY() * 1, //LY, 1
+                          () -> m_driveController.getLeftX() * 1) //LX, 0
+                      .withControllerRotationAxis(m_driveController::getRightX) //Rotate 2
                       .deadband(OPERATOR.DEADBAND)
                       .scaleTranslation(0.8)
                       .scaleRotation(0-0.4)
@@ -109,34 +105,34 @@ public class RobotContainer {
   private void configureBindings() {
 
       // coral position
-      m_controlController.pov(0).onTrue(new ToCL4(m_elevatorSys, m_manpulatorPitchSys)); // up
-      m_controlController.pov(90).onTrue(new ToCL3(m_elevatorSys, m_manpulatorPitchSys)); // right
-      m_controlController.pov(180).onTrue(new ToCL1(m_elevatorSys, m_manpulatorPitchSys)); // down
-      m_controlController.pov(270).onTrue(new ToCL2(m_elevatorSys, m_manpulatorPitchSys)); // left
-      m_controlController.button(9).onTrue(new ToHome(m_elevatorSys, m_manpulatorPitchSys)); // left stick button
+      m_gunnerController.pov(0).onTrue(new ToCL4(m_elevatorSys, m_manpulatorPitchSys)); // up
+      m_gunnerController.pov(90).onTrue(new ToCL3(m_elevatorSys, m_manpulatorPitchSys)); // right
+      m_gunnerController.pov(180).onTrue(new ToCL1(m_elevatorSys, m_manpulatorPitchSys)); // down
+      m_gunnerController.pov(270).onTrue(new ToCL2(m_elevatorSys, m_manpulatorPitchSys)); // left
+      m_gunnerController.button(9).onTrue(new ToHome(m_elevatorSys, m_manpulatorPitchSys)); // left stick button
 
 
       // coral manipultion (replace with automatic single button)
-      m_controlController.leftBumper().whileTrue(new CManipulate(m_coralManipulatorSys, CORAL.INTAKE_SPEED)); // left bumper
-      m_controlController.button(7).whileTrue(new CManipulate(m_coralManipulatorSys, CORAL.FRONT_OUTTAKE_SPEED));
-      m_controlController.button(11).whileTrue(new CManipulate(m_coralManipulatorSys, -CORAL.BACK_OUTTAKE_SPEED));//left stick
+      m_gunnerController.leftBumper().whileTrue(new CManipulate(m_coralManipulatorSys, CORAL.INTAKE_SPEED)); // left bumper
+      m_gunnerController.button(7).whileTrue(new CManipulate(m_coralManipulatorSys, CORAL.FRONT_OUTTAKE_SPEED));
+      m_gunnerController.button(11).whileTrue(new CManipulate(m_coralManipulatorSys, -CORAL.BACK_OUTTAKE_SPEED));//left stick
 
       //algae manipulation
-      m_controlController.rightBumper().whileTrue(new AManipulate(m_algaeManipulatorSys, 0.3)); // left bumper
-      m_controlController.button(8).whileTrue(new AManipulate(m_algaeManipulatorSys, -1));
+      m_gunnerController.rightBumper().whileTrue(new AManipulate(m_algaeManipulatorSys, 0.3)); // left bumper
+      m_gunnerController.button(8).whileTrue(new AManipulate(m_algaeManipulatorSys, -1));
       m_algaeManipulatorSys.setDefaultCommand(new AManipulate(m_algaeManipulatorSys, 0));
 
       // algae position
-      m_controlController.button(4).onTrue(new ToANet(m_elevatorSys, m_manpulatorPitchSys)); // y
-      m_controlController.button(1).onTrue(new ToAL1(m_elevatorSys, m_manpulatorPitchSys)); // x
-      m_controlController.button(3).onTrue(new ToAL2(m_elevatorSys, m_manpulatorPitchSys)); // b
-      m_controlController.button(2).onTrue(new ToAProcessor(m_elevatorSys, m_manpulatorPitchSys)); // a
-      m_controlController.button(10).onTrue(new ToAGround(m_elevatorSys, m_manpulatorPitchSys)); // start
+      m_gunnerController.button(4).onTrue(new ToANet(m_elevatorSys, m_manpulatorPitchSys)); // y
+      m_gunnerController.button(1).onTrue(new ToAL1(m_elevatorSys, m_manpulatorPitchSys)); // x
+      m_gunnerController.button(3).onTrue(new ToAL2(m_elevatorSys, m_manpulatorPitchSys)); // b
+      m_gunnerController.button(2).onTrue(new ToAProcessor(m_elevatorSys, m_manpulatorPitchSys)); // a
+      m_gunnerController.button(10).onTrue(new ToAGround(m_elevatorSys, m_manpulatorPitchSys)); // start
 
 
-    m_driver2.button(1).onTrue(new ToClimbHome(m_climbSys)); //A
-    m_driver2.button(2).onTrue(new ToClimbReady(m_climbSys)); //B
-    m_driver2.button(4).onTrue(new ToClimbLatched(m_climbSys)); //Y
+    m_driveController.button(1).onTrue(new ToClimbHome(m_climbSys)); //A
+    m_driveController.button(2).onTrue(new ToClimbReady(m_climbSys)); //B
+    m_driveController.button(4).onTrue(new ToClimbLatched(m_climbSys)); //Y
 
     // Command driveFieldOrientedDirectAngle      = drivebase.driveFieldOriented(driveDirectAngle);
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
@@ -156,32 +152,32 @@ public class RobotContainer {
 
     if (Robot.isSimulation())
     {
-      m_controlController.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
-      m_controlController.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
+      m_gunnerController.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
+      m_gunnerController.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
 
     }
     if (DriverStation.isTest())
     {
       drivebase.setDefaultCommand(driveRobotOrientedAngularVelocity); // Overrides drive command above!
 
-      m_controlController.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      m_controlController.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
-      m_controlController.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      m_controlController.back().whileTrue(drivebase.centerModulesCommand());
-      m_controlController.leftBumper().onTrue(Commands.none());
-      m_controlController.rightBumper().onTrue(Commands.none());
+      m_gunnerController.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+      m_gunnerController.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
+      m_gunnerController.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+      m_gunnerController.back().whileTrue(drivebase.centerModulesCommand());
+      m_gunnerController.leftBumper().onTrue(Commands.none());
+      m_gunnerController.rightBumper().onTrue(Commands.none());
     } else
     {
-      // m_controlController.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      // m_controlController.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      // m_controlController.b().whileTrue(
+      // m_gunnerController.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+      // m_gunnerController.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
+      // m_gunnerController.b().whileTrue(
       //     drivebase.driveToPose(
       //         new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
       //                         );
-      m_controlController.start().whileTrue(Commands.none());
-      m_controlController.back().whileTrue(Commands.none());
-      m_controlController.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      m_controlController.rightBumper().onTrue(Commands.none());
+      m_gunnerController.start().whileTrue(Commands.none());
+      m_gunnerController.back().whileTrue(Commands.none());
+      m_gunnerController.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+      m_gunnerController.rightBumper().onTrue(Commands.none());
 
     }
 
@@ -193,14 +189,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-  //  return new SequentialCommandGroup( 
-     return drivebase.driveToDistanceCommand(5, 1.5).withTimeout(2);
-    //   new ToCL3(m_elevatorSys, m_manpulatorPitchSys),
-    //   drivebase.driveToDistanceCommand(0.2, -0.5).withTimeout(2),
-    //   new CManipulate(m_coralManipulatorSys, MOTION.CORAL_FRONT_OUTTAKE_SPEED)
-    // );
-    
+    return drivebase.driveToDistanceCommand(5, 1.5).withTimeout(2);
     //Autos.exampleAuto(m_exampleSubsystem);
   }
 

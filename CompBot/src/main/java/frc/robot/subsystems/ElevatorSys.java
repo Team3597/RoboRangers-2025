@@ -45,13 +45,7 @@ public class ElevatorSys extends SubsystemBase {
       .i(ELEVATOR.PID.I)
       .d(ELEVATOR.PID.D)
       .outputRange(ELEVATOR.PID.MIN, ELEVATOR.PID.MAX)
-      //includes feedforward due to gravity
-      //.velocityFF(ELEVATOR.PID.FF)
       .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    // mainConfig.closedLoop.maxMotion
-    // .maxVelocity(ELEVATOR.PID.MAX_V) //RPM by default
-    // .maxAcceleration(ELEVATOR.PID.MAX_A) //RPM/S by default
-    // .allowedClosedLoopError(1);
     mainConfig
       .idleMode(IdleMode.kBrake)
       .inverted(false)
@@ -71,38 +65,26 @@ public class ElevatorSys extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Elevator Encoder", GetElevatorEncoder());
+    SmartDashboard.putNumber("Elevator Position", GetElevatorPosition());
     SmartDashboard.putNumber("Slave Encoder", elevatorSlave.getEncoder().getPosition());
-  //  System.out.println(GetElevatorEncoder());
-  //  System.out.println(elevatorSlave.getEncoder().getPosition());
     SmartDashboard.putNumber("Elevator RPM", elevatorMain.getEncoder().getVelocity());
     SmartDashboard.putNumber("Elevator Amps", elevatorMain.getOutputCurrent() + elevatorSlave.getOutputCurrent());
   }
 
-
+  //sets height target
   private void setHeight(double in) {
-
-    // if (in < ELEVATOR.MAX_HEIGHT && in > 0) {
-    //     elevatorController.setReference(inToEncoder(in), ControlType.kMAXMotionPositionControl,ClosedLoopSlot.kSlot0,ELEVATOR.PID.FF);
-    // }
-    target = new TrapezoidProfile.State(in,0);
-  }
-
-  public void moveToHeight() {
-    setpoint = motionProfile.calculate(0.02, setpoint, target);
-    elevatorController.setReference(setpoint.position, ControlType.kPosition,ClosedLoopSlot.kSlot0,ELEVATOR.PID.FF);
-  }
-
-  private void setPosition(double count) {
-    if (count < ELEVATOR.MAX_HEIGHT && count > 0) {
-      elevatorController.setReference(count, ControlType.kPosition);
-
+    if (in < ELEVATOR.MAX_HEIGHT && in > 0) {
+      target = new TrapezoidProfile.State(in,0);
     }
+    SmartDashboard.putNumber("Elevator Setpoint",in);
   }
-
-  private double inToEncoder(double in) {
-    System.out.println ((in / ELEVATOR.MAX_HEIGHT) * ELEVATOR.MAX_COUNTS + ELEVATOR.COUNT_OFFSET);
-    return (in / ELEVATOR.MAX_HEIGHT) * ELEVATOR.MAX_COUNTS + ELEVATOR.COUNT_OFFSET;
+  
+  //drives to height target; must be called repeatedly
+  public void moveToHeight() {
+    //gets setpoint object from motion profile
+    setpoint = motionProfile.calculate(0.02, setpoint, target);
+    //sets elevator pid controller to position from setpoint object with gravity feedforward
+    elevatorController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ELEVATOR.PID.FF);
   }
 
   private double encoderToIn(double counts) {
@@ -110,7 +92,7 @@ public class ElevatorSys extends SubsystemBase {
   }
 
   public double GetElevatorEncoder() {
-    return encoderToIn(elevatorMain.getEncoder().getPosition());
+    return elevatorMain.getEncoder().getPosition();
   }
 
   public double GetElevatorPosition() {
@@ -118,54 +100,48 @@ public class ElevatorSys extends SubsystemBase {
   }
 
   public void toHome() {
-    target = new TrapezoidProfile.State(ELEVATOR.HOME,0);
-    //setHeight(Constants.ELEVATOR.HOME,false);
-    //if (GLOBAL.DEBUG_MODE) System.out.println("elev toHome");
-    SmartDashboard.putNumber("Setpoint",ELEVATOR.HOME);
+    setHeight(ELEVATOR.CLEAR);
+    if (GLOBAL.DEBUG_MODE) System.out.println("elev toHome");
   }
 
   public void toClear() {
-    setHeight(Constants.ELEVATOR.CLEAR);
+    setHeight(ELEVATOR.CLEAR);
     if (GLOBAL.DEBUG_MODE) System.out.println("elev toClear");
   }
 
   public void toAL1() {
-    setHeight(Constants.ELEVATOR.AL1);
+    setHeight(ELEVATOR.AL1);
     if (GLOBAL.DEBUG_MODE) System.out.println("elev toAL1");
   }
 
   public void toAL2() {
-    setHeight(Constants.ELEVATOR.AL2);
+    setHeight(ELEVATOR.AL2);
     if (GLOBAL.DEBUG_MODE) System.out.println("elev toAL2");
   }
 
   public void toANet() {
-    setHeight(Constants.ELEVATOR.ANET);
+    setHeight(ELEVATOR.ANET);
     if (GLOBAL.DEBUG_MODE) System.out.println("elev toANet");
   }
 
   public void toCL1() {
-    setHeight(Constants.ELEVATOR.CL1);
+    setHeight(ELEVATOR.CL1);
     if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL1");
-    SmartDashboard.putNumber("Setpoint",ELEVATOR.CL1);
   }
 
   public void toCL2() {
-    setHeight(Constants.ELEVATOR.CL2);
+    setHeight(ELEVATOR.CL2);
     if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL2");
-    SmartDashboard.putNumber("Setpoint",ELEVATOR.CL2);
   }
 
   public void toCL3() {
-    setHeight(Constants.ELEVATOR.CL3);
+    setHeight(ELEVATOR.CL3);
     if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL3");
-    SmartDashboard.putNumber("Setpoint",ELEVATOR.CL3);
   }
 
   public void toCL4() {
-    setHeight(Constants.ELEVATOR.CL4);
+    setHeight(ELEVATOR.CL4);
     if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL4");
-    SmartDashboard.putNumber("Setpoint",ELEVATOR.CL4);
   }
 
   public boolean isHome() {
