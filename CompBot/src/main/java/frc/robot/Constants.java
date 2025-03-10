@@ -22,7 +22,12 @@ import swervelib.math.Matter;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
+
+//@Deprecated
 public final class Constants {
+
+  public static final double LOOPER_DELTA_DURATION = 0.01;
+
 
   public static class GLOBAL {
     public static boolean DEBUG_MODE = false; //enables debug sysouts

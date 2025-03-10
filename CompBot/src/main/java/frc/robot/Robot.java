@@ -10,18 +10,11 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-import frc.robot.Constants.PROPERTIES;
-
-/**
- * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as
- * described in the TimedRobot documentation. If you change the name of this class or the package after creating this
- * project, you must also update the build.gradle file in the project.
- */
 public class Robot extends TimedRobot
 {
 
   private static Robot   instance;
-  private        Command m_autonomousCommand;
+  private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
 
@@ -48,7 +41,7 @@ public class Robot extends TimedRobot
     m_robotContainer = new RobotContainer();
 
     // Create a timer to disable motor brake a few seconds after disable.  This will let the robot stop
-    // immediately when disabled, but then also let it be pushed more 
+    // immediately when disabled, but then also let it be pushed more
     disabledTimer = new Timer();
 
     if (isSimulation())
@@ -72,7 +65,7 @@ public class Robot extends TimedRobot
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    
+
   }
 
   /**
@@ -89,7 +82,7 @@ public class Robot extends TimedRobot
   @Override
   public void disabledPeriodic()
   {
-    if (disabledTimer.hasElapsed(PROPERTIES.WHEEL_LOCK_TIME))
+    if (disabledTimer.hasElapsed(Constants.PROPERTIES.WHEEL_LOCK_TIME))
     {
       m_robotContainer.setMotorBrake(false);
       disabledTimer.stop();
@@ -142,7 +135,7 @@ public class Robot extends TimedRobot
    */
   @Override
   public void teleopPeriodic()
-  { 
+  {
   }
 
   @Override
