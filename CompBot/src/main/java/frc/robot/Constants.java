@@ -157,7 +157,7 @@ public final class Constants {
 
     }
 
-    public static final double MANIPULATOR_PIVOT_OFFSET = -0.57;
+    public static final double MANIPULATOR_PIVOT_OFFSET = 0;
     //encoder got screwed so zeroed + am lazy
 
     public static final double MANIPULATOR_MIN_PITCH = 0;
