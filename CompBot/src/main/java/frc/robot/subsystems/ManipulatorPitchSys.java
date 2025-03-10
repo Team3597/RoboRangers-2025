@@ -126,6 +126,11 @@ public class ManipulatorPitchSys extends SubsystemBase {
     if (GLOBAL.DEBUG_MODE) System.out.println("manip toCLow");
   }
 
+  public void toCL1() {
+    setPitch(Constants.MANIPULATOR.CL1);
+    if (GLOBAL.DEBUG_MODE) System.out.println("manip toCL1");
+  }
+
   public void toCHigh() {
     setPitch(Constants.MANIPULATOR.CHIGH);
     if (GLOBAL.DEBUG_MODE) System.out.println("manip toCHigh");

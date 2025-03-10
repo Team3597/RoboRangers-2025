@@ -31,7 +31,7 @@ public class ToCL1 extends Command {
   public void initialize() {
     if (GLOBAL.DEBUG_MODE) System.out.println("To CL1");
     elevatorSys.toCL1(); // elevator to cl1
-
+    manipulatorPitchSys.toCL1();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

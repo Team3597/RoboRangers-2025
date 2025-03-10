@@ -138,9 +138,9 @@ public final class Constants {
     public static final double CL1 = 14.5; // coral l1, l2, l3, l4
     public static final double CL2 = 26.5;
     public static final double CL3 = 42.8;
-    public static final double CL4 = 52;
+    public static final double CL4 = 53;
     
-    public static final double DEADBAND = 2;
+    public static final double DEADBAND = 0.25;
   }
 
   public static class MANIPULATOR {
@@ -160,21 +160,24 @@ public final class Constants {
     public static final double MANIPULATOR_PIVOT_OFFSET = -0.57;
     //encoder got screwed so zeroed + am lazy
 
-    public static final double MANIPULATOR_MIN_PITCH = 0.57;
-    public static final double MANIPULATOR_MAX_PITCH = 0.99;
-    
-    
-    public static final double HOME = 0.57; // home pitch
- 
-    public static final double UNSTICK = 0.6; // pitch to unstick coral
+    public static final double MANIPULATOR_MIN_PITCH = 0;
+    //0.57
+    public static final double MANIPULATOR_MAX_PITCH = 0.5;
+    //0.99
 
-    public static final double AGROUND = 0.7; // algae ground, processor, reef (l1, l2), net
-    public static final double APROCESSOR = 0.75;
-    public static final double AREEF = 0.75;
-    public static final double ANET = 0.99;
+    public static final double HOME = 0; // home pitch
+    //0.57.
+ 
+    public static final double UNSTICK = 0.03; // pitch to unstick coral
+
+    public static final double AGROUND = 0.13; // algae ground, processor, reef (l1, l2), net
+    public static final double APROCESSOR = 0.18;
+    public static final double AREEF = 0.18;
+    public static final double ANET = 0.42;
 
     public static final double CLOW = HOME; // coral low (l1, l2, l3), high (l4)
-    public static final double CHIGH = 0.99;
+    public static final double CHIGH = 0.48;
+    public static final double CL1 = 0.1;
 
     public static final double DEADBAND = 0.1;
   }
