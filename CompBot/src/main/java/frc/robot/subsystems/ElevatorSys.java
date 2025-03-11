@@ -85,7 +85,7 @@ public class ElevatorSys extends SubsystemBase {
     // if (in < ELEVATOR.MAX_HEIGHT && in > 0) {
     //     elevatorController.setReference(inToEncoder(in), ControlType.kMAXMotionPositionControl,ClosedLoopSlot.kSlot0,ELEVATOR.PID.FF);
     // }
-    target = new TrapezoidProfile.State(in,0);
+    target = new TrapezoidProfile.State(inToEncoder(in),0);
   }
 
   public void moveToHeight() {

@@ -80,6 +80,7 @@ public class RobotContainer {
                       .deadband(OPERATOR.DEADBAND)
                       .scaleTranslation(0.8)
                       .scaleRotation(0-0.4)
+                      .cubeTranslationControllerAxis(true)
                       .allianceRelativeControl(false);
 
   // Clones the angular velocity input stream and converts it to a robotRelative input stream.
@@ -122,8 +123,8 @@ public class RobotContainer {
       m_controlController.button(11).whileTrue(new CManipulate(m_coralManipulatorSys, -CORAL.BACK_OUTTAKE_SPEED));//left stick
 
       //algae manipulation
-      m_controlController.rightBumper().whileTrue(new AManipulate(m_algaeManipulatorSys, 0.3)); // left bumper
-      m_controlController.button(8).whileTrue(new AManipulate(m_algaeManipulatorSys, -1));
+      m_controlController.rightBumper().whileTrue(new AManipulate(m_algaeManipulatorSys, -0.3)); // left bumper
+      m_controlController.button(8).whileTrue(new AManipulate(m_algaeManipulatorSys, 1));
       m_algaeManipulatorSys.setDefaultCommand(new AManipulate(m_algaeManipulatorSys, 0));
 
       // algae position
