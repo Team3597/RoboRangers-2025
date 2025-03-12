@@ -44,7 +44,7 @@ public class StateMachine {
             conditions.put(currentState, new ArrayList<>());
         }
         //add transition to array of conditions for current state
-        conditions.get(currentState).add(transition);
+        conditions.get(currentState).add(transition); // Makili: seems like conditionName should be tied to the transition in some way...
     }
 
     // sets first state to passed "stateName"
@@ -72,8 +72,8 @@ public class StateMachine {
 
     // call in robot periodic
     public void update() {
-        // validate that currentState hhas been set by StateMachine.getFirstState("StateName").start();
-        if (conditions.get(currentState) != null) {
+        // validate that currentState has been set by StateMachine.getFirstState("StateName").start();
+        if (conditions.get(currentState) != null) { // Makili: huh? start() doesn't fill conditions for currentState...
             // create new state from currentState in states hash map
             State stateExecutor = states.get(currentState);
             // iterate through array of conditions for currentState
