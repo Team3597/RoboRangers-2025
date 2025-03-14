@@ -4,12 +4,15 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.algae.AManipulate;
 import frc.robot.commands.algae.ToAGround;
 import frc.robot.commands.algae.ToAL1;
@@ -67,6 +70,8 @@ public class RobotContainer {
 
  // private final Joystick driveJoystick = new Joystick(Constants.OPERATOR.DRIVE_CONTROLLER_PORT);
 
+  private final SendableChooser<Command> autoChooser; // Auto chooser for path planner (part of recommended method of choosing an auto).
+
   //Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
   SwerveInputStream driveAngularVelocity = 
     SwerveInputStream.of(drivebase.getSwerveDrive(),
@@ -90,7 +95,14 @@ public class RobotContainer {
     
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
-  
+
+    // Build an auto chooser. This will use Commands.none() as the default option.
+    autoChooser = AutoBuilder.buildAutoChooser();
+
+    // Another option that allows you to specify the default auto by its name
+    // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
@@ -189,7 +201,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return drivebase.driveToDistanceCommand(5, 1.5).withTimeout(2);
+    return autoChooser.getSelected();
+
+    // return drivebase.driveToDistanceCommand(5, 1.5).withTimeout(2); // Old auto command
     //Autos.exampleAuto(m_exampleSubsystem);
   }
 
