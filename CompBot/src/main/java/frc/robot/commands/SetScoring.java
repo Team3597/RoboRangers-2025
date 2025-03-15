@@ -5,33 +5,29 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ELEVATOR;
-import frc.robot.Constants.MANIPULATOR;
 import frc.robot.subsystems.ElevatorSys;
 import frc.robot.subsystems.ManipulatorPitchSys;
+import frc.robot.subsystems.StateSys;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ToClear extends Command {
-  /** Creates a new ToClear. */
+public class SetScoring extends Command {
+  /** Creates a new SetScoring. */
 
-  private static ManipulatorPitchSys manipulatorPitchSys;
+  private static StateSys stateSys;
   private static ElevatorSys elevatorSys;
-  
-  public ToClear(ManipulatorPitchSys pitch, ElevatorSys elevator) {
-    this.manipulatorPitchSys = pitch;
-    this.elevatorSys = elevator;
+  private static ManipulatorPitchSys manipulatorPitchSys;
 
-    addRequirements(manipulatorPitchSys, elevatorSys);
+  public SetScoring(StateSys state, ElevatorSys elevator, ManipulatorPitchSys manipulator) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.stateSys = state;
+    this.elevatorSys = elevator;
+    this.manipulatorPitchSys = manipulator;
+    addRequirements(stateSys, elevatorSys, manipulatorPitchSys);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    manipulatorPitchSys.toHome();
-    elevatorSys.toClear();;
-
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

@@ -6,9 +6,9 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ScoringStateSys extends SubsystemBase {
+public class StateSys extends SubsystemBase {
   /** Creates a new ScoringStateSys. */
-  private enum states {
+  public enum scoring {
     Home,
     CL1,
     CL2,
@@ -20,8 +20,21 @@ public class ScoringStateSys extends SubsystemBase {
     ANet
   };
 
+  public scoring scoringState;
   
-  public ScoringStateSys() {}
+
+  
+  public StateSys() {
+    scoringState = scoring.Home;
+  }
+
+  public void setState(scoring newState) {
+    scoringState = newState;
+  }
+
+  public scoring getState() {
+    return scoringState;
+  }
 
   @Override
   public void periodic() {

@@ -14,7 +14,6 @@ import frc.robot.subsystems.AlgaeManipulatorSys;
 import frc.robot.subsystems.ClimbSys;
 import frc.robot.subsystems.CoralManipulatorSys;
 import frc.robot.subsystems.ElevatorSys;
-import frc.robot.subsystems.ExampleSys;
 import frc.robot.subsystems.ManipulatorPitchSys;
 import frc.robot.subsystems.VisionSys;
 import edu.wpi.first.wpilibj2.command.Command;
