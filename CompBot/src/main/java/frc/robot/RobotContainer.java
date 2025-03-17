@@ -80,11 +80,14 @@ public class RobotContainer {
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // Named commands:
+    NamedCommands.registerCommand("test_named_command", Commands.print("I EXIST"));
+    NamedCommands.registerCommand("test_subsystems", SetScoring(scoring.CL3));
+
     // Configure the trigger bindings
     configureBindings();
     
     DriverStation.silenceJoystickConnectionWarning(true);
-    NamedCommands.registerCommand("test", Commands.print("I EXIST"));
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     autoChooser = AutoBuilder.buildAutoChooser();

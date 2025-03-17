@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "test_path"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "test_named_command"
