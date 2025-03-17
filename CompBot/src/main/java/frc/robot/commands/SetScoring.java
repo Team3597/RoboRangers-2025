@@ -33,17 +33,18 @@ public class SetScoring extends Command {
     this.elevatorSys = elevator;
     this.manipulatorPitchSys = manipulator;
     addRequirements(stateSys, elevatorSys, manipulatorPitchSys);
-
-    this.currentPos = stateSys.getScoringState();
-    this.targetHeight = targetPos.height();
-    this.targetPitch = targetPos.pitch();
   }
 
   @Override
   public void initialize() {
+    this.currentPos = stateSys.getScoringState();
+    this.targetHeight = targetPos.height();
+    this.targetPitch = targetPos.pitch();
+    
     System.out.println("new SetScoring with el and manip " + targetHeight + targetPitch + " to pos " + targetPos.toString());
+    System.out.println("current pos is " + currentPos.toString() + " and target is " + targetPos.toString());
       // if manipulator moving through clear
-    if ((targetPos == scoring.AGround && currentPos == scoring.Home) || (targetPos == scoring.Home && currentPos == scoring.AGround)) {
+    if ((targetPos == scoring.AGround && currentPos == scoring.Home) || (targetPos == scoring.Home && currentPos == scoring.AGround) || (targetPos == scoring.AProcessor && currentPos == scoring.Home) || (targetPos == scoring.Home && currentPos == scoring.AProcessor)) {
       // go to clear before anything else
       System.out.println("moving through clear, setting elevator to clear");
       elevatorSys.setProfile(ELEVATOR.CLEAR);
