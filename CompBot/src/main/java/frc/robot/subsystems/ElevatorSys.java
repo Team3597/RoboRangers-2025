@@ -17,17 +17,19 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
+import frc.robot.Constants.CAN;
 import frc.robot.Constants.ELEVATOR;
-import frc.robot.Constants.GLOBAL;
 
 public class ElevatorSys extends SubsystemBase {
-  /** Creates a new Elevator. */
 
-  private static SparkMax elevatorMain = new SparkMax(Constants.CAN.ELEVATOR_MAIN, MotorType.kBrushless);
-  private static SparkMax elevatorSlave = new SparkMax(Constants.CAN.ELEVATOR_SLAVE, MotorType.kBrushless);
+  private static SparkMax elevatorMain = new SparkMax(CAN.ELEVATOR_MAIN, MotorType.kBrushless);
+  private static SparkMax elevatorSlave = new SparkMax(CAN.ELEVATOR_SLAVE, MotorType.kBrushless);
 
   private static SparkClosedLoopController elevatorController = elevatorMain.getClosedLoopController();
 
@@ -40,157 +42,69 @@ public class ElevatorSys extends SubsystemBase {
   private TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
 
   public ElevatorSys() {
-    mainConfig.closedLoop
-      .p(ELEVATOR.PID.P)
-      .i(ELEVATOR.PID.I)
-      .d(ELEVATOR.PID.D)
-      .outputRange(ELEVATOR.PID.MIN, ELEVATOR.PID.MAX)
-      .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     mainConfig
       .idleMode(IdleMode.kBrake)
       .inverted(false)
-      .smartCurrentLimit(Constants.ELEVATOR.AMP_LIMIT);
+      .smartCurrentLimit(ELEVATOR.AMP_LIMIT)
+      .closedLoop
+        .p(ELEVATOR.PID.P)
+        .i(ELEVATOR.PID.I)
+        .d(ELEVATOR.PID.D)
+        .outputRange(ELEVATOR.PID.MIN, ELEVATOR.PID.MAX)
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     elevatorMain.configure(mainConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     slaveConfig
       .follow(elevatorMain)
       .idleMode(IdleMode.kBrake)
       .inverted(false)
-      .smartCurrentLimit(Constants.ELEVATOR.AMP_LIMIT);
+      .smartCurrentLimit(ELEVATOR.AMP_LIMIT);
     elevatorSlave.configure(slaveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    //toHome();
   }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Elevator Position", GetElevatorPosition());
-    SmartDashboard.putNumber("Slave Encoder", elevatorSlave.getEncoder().getPosition());
-    SmartDashboard.putNumber("Elevator RPM", elevatorMain.getEncoder().getVelocity());
-    SmartDashboard.putNumber("Elevator Amps", elevatorMain.getOutputCurrent() + elevatorSlave.getOutputCurrent());
+  public Command setHeight(double position) {
+    return new SequentialCommandGroup(
+      this.runOnce(() -> this.setProfile(position)),
+      this.run(() -> this.followProfile()).until(() -> this.atHeight(position))
+    );
   }
 
-  //sets height target
-  private void setHeight(double in) {
-    if (in < ELEVATOR.MAX_HEIGHT && in > 0) {
-      target = new TrapezoidProfile.State(in,0);
+  public boolean atHeight(double position) {
+    if (Math.abs(getHeight() - position) < ELEVATOR.DEADBAND) {
+      return true;
+    } 
+    return false;
+  }
+
+  //create profile to target height
+  public void setProfile(double position) {
+    if (position < ELEVATOR.MAX_HEIGHT && position > 0) {
+      target = new TrapezoidProfile.State(position,0);
     }
-    SmartDashboard.putNumber("Elevator Setpoint",in);
+    SmartDashboard.putNumber("Elevator Setpoint",position);
   }
   
-  //drives to height target; must be called repeatedly
-  public void moveToHeight() {
+  //drives to target along profile; must be called repeatedly
+  public void followProfile() {
     //gets setpoint object from motion profile
     setpoint = motionProfile.calculate(0.02, setpoint, target);
     //sets elevator pid controller to position from setpoint object with gravity feedforward
     elevatorController.setReference(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ELEVATOR.PID.FF);
   }
 
-  private double encoderToIn(double counts) {
-    return ((counts + ELEVATOR.COUNT_OFFSET) / ELEVATOR.MAX_HEIGHT) * ELEVATOR.MAX_HEIGHT;
-  }
-
-  public double GetElevatorEncoder() {
+  public double getHeight() {
     return elevatorMain.getEncoder().getPosition();
   }
 
-  public double GetElevatorPosition() {
-    return encoderToIn(elevatorMain.getEncoder().getPosition());
-  }
+  // private double encoderToIn(double counts) {
+  //   return ((counts + ELEVATOR.COUNT_OFFSET) / ELEVATOR.MAX_HEIGHT) * ELEVATOR.MAX_HEIGHT;
+  // }
 
-  public void toHome() {
-    setHeight(ELEVATOR.CLEAR);
-    if (GLOBAL.DEBUG_MODE) System.out.println("elev toHome");
-  }
-
-  public void toClear() {
-    setHeight(ELEVATOR.CLEAR);
-    if (GLOBAL.DEBUG_MODE) System.out.println("elev toClear");
-  }
-
-  public void toAL1() {
-    setHeight(ELEVATOR.AL1);
-    if (GLOBAL.DEBUG_MODE) System.out.println("elev toAL1");
-  }
-
-  public void toAL2() {
-    setHeight(ELEVATOR.AL2);
-    if (GLOBAL.DEBUG_MODE) System.out.println("elev toAL2");
-  }
-
-  public void toANet() {
-    setHeight(ELEVATOR.ANET);
-    if (GLOBAL.DEBUG_MODE) System.out.println("elev toANet");
-  }
-
-  public void toCL1() {
-    setHeight(ELEVATOR.CL1);
-    if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL1");
-  }
-
-  public void toCL2() {
-    setHeight(ELEVATOR.CL2);
-    if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL2");
-  }
-
-  public void toCL3() {
-    setHeight(ELEVATOR.CL3);
-    if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL3");
-  }
-
-  public void toCL4() {
-    setHeight(ELEVATOR.CL4);
-    if (GLOBAL.DEBUG_MODE) System.out.println("elev toCL4");
-  }
-
-  public boolean isHome() {
-    if (GetElevatorPosition() <= ELEVATOR.HOME + ELEVATOR.DEADBAND) return true;
-    return false;
-  }
-  
-  public boolean isClear() {
-    if (GetElevatorPosition() >= ELEVATOR.CLEAR - ELEVATOR.DEADBAND) {
-     // System.out.println("IS CLEAR");
-      return true;
-    } else {
-     // System.out.println("NOT CLEAR");
-    return false;
-    }
-  }
-
-  public boolean isAtAL1() {
-    if (GetElevatorPosition() >= ELEVATOR.AL1 - ELEVATOR.DEADBAND && GetElevatorPosition() <= ELEVATOR.AL1 + ELEVATOR.DEADBAND) return true;
-    return false;
-  }
-
-  public boolean isAtAL2() {
-    if (GetElevatorPosition() >= ELEVATOR.AL2 - ELEVATOR.DEADBAND && GetElevatorPosition() <= ELEVATOR.AL2 + ELEVATOR.DEADBAND) return true;
-    return false;
-  }
-
-  public boolean isAtANet() {
-    if (GetElevatorPosition() >= ELEVATOR.ANET - ELEVATOR.DEADBAND && GetElevatorPosition() <= ELEVATOR.ANET + ELEVATOR.DEADBAND) return true;
-    return false;
-  }
-
-  public boolean isAtCL1() {
-    if (GetElevatorPosition() >= ELEVATOR.CL1 - ELEVATOR.DEADBAND && GetElevatorPosition() <= ELEVATOR.CL1 + ELEVATOR.DEADBAND) return true;
-    return false;
-  }
-
-  public boolean isAtCL2() {
-    if (GetElevatorPosition() >= ELEVATOR.CL2 - ELEVATOR.DEADBAND && GetElevatorPosition() <= ELEVATOR.CL2 + ELEVATOR.DEADBAND) return true;
-    return false;
-  }
-
-  public boolean isAtCL3() {
-    if (GetElevatorPosition() >= ELEVATOR.CL3 - ELEVATOR.DEADBAND && GetElevatorPosition() <= ELEVATOR.CL3 + ELEVATOR.DEADBAND) return true;
-    return false;
-  }
-
-  public boolean isAtCL4() {
-    if (GetElevatorPosition() >= ELEVATOR.CL4 - ELEVATOR.DEADBAND && GetElevatorPosition() <= ELEVATOR.CL4 + ELEVATOR.DEADBAND) return true;
-    return false;
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("Elevator Position", getHeight());
+    SmartDashboard.putNumber("Slave Encoder", elevatorSlave.getEncoder().getPosition());
+    SmartDashboard.putNumber("Elevator RPM", elevatorMain.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Elevator Amps", elevatorMain.getOutputCurrent() + elevatorSlave.getOutputCurrent());
   }
 }

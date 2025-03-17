@@ -18,18 +18,19 @@ import frc.robot.subsystems.ClimbSys;
 import frc.robot.subsystems.CoralManipulatorSys;
 import frc.robot.subsystems.ElevatorSys;
 import frc.robot.subsystems.ManipulatorPitchSys;
+import frc.robot.subsystems.StateSys;
+import frc.robot.subsystems.StateSys.scoring;
 import frc.robot.subsystems.VisionSys;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.CORAL;
 import frc.robot.Constants.OPERATOR;
+import frc.robot.commands.ManipulateObject;
+import frc.robot.commands.SetScoring;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-import lib.frc3597.state.State;
-import lib.frc3597.state.StateMachine;
-import lib.frc3597.state.Transition;
-
 import java.io.File;
 import swervelib.SwerveInputStream;
 
@@ -51,6 +52,7 @@ public class RobotContainer {
   private static final ManipulatorPitchSys m_manpulatorPitchSys = new ManipulatorPitchSys();
   private static final ClimbSys m_climbSys = new ClimbSys();
   private static final VisionSys m_visionSys = new VisionSys();
+  private static final StateSys m_stateSys = new StateSys();
 
 
   private final CommandXboxController m_gunnerController = new CommandXboxController(OPERATOR.GUNNER_CONTROLLER_PORT);
@@ -102,37 +104,42 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
+
+  // lazy method to get full set scoring commands from just the target
+  private SetScoring SetScoring(StateSys.scoring target) {
+    return new SetScoring(target, m_stateSys, m_elevatorSys, m_manpulatorPitchSys);
+  }
+
+  private ManipulateObject ManipulateObject() {
+    return new ManipulateObject(m_stateSys, m_coralManipulatorSys, m_algaeManipulatorSys);
+  }
+
   private void configureBindings() {
 
-      // coral position
-      m_gunnerController.pov(0).onTrue(new ToCL4(m_elevatorSys, m_manpulatorPitchSys)); // up
-      m_gunnerController.pov(90).onTrue(new ToCL3(m_elevatorSys, m_manpulatorPitchSys)); // right
-      m_gunnerController.pov(180).onTrue(new ToCL1(m_elevatorSys, m_manpulatorPitchSys)); // down
-      m_gunnerController.pov(270).onTrue(new ToCL2(m_elevatorSys, m_manpulatorPitchSys)); // left
-      m_gunnerController.button(9).onTrue(new ToHome(m_elevatorSys, m_manpulatorPitchSys)); // left stick button
+
+    // coral position
+    m_gunnerController.pov(0).onTrue(SetScoring(scoring.CL4)); // up
+    m_gunnerController.pov(90).onTrue(SetScoring(scoring.CL3)); // right
+    m_gunnerController.pov(180).onTrue(SetScoring(scoring.CL1)); // down
+    m_gunnerController.pov(270).onTrue(SetScoring(scoring.CL2)); // left
+    m_gunnerController.button(9).onTrue(SetScoring(scoring.Home)); // left stick button
 
 
-      // coral manipultion (replace with automatic single button)
-      m_gunnerController.leftBumper().whileTrue(new CManipulate(m_coralManipulatorSys, CORAL.INTAKE_SPEED)); // left bumper
-      m_gunnerController.button(7).whileTrue(new CManipulate(m_coralManipulatorSys, CORAL.FRONT_OUTTAKE_SPEED));
-      m_gunnerController.button(11).whileTrue(new CManipulate(m_coralManipulatorSys, -CORAL.BACK_OUTTAKE_SPEED));//left stick
-
-      //algae manipulation
-      m_gunnerController.rightBumper().whileTrue(new AManipulate(m_algaeManipulatorSys, 0.3)); // left bumper
-      m_gunnerController.button(8).whileTrue(new AManipulate(m_algaeManipulatorSys, -1));
-      m_algaeManipulatorSys.setDefaultCommand(new AManipulate(m_algaeManipulatorSys, 0));
-
-      // algae position
-      m_gunnerController.button(4).onTrue(new ToANet(m_elevatorSys, m_manpulatorPitchSys)); // y
-      m_gunnerController.button(1).onTrue(new ToAL1(m_elevatorSys, m_manpulatorPitchSys)); // x
-      m_gunnerController.button(3).onTrue(new ToAL2(m_elevatorSys, m_manpulatorPitchSys)); // b
-      m_gunnerController.button(2).onTrue(new ToAProcessor(m_elevatorSys, m_manpulatorPitchSys)); // a
-      m_gunnerController.button(10).onTrue(new ToAGround(m_elevatorSys, m_manpulatorPitchSys)); // start
+    // automatic manipulation
+    m_gunnerController.leftBumper().whileTrue(ManipulateObject()); // left bumper
 
 
-    m_driveController.button(1).onTrue(new ToClimbHome(m_climbSys)); //A
-    m_driveController.button(2).onTrue(new ToClimbReady(m_climbSys)); //B
-    m_driveController.button(4).onTrue(new ToClimbLatched(m_climbSys)); //Y
+    // algae position
+    m_gunnerController.button(4).onTrue(SetScoring(scoring.ANet)); // y
+    m_gunnerController.button(1).onTrue(SetScoring(scoring.AL1)); // x
+    m_gunnerController.button(3).onTrue(SetScoring(scoring.AL2)); // b
+    m_gunnerController.button(2).onTrue(SetScoring(scoring.AGround)); // a
+    m_gunnerController.button(10).onTrue(SetScoring(scoring.AProcessor)); // start
+
+
+    // m_driveController.button(1).onTrue(new ToClimbHome(m_climbSys)); //A
+    // m_driveController.button(2).onTrue(new ToClimbReady(m_climbSys)); //B
+    // m_driveController.button(4).onTrue(new ToClimbLatched(m_climbSys)); //Y
 
     // Command driveFieldOrientedDirectAngle      = drivebase.driveFieldOriented(driveDirectAngle);
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
@@ -189,10 +196,13 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+   // return autoChooser.getSelected();
 
-    // return drivebase.driveToDistanceCommand(5, 1.5).withTimeout(2); // Old auto command
-    //Autos.exampleAuto(m_exampleSubsystem);
+    // check if my command ends correctly
+    return new SequentialCommandGroup(
+      SetScoring(scoring.CL2),
+      new InstantCommand(() -> System.out.println("test"))
+    );
   }
 
   public void setMotorBrake(boolean brake)

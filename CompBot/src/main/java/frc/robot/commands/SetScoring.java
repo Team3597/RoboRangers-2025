@@ -5,41 +5,82 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ELEVATOR;
+import frc.robot.Constants.MANIPULATOR;
 import frc.robot.subsystems.ElevatorSys;
 import frc.robot.subsystems.ManipulatorPitchSys;
 import frc.robot.subsystems.StateSys;
+import frc.robot.subsystems.StateSys.scoring;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+// nomenclature change: position now only refers to overall scoring position; ie L1
+// height and pitch then refer to the components of this for the elevator and manipulator
+
 public class SetScoring extends Command {
-  /** Creates a new SetScoring. */
 
-  private static StateSys stateSys;
-  private static ElevatorSys elevatorSys;
-  private static ManipulatorPitchSys manipulatorPitchSys;
+  private final StateSys stateSys;
+  private final ElevatorSys elevatorSys;
+  private final ManipulatorPitchSys manipulatorPitchSys;
 
-  public SetScoring(StateSys state, ElevatorSys elevator, ManipulatorPitchSys manipulator) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  private StateSys.scoring currentPos;
+  private StateSys.scoring targetPos;
+
+  private double targetHeight;
+  private double targetPitch;
+
+  public SetScoring(StateSys.scoring target, StateSys state, ElevatorSys elevator, ManipulatorPitchSys manipulator) {
+    this.targetPos = target;
     this.stateSys = state;
     this.elevatorSys = elevator;
     this.manipulatorPitchSys = manipulator;
     addRequirements(stateSys, elevatorSys, manipulatorPitchSys);
+
+    this.currentPos = stateSys.getScoringState();
+    this.targetHeight = targetPos.height();
+    this.targetPitch = targetPos.pitch();
   }
 
-  // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+      // if manipulator moving through clear
+    if ((targetPos == scoring.AGround && currentPos == scoring.Home) || (targetPos == scoring.Home && currentPos == scoring.AGround)) {
+      // go to clear before anything else
+      elevatorSys.setProfile(ELEVATOR.CLEAR);
+    } else {
+      // otherwise go right to final height
+      elevatorSys.setProfile(targetHeight);
+    }
+  }
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    elevatorSys.followProfile();
+    // if elevator is above clear move manipulator
+    if (elevatorSys.getHeight() > ELEVATOR.CLEAR - ELEVATOR.DEADBAND) {
+      if (StateSys.hasAlgae && targetPos.coral()) {
+        System.out.println("Cannot move to coral positions with algae");
+      } else {
+        manipulatorPitchSys.setPitch(targetPitch);
+      }
+    }
+    // once at final position move elevator to target
+    if (Math.abs(manipulatorPitchSys.getPitch() - targetPitch) < MANIPULATOR.DEADBAND) {
+      elevatorSys.setProfile(targetHeight);
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    stateSys.setScoringState(targetPos);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (Math.abs(elevatorSys.getHeight() - targetHeight) < ELEVATOR.END_DEADBAND
+        && Math.abs(manipulatorPitchSys.getPitch() - targetPitch) < MANIPULATOR.END_DEADBAND) {
+          return true;
+    }
     return false;
   }
 }
