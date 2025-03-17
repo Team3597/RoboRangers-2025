@@ -199,13 +199,13 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-   // return autoChooser.getSelected();
+    return autoChooser.getSelected();
 
     // check if my command ends correctly
-    return new SequentialCommandGroup(
-      SetScoring(scoring.CL2),
-      new InstantCommand(() -> System.out.println("test"))
-    );
+    //return new SequentialCommandGroup(
+    //  SetScoring(scoring.CL2),
+    //  new InstantCommand(() -> System.out.println("test"))
+    //);
   }
 
   public void setMotorBrake(boolean brake)
