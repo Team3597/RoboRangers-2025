@@ -43,11 +43,7 @@ deploy {
     }
 }
 
-repositories {
-    maven {
-        url = uri("https://maven.pkg.github.com/Mechanical-Advantage/AdvantageKit")
-    }
-}
+
 
 def deployArtifact = deploy.targets.roborio.artifacts.frcJava
 
@@ -81,8 +77,6 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    // AdvantageKit
-    annotationProcessor "org.littletonrobotics.akit.junction:junction-autolog:4.0.0-alpha-1"
 }
 
 test {
