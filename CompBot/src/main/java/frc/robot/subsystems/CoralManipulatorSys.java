@@ -61,7 +61,7 @@ public class CoralManipulatorSys extends SubsystemBase {
   //for scoring L4
   public void backOuttakeCoral() {
 
-    coralManipulator.set(CORAL.BACK_OUTTAKE_SPEED);
+    coralManipulator.set(-CORAL.BACK_OUTTAKE_SPEED);
 
   }
 

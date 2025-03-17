@@ -49,10 +49,8 @@ public class ManipulatorPitchSys extends SubsystemBase {
     pitchController.setReference(MANIPULATOR.HOME, ControlType.kPosition);
   }
 
-  public Command setPitch(double pitch) {
-    return 
-      this.run(() -> this.setReference(pitch)).until(() -> this.atPitch(pitch))
-    ;
+  public void setPitch(double pitch) {
+    pitchController.setReference(pitch, ControlType.kPosition);
   }
 
   public boolean atPitch(double pitch) {

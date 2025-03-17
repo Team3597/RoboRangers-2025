@@ -135,7 +135,7 @@ public final class Constants {
     public static final double CL4 = 53;
     
     public static final double DEADBAND = 0.25;
-    public static final double END_DEADBAND = 0;
+    public static final double END_DEADBAND = 0.75;
   }
 
   public static class MANIPULATOR {
@@ -173,7 +173,7 @@ public final class Constants {
     public static final double CL1 = 0.1;
 
     public static final double DEADBAND = 0.1;
-    public static final double END_DEADBAND = 0;
+    public static final double END_DEADBAND = 0.01;
   }
 
   public static class CLIMB {
