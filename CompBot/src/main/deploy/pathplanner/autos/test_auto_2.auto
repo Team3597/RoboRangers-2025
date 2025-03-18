@@ -21,6 +21,12 @@
           "data": {
             "name": "test_subsystems"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "home"
+          }
         }
       ]
     }

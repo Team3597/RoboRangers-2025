@@ -83,6 +83,7 @@ public class RobotContainer {
     // Named commands:
     NamedCommands.registerCommand("test_named_command", Commands.print("I EXIST"));
     NamedCommands.registerCommand("test_subsystems", SetScoring(scoring.CL3));
+    NamedCommands.registerCommand("home", SetScoring(scoring.Home));
 
     // Configure the trigger bindings
     configureBindings();
