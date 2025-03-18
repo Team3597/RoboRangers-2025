@@ -121,7 +121,7 @@ public final class Constants {
     public static final double MAX_HEIGHT = 53;
     public static final double MAX_COUNTS = 56;
 
-    public static final double HOME = .25; // home height
+    public static final double HOME = 0.25; // home height
     public static final double CLEAR = 4; // clearance height for manipulator
 
     public static final double AL1 = 26.5; // algae l1, l2, net

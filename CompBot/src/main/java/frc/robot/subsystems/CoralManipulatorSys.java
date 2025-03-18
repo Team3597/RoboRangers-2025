@@ -26,7 +26,7 @@ public class CoralManipulatorSys extends SubsystemBase {
 
   private static SparkMaxConfig coralConfig = new SparkMaxConfig();
 
-  DigitalInput coralLimitSwitch = new DigitalInput(DIO.CORAL_LIMIT);
+  //DigitalInput coralLimitSwitch = new DigitalInput(DIO.CORAL_LIMIT);
 
   public CoralManipulatorSys() {
     coralConfig
@@ -38,7 +38,7 @@ public class CoralManipulatorSys extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Coral Limit Switch", coralLimitSwitch.get());
+    //SmartDashboard.putBoolean("Coral Limit Switch", coralLimitSwitch.get());
     // This method will be called once per scheduler run
   }
 
