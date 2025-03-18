@@ -39,7 +39,7 @@ public class ManipulatorPitchSys extends SubsystemBase {
       .d(MANIPULATOR.PID.D)
       .outputRange(MANIPULATOR.PID.MIN, MANIPULATOR.PID.MAX)
       .positionWrappingEnabled(true)
-      .positionWrappingInputRange(0, 1);
+      .positionWrappingInputRange(MANIPULATOR.PID.WRAP_MIN, MANIPULATOR.PID.WRAP_MAX);
     pitchConfig
       .idleMode(IdleMode.kBrake)
       .inverted(false)

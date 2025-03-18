@@ -106,7 +106,7 @@ public final class Constants {
     public static class PID {
       public static final double P = 0.25;
       public static final double I = 0.0;
-      public static final double D = 0.02;
+      public static final double D = 0.03;
       public static final double MIN = -1;
       public static final double MAX = 1;
       public static final double FF = 0.022;
@@ -121,7 +121,7 @@ public final class Constants {
     public static final double MAX_HEIGHT = 53;
     public static final double MAX_COUNTS = 56;
 
-    public static final double HOME = .5; // home height
+    public static final double HOME = .25; // home height
     public static final double CLEAR = 4; // clearance height for manipulator
 
     public static final double AL1 = 26.5; // algae l1, l2, net
@@ -144,21 +144,24 @@ public final class Constants {
     public static final int ALGAE_AMP_LIMIT = 30;
 
     public static class PID {
-      public static double P = 3;
+      public static double P = 4;
       public static double I = 0.001;
-      public static double D = 0.1;
+      public static double D = 0.05;
       public static final double MIN = -1;
       public static final double MAX = 1;
 
+      public static final double WRAP_MIN = 0;
+      public static final double WRAP_MAX = 1;
+
     }
 
-    public static final double MANIPULATOR_PIVOT_OFFSET = 0;
+    public static final double MANIPULATOR_PIVOT_OFFSET = 0.0;
 
     public static final double MANIPULATOR_MIN_PITCH = 0;
     // 0.57 pre zero
     public static final double MANIPULATOR_MAX_PITCH = 0.5;
     // 0.99
-    public static final double HOME = 0; // home pitch
+    public static final double HOME = 0.016; // home pitch
     // 0.57.
  
     public static final double UNSTICK = 0.03; // pitch to unstick coral
@@ -172,8 +175,8 @@ public final class Constants {
     public static final double CHIGH = 0.48;
     public static final double CL1 = 0.1;
 
-    public static final double DEADBAND = 0.015;
-    public static final double END_DEADBAND = 0.015;
+    public static final double DEADBAND = 0.025;
+    public static final double END_DEADBAND = 0.025;
   }
 
   public static class CLIMB {
