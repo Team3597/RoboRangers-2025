@@ -202,7 +202,7 @@ public class RobotContainer {
     return autoChooser.getSelected();
 
     // check if my command ends correctly
-    //return new SequentialCommandGroup(
+    // return new SequentialCommandGroup(
     //  SetScoring(scoring.CL2),
     //  new InstantCommand(() -> System.out.println("test"))
     //);
