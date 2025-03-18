@@ -122,7 +122,7 @@ public final class Constants {
     public static final double MAX_COUNTS = 56;
 
     public static final double HOME = .5; // home height
-    public static final double CLEAR = 2; // clearance height for manipulator
+    public static final double CLEAR = 4; // clearance height for manipulator
 
     public static final double AL1 = 26.5; // algae l1, l2, net
     public static final double AL2 = 41;
@@ -135,7 +135,7 @@ public final class Constants {
     public static final double CL4 = 53;
     
     public static final double DEADBAND = 0.25;
-    public static final double END_DEADBAND = 0;
+    public static final double END_DEADBAND = 0.75;
   }
 
   public static class MANIPULATOR {
@@ -145,10 +145,10 @@ public final class Constants {
 
     public static class PID {
       public static double P = 3;
-      public static double I = 0;
-      public static double D = 0.01;
-      public static final double MIN = -0.5;
-      public static final double MAX = 0.5;
+      public static double I = 0.001;
+      public static double D = 0.1;
+      public static final double MIN = -1;
+      public static final double MAX = 1;
 
     }
 
@@ -163,7 +163,7 @@ public final class Constants {
  
     public static final double UNSTICK = 0.03; // pitch to unstick coral
 
-    public static final double AGROUND = 0.13; // algae ground, processor, reef (l1, l2), net
+    public static final double AGROUND = 0.18; // algae ground, processor, reef (l1, l2), net
     public static final double APROCESSOR = 0.18;
     public static final double AREEF = 0.18;
     public static final double ANET = 0.42;
@@ -172,8 +172,8 @@ public final class Constants {
     public static final double CHIGH = 0.48;
     public static final double CL1 = 0.1;
 
-    public static final double DEADBAND = 0.1;
-    public static final double END_DEADBAND = 0;
+    public static final double DEADBAND = 0.015;
+    public static final double END_DEADBAND = 0.015;
   }
 
   public static class CLIMB {

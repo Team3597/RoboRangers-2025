@@ -33,16 +33,17 @@ public class SetScoring extends Command {
     this.elevatorSys = elevator;
     this.manipulatorPitchSys = manipulator;
     addRequirements(stateSys, elevatorSys, manipulatorPitchSys);
-
-    this.currentPos = stateSys.getScoringState();
-    this.targetHeight = targetPos.height();
-    this.targetPitch = targetPos.pitch();
   }
 
   @Override
   public void initialize() {
+    this.currentPos = stateSys.getScoringState();
+    this.targetHeight = targetPos.height();
+    this.targetPitch = targetPos.pitch();
+    
+    
       // if manipulator moving through clear
-    if ((targetPos == scoring.AGround && currentPos == scoring.Home) || (targetPos == scoring.Home && currentPos == scoring.AGround)) {
+    if ((targetPos == scoring.AGround && currentPos == scoring.Home) || (targetPos == scoring.Home && currentPos == scoring.AGround) || (targetPos == scoring.AProcessor && currentPos == scoring.Home) || (targetPos == scoring.Home && currentPos == scoring.AProcessor)) {
       // go to clear before anything else
       elevatorSys.setProfile(ELEVATOR.CLEAR);
     } else {
@@ -57,7 +58,6 @@ public class SetScoring extends Command {
     // if elevator is above clear move manipulator
     if (elevatorSys.getHeight() > ELEVATOR.CLEAR - ELEVATOR.DEADBAND) {
       if (StateSys.hasAlgae && targetPos.coral()) {
-        System.out.println("Cannot move to coral positions with algae");
       } else {
         manipulatorPitchSys.setPitch(targetPitch);
       }

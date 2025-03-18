@@ -49,10 +49,9 @@ public class ManipulatorPitchSys extends SubsystemBase {
     pitchController.setReference(MANIPULATOR.HOME, ControlType.kPosition);
   }
 
-  public Command setPitch(double pitch) {
-    return 
-      this.run(() -> this.setReference(pitch)).until(() -> this.atPitch(pitch))
-    ;
+  public void setPitch(double pitch) {
+    pitchController.setReference(pitch, ControlType.kPosition);
+    SmartDashboard.putNumber("Manipulator Target", pitch);
   }
 
   public boolean atPitch(double pitch) {
@@ -74,6 +73,8 @@ public class ManipulatorPitchSys extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Manipulator Encoder", getPitch());
+    SmartDashboard.putNumber("Manipulator Neo Encoder", 0.48 * (manipulatorPitch.getEncoder().getPosition()/33.64));
+    SmartDashboard.putNumber("Manipulator Current", manipulatorPitch.getOutputCurrent());
   }
 
 }

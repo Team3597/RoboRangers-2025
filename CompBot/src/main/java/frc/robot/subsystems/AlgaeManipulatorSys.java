@@ -60,12 +60,12 @@ public class AlgaeManipulatorSys extends SubsystemBase {
 
   public void intakeAlgae() {
     //algaeVelocityController.setReference(MOTION.ALGAE_INTAKE_RPM, ControlType.kVelocity);
-    algaeManipulator.set(0.2);
+    algaeManipulator.set(-0.2);
   }
 
   public void outtakeAlgae() {
     //algaeVelocityController.setReference(MOTION.ALGAE_OUTTAKE_RPM, ControlType.kVelocity);
-    algaeManipulator.set(0.01);
+    algaeManipulator.set(1);
   }
 
   public void manipulateAlgae(double rpm) {

@@ -22,7 +22,7 @@ public class StateSys extends SubsystemBase {
     AProcessor( ELEVATOR.HOME, MANIPULATOR.AGROUND, true,  false, false),
     AL1(        ELEVATOR.AL1,  MANIPULATOR.AREEF,   true,  false, true),
     AL2(        ELEVATOR.AL2,  MANIPULATOR.AREEF,   true,  false, true),
-    ANet(       ELEVATOR.ANET, MANIPULATOR.AREEF,   true,  false, false);
+    ANet(       ELEVATOR.ANET, MANIPULATOR.ANET,   true,  false, false);
 
     private final double elevatorHeight;
     private final double manipulatorPitch;
