@@ -10,13 +10,16 @@ import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAMERA;
+import frc.robot.Constants.GLOBAL;
 
 public class CameraSys extends SubsystemBase {
 
   private static PhotonCamera camera = new PhotonCamera(CAMERA.CAMERA_NICKNAME); // camera is constant (not sure if this should be final?) so no need for initialization in constructor
 
   /** Creates a new CameraSys. */
-  public CameraSys() {}
+  public CameraSys() {
+    if (GLOBAL.DEBUG_MODE) System.out.println("in camera constructor");
+  }
 
   @Override
   public void periodic() {
@@ -28,6 +31,7 @@ public class CameraSys extends SubsystemBase {
    * Returns null if not targets are found by the camera (check for null to avoid a nullPointerException error). */
   public EstimatedRobotPose getEstimatedRobotPose() {
     PhotonPipelineResult result = camera.getLatestResult(); // gets result from the camera
+    if (GLOBAL.DEBUG_MODE) System.out.println("got results from camera");
     if (!result.hasTargets()) return null; // checks if result has targets
     if (CAMERA.PHOTON_POSE_ESTIMATOR.update(result).isPresent()) return CAMERA.PHOTON_POSE_ESTIMATOR.update(result).get(); // returns an EstimatedRobotPose if available from targets
     return null; // returns null otherwise

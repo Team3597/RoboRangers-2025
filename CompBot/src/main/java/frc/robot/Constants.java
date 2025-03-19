@@ -29,7 +29,7 @@ public final class Constants {
   public static final double LOOPER_DELTA_DURATION = 0.01;
 
   public static class GLOBAL {
-    public static boolean DEBUG_MODE = false; //enables debug sysouts
+    public static boolean DEBUG_MODE = true; //enables debug sysouts
     public static boolean MANIPULATOR_CLEAR = false; //are we good to change manipulator pitch?
 
     public static boolean DISABLE_ELEVATOR = false;

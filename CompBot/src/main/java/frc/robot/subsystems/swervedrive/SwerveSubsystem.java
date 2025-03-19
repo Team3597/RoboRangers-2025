@@ -37,6 +37,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.Constants.CAMERA;
+import frc.robot.Constants.GLOBAL;
 import frc.robot.Constants.PROPERTIES;
 import frc.robot.subsystems.CameraSys;
 import frc.robot.subsystems.swervedrive.Vision.Cameras;
@@ -123,6 +124,7 @@ public class SwerveSubsystem extends SubsystemBase
 
     if (CAMERA.PATH_PLANNER_ENABLED) // Sets up cameraSys and manually stops default odemetry thread (will update manually in periodic) when camera and path planner are set up.
     {
+      if (GLOBAL.DEBUG_MODE) System.out.println("seting up camera in swerve subsystem");
       setupCameraSys();
       swerveDrive.stopOdometryThread();
     }
@@ -159,6 +161,7 @@ public class SwerveSubsystem extends SubsystemBase
   public void setupCameraSys()
   {
     cameraSys = new CameraSys();
+    if (GLOBAL.DEBUG_MODE) System.out.println("camera started");
   }
 
   @Override
@@ -175,6 +178,7 @@ public class SwerveSubsystem extends SubsystemBase
     if (CAMERA.PATH_PLANNER_ENABLED) // Should update odometry when camera and path planner are set up.
     {
       swerveDrive.updateOdometry();
+      if (GLOBAL.DEBUG_MODE) System.out.println("calling addVisionReading");
       addVisionReading();
     }
   }
@@ -753,7 +757,11 @@ public class SwerveSubsystem extends SubsystemBase
   public void addVisionReading()
   {
     EstimatedRobotPose estimatedRobotPose = cameraSys.getEstimatedRobotPose();
-    if (estimatedRobotPose == null) return;
+    if (estimatedRobotPose == null){
+      if (GLOBAL.DEBUG_MODE) System.out.println("vision reading cancelled");
+      return;
+    }
+    if (GLOBAL.DEBUG_MODE) System.out.println("adding vision measurement");
     swerveDrive.addVisionMeasurement(estimatedRobotPose.estimatedPose.toPose2d(), estimatedRobotPose.timestampSeconds);
   }
 
