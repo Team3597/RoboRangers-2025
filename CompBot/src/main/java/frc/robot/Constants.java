@@ -227,6 +227,6 @@ public final class Constants {
 
     public static final PhotonPoseEstimator PHOTON_POSE_ESTIMATOR = new PhotonPoseEstimator(CAMERA.APRIL_TAG_FIELD_LAYOUT, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, CAMERA.CAMERA_TRANSFORM_3D);
 
-    public static final boolean PATH_PLANNER_ENABLED = false;
+    public static final boolean PATH_PLANNER_ENABLED = true; // Actually should be "CAMERA_ENABLED"
   }
 }
