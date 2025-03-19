@@ -23,8 +23,6 @@ import frc.robot.subsystems.StateSys.scoring;
 import frc.robot.subsystems.VisionSys;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OPERATOR;
@@ -43,8 +41,7 @@ import swervelib.SwerveInputStream;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = 
-    new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-                                        "swerve"));
+    new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
   private static final AlgaeManipulatorSys m_algaeManipulatorSys = new AlgaeManipulatorSys();
   private static final CoralManipulatorSys m_coralManipulatorSys = new CoralManipulatorSys();
@@ -58,15 +55,13 @@ public class RobotContainer {
   private final CommandXboxController m_gunnerController = new CommandXboxController(OPERATOR.GUNNER_CONTROLLER_PORT);
   private final CommandXboxController m_driveController = new CommandXboxController(OPERATOR.DRIVE_CONTROLLER_PORT);
 
- // private final Joystick driveJoystick = new Joystick(Constants.OPERATOR.DRIVE_CONTROLLER_PORT);
-
   private final SendableChooser<Command> autoChooser; // Auto chooser for path planner (part of recommended method of choosing an auto).
 
   //Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
   SwerveInputStream driveAngularVelocity = 
     SwerveInputStream.of(drivebase.getSwerveDrive(),
-                          () -> m_driveController.getLeftY() * 1, //LY, 1
-                          () -> m_driveController.getLeftX() * 1) //LX, 0
+                          () -> m_driveController.getRawAxis(1) * 1, //LY, 1
+                          () -> m_driveController.getRawAxis(0) * 1) //LX, 0
                       .withControllerRotationAxis(m_driveController::getRightX) //Rotate 2
                       .deadband(OPERATOR.DEADBAND)
                       .scaleTranslation(0.8)
@@ -85,8 +80,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("test_subsystems", SetScoring(scoring.CL3));
     NamedCommands.registerCommand("home", SetScoring(scoring.Home));
 
-    // Configure the trigger bindings
     configureBindings();
+    setDefaultCommands();
     
     DriverStation.silenceJoystickConnectionWarning(true);
 
@@ -109,7 +104,7 @@ public class RobotContainer {
    * joysticks}.
    */
 
-  // lazy method to get full set scoring commands from just the target
+  // lazy methods to get full set scoring commands from just the target
   private SetScoring SetScoring(StateSys.scoring target) {
     return new SetScoring(target, m_stateSys, m_elevatorSys, m_manpulatorPitchSys);
   }
@@ -120,7 +115,6 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-
     // coral position
     m_gunnerController.pov(0).onTrue(SetScoring(scoring.CL4)); // up
     m_gunnerController.pov(90).onTrue(SetScoring(scoring.CL3)); // right
@@ -128,10 +122,8 @@ public class RobotContainer {
     m_gunnerController.pov(270).onTrue(SetScoring(scoring.CL2)); // left
     m_gunnerController.button(9).onTrue(SetScoring(scoring.Home)); // left stick button
 
-
     // automatic manipulation
     m_gunnerController.leftBumper().whileTrue(ManipulateObject()); // left bumper
-
 
     // algae position
     m_gunnerController.button(4).onTrue(SetScoring(scoring.ANet)); // y
@@ -140,57 +132,15 @@ public class RobotContainer {
     m_gunnerController.button(2).onTrue(SetScoring(scoring.AGround)); // a
     m_gunnerController.button(10).onTrue(SetScoring(scoring.AProcessor)); // start
 
-
-    // m_driveController.button(1).onTrue(new ToClimbHome(m_climbSys)); //A
-    // m_driveController.button(2).onTrue(new ToClimbReady(m_climbSys)); //B
-    // m_driveController.button(4).onTrue(new ToClimbLatched(m_climbSys)); //Y
-
-    // Command driveFieldOrientedDirectAngle      = drivebase.driveFieldOriented(driveDirectAngle);
-    Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
     Command driveRobotOrientedAngularVelocity  = drivebase.driveFieldOriented(driveRobotOriented);
-    // Command driveSetpointGen = drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngle);
-    // Command driveFieldOrientedDirectAngleKeyboard      = drivebase.driveFieldOriented(driveDirectAngleKeyboard);
-    // Command driveFieldOrientedAnglularVelocityKeyboard = drivebase.driveFieldOriented(driveAngularVelocityKeyboard);
-    // Command driveSetpointGenKeyboard = drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngleKeyboard);
+    m_driveController.button(0).whileTrue(driveRobotOrientedAngularVelocity);
 
-    if (RobotBase.isSimulation())
-    {
-      // drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
-    } else
-    {
-      drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-    }
+  }
 
-    if (Robot.isSimulation())
-    {
-      m_gunnerController.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
-      m_gunnerController.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
-
-    }
-    if (DriverStation.isTest())
-    {
-      drivebase.setDefaultCommand(driveRobotOrientedAngularVelocity); // Overrides drive command above!
-
-      m_gunnerController.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      m_gunnerController.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
-      m_gunnerController.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      m_gunnerController.back().whileTrue(drivebase.centerModulesCommand());
-      m_gunnerController.leftBumper().onTrue(Commands.none());
-      m_gunnerController.rightBumper().onTrue(Commands.none());
-    } else
-    {
-      // m_gunnerController.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      // m_gunnerController.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      // m_gunnerController.b().whileTrue(
-      //     drivebase.driveToPose(
-      //         new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
-      //                         );
-      m_gunnerController.start().whileTrue(Commands.none());
-      m_gunnerController.back().whileTrue(Commands.none());
-      m_gunnerController.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      m_gunnerController.rightBumper().onTrue(Commands.none());
-
-    }
+  private void setDefaultCommands() {
+    
+    Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
+    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
   }
 

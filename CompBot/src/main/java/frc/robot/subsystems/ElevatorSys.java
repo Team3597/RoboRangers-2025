@@ -16,6 +16,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -40,6 +41,8 @@ public class ElevatorSys extends SubsystemBase {
     new TrapezoidProfile(new TrapezoidProfile.Constraints(ELEVATOR.PID.MAX_V, ELEVATOR.PID.MAX_A));
   private TrapezoidProfile.State target = new TrapezoidProfile.State();
   private TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
+
+  private DigitalInput homeLimit = new DigitalInput(0);
 
   public ElevatorSys() {
     mainConfig
@@ -76,9 +79,17 @@ public class ElevatorSys extends SubsystemBase {
     return false;
   }
 
+  // public void homeEncoder() {
+  //   if (!homeLimit.get()) {
+  //    // elevatorMain.getEncoder().setPosition(0);
+      
+  //     //System.out.println(homeLimit.get());
+  //   }
+  // }
+
   //create profile to target height
   public void setProfile(double position) {
-    if (position <= ELEVATOR.MAX_HEIGHT && position > 0) {
+    if (position <= ELEVATOR.MAX_COUNTS && position > 0) {
       target = new TrapezoidProfile.State(position,0);
     }
     SmartDashboard.putNumber("Elevator Setpoint",position);
@@ -106,5 +117,7 @@ public class ElevatorSys extends SubsystemBase {
     SmartDashboard.putNumber("Slave Encoder", elevatorSlave.getEncoder().getPosition());
     SmartDashboard.putNumber("Elevator RPM", elevatorMain.getEncoder().getVelocity());
     SmartDashboard.putNumber("Elevator Amps", elevatorMain.getOutputCurrent() + elevatorSlave.getOutputCurrent());
+    //homeEncoder();
+    //SmartDashboard.putBoolean("Elevator Limit", homeLimit.get());
   }
 }
