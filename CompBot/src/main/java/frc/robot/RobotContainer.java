@@ -175,7 +175,7 @@ public class RobotContainer {
       m_gunnerController.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
       m_gunnerController.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       m_gunnerController.back().whileTrue(drivebase.centerModulesCommand());
-      m_gunnerController.leftBumper().onTrue(Commands.none());
+      //m_gunnerController.leftBumper().onTrue(Commands.none());
       m_gunnerController.rightBumper().onTrue(Commands.none());
     } else
     {
@@ -185,10 +185,10 @@ public class RobotContainer {
       //     drivebase.driveToPose(
       //         new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
       //                         );
-      m_gunnerController.start().whileTrue(Commands.none());
-      m_gunnerController.back().whileTrue(Commands.none());
-      m_gunnerController.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      m_gunnerController.rightBumper().onTrue(Commands.none());
+      // m_gunnerController.start().whileTrue(Commands.none());
+      // m_gunnerController.back().whileTrue(Commands.none());
+      // m_gunnerController.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+      // m_gunnerController.rightBumper().onTrue(Commands.none());
 
     }
 

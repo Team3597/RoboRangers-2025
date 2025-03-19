@@ -22,7 +22,7 @@ public class ManipulateObject extends Command {
     this.stateSys = state;
     this.coralManipulatorSys = coral;
     this.algaeManipulatorSys = algae;
-    addRequirements(stateSys);
+    addRequirements();
   }
 
   // Called when the command is initially scheduled.

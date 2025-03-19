@@ -89,7 +89,7 @@ public class ElevatorSys extends SubsystemBase {
 
   //create profile to target height
   public void setProfile(double position) {
-    if (position <= ELEVATOR.MAX_HEIGHT && position > 0) {
+    if (position <= ELEVATOR.MAX_COUNTS && position > 0) {
       target = new TrapezoidProfile.State(position,0);
     }
     SmartDashboard.putNumber("Elevator Setpoint",position);

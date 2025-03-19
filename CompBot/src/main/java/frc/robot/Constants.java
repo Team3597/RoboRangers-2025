@@ -37,7 +37,7 @@ public final class Constants {
   }
 
   public static class PROPERTIES {
-    public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
+    public static final double ROBOT_MASS = (125) * 0.453592; // 32lbs * kg per pound
     public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
     public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
     public static final double MAX_SPEED  = Units.feetToMeters(14.5);
@@ -101,7 +101,7 @@ public final class Constants {
   }
 
   public static class ELEVATOR {
-    public static final int AMP_LIMIT = 30;
+    public static final int AMP_LIMIT = 40;
 
     public static class PID {
       public static final double P = 0.25;
@@ -110,29 +110,30 @@ public final class Constants {
       public static final double MIN = -1;
       public static final double MAX = 1;
       public static final double FF = 0.022;
-      // 0.022 from recalc
-      public static final double MAX_A = 400;
+      // 0.022
+      public static final double MAX_A = 200;
+      // 410 updated
       // 618.55;
-      public static final double MAX_V = 30;
+      public static final double MAX_V = 50;
+      // 38 updated
       // 25.08;
     }
 
     public static final double COUNT_OFFSET = 0;
-    public static final double MAX_HEIGHT = 53;
     public static final double MAX_COUNTS = 56;
 
     public static final double HOME = 0.25; // home height
     public static final double CLEAR = 4; // clearance height for manipulator
 
-    public static final double AL1 = 26.5; // algae l1, l2, net
+    public static final double AL1 = 27; // algae l1, l2, net
     public static final double AL2 = 41;
-    public static final double ANET = 52.5;
+    public static final double ANET = 56;
     public static final double APROCESSOR = 2;
 
-    public static final double CL1 = 14.5; // coral l1, l2, l3, l4
-    public static final double CL2 = 26.5;
+    public static final double CL1 = 15; // coral l1, l2, l3, l4
+    public static final double CL2 = 27;
     public static final double CL3 = 42.8;
-    public static final double CL4 = 53;
+    public static final double CL4 = 56;
     
     public static final double DEADBAND = 0.25;
     public static final double END_DEADBAND = 0.75;
@@ -146,7 +147,7 @@ public final class Constants {
     public static class PID {
       public static double P = 4;
       public static double I = 0.001;
-      public static double D = 0.05;
+      public static double D = 0.03;
       public static final double MIN = -1;
       public static final double MAX = 1;
 
@@ -166,8 +167,8 @@ public final class Constants {
  
     public static final double UNSTICK = 0.03; // pitch to unstick coral
 
-    public static final double AGROUND = 0.18; // algae ground, processor, reef (l1, l2), net
-    public static final double APROCESSOR = 0.18;
+    public static final double AGROUND = 0.2; // algae ground, processor, reef (l1, l2), net
+    public static final double APROCESSOR = AGROUND;
     public static final double AREEF = 0.18;
     public static final double ANET = 0.42;
 
@@ -208,7 +209,7 @@ public final class Constants {
   }
 
   public static class CAMERA {
-    public static final String CAMERA_NICKNAME = "Team3597Camera"; // camera nickname (needs to be updated)
+    public static final String CAMERA_NICKNAME = "FrontRight"; // camera nickname
     
     public static final double CAMERA_X_FROM_ROBOT_CENTER_INCHES = 0; // the sign of these might have to be experimented with
     public static final double CAMERA_Y_FROM_ROBOT_CENTER_INCHES = 0;
