@@ -68,4 +68,12 @@ public class ClimbSys extends SubsystemBase {
     return climbPitch.getAbsoluteEncoder().getPosition();
   }
 
+  public void climb(double speed) {
+    climbPitch.set(speed);
+  }
+
+  public void stop() {
+    climbPitch.stopMotor();
+  }
+
 }

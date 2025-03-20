@@ -187,8 +187,8 @@ public final class Constants {
       public static final double P = 0.5;
       public static final double I = 0;
       public static final double D = 0;
-      public static final double MIN = -1;
-      public static final double MAX = 1;
+      public static final double MIN = -0.1;
+      public static final double MAX = 0.1;
 
       public static final double P_CLIMB = 0;
       public static final double I_CLIMB = 0;
@@ -227,6 +227,6 @@ public final class Constants {
 
     public static final PhotonPoseEstimator PHOTON_POSE_ESTIMATOR = new PhotonPoseEstimator(CAMERA.APRIL_TAG_FIELD_LAYOUT, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, CAMERA.CAMERA_TRANSFORM_3D);
 
-    public static final boolean PATH_PLANNER_ENABLED = true; // Actually should be "CAMERA_ENABLED"
+    public static final boolean PATH_PLANNER_ENABLED = false; // Actually should be "CAMERA_ENABLED"
   }
 }

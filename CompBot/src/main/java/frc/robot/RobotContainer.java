@@ -6,12 +6,9 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.StateSys;
@@ -22,7 +19,6 @@ import frc.robot.subsystems.manipulator.CoralManipulatorSys;
 import frc.robot.subsystems.manipulator.ManipulatorPitchSys;
 import frc.robot.subsystems.superstructure.ClimbSys;
 import frc.robot.subsystems.superstructure.ElevatorSys;
-import frc.robot.subsystems.VisionSys;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -31,6 +27,7 @@ import frc.robot.Constants.OPERATOR;
 import frc.robot.commands.ManipulateObject;
 import frc.robot.commands.SetClimbing;
 import frc.robot.commands.SetScoring;
+import frc.robot.commands.climb;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 import swervelib.SwerveInputStream;
@@ -84,7 +81,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("test_subsystems", SetScoring(scoring.CL3));
     NamedCommands.registerCommand("home", SetScoring(scoring.Home));
 
-    PortForwarder.add(5800, "photonvision.local", 5800);
+    //PortForwarder.add(5800, "photonvision.local", 5800);
     
     configureBindings();
     setDefaultCommands();
@@ -143,9 +140,13 @@ public class RobotContainer {
     m_gunnerController.button(10).onTrue(SetScoring(scoring.AProcessor)); // start
 
     // climb
-    m_gunnerController.button(0).onTrue(SetClimbing(climbing.Home));
-    m_gunnerController.button(0).onTrue(SetClimbing(climbing.Ready));
-    m_gunnerController.button(0).onTrue(SetClimbing(climbing.Latched));
+    // m_gunnerController.button(6).onTrue(SetClimbing(climbing.Home)); // right bumper
+    // m_gunnerController.button(8).onTrue(SetClimbing(climbing.Ready)); // right trigger
+    // m_gunnerController.button(12).onTrue(SetClimbing(climbing.Latched)); // right stick
+
+    m_gunnerController.button(6).whileTrue(new climb(0.1, m_climbSys)); // right bumper
+    m_gunnerController.button(8).whileTrue(new climb(-0.1, m_climbSys)); // right trigger
+    m_gunnerController.button(12).whileTrue(new climb(0.1, m_climbSys)); // right stick
     
 
     Command driveRobotOrientedAngularVelocity  = drivebase.driveFieldOriented(driveRobotOriented);
