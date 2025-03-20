@@ -184,8 +184,8 @@ public final class Constants {
     public static final int AMP_LIMIT = 40;
 
     public static class PID {
-      public static final double P = 3;
-      public static final double I = 0.1;
+      public static final double P = 0.5;
+      public static final double I = 0;
       public static final double D = 0;
       public static final double MIN = -1;
       public static final double MAX = 1;
@@ -205,7 +205,7 @@ public final class Constants {
     public static final double READY = 0.125;
 
 
-    public static final double DEADBAND = 0.5;
+    public static final double DEADBAND = 0.1;
   }
 
   public static class CAMERA {

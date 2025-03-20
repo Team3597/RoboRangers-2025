@@ -5,10 +5,10 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.AlgaeManipulatorSys;
-import frc.robot.subsystems.CoralManipulatorSys;
 import frc.robot.subsystems.StateSys;
 import frc.robot.subsystems.StateSys.scoring;
+import frc.robot.subsystems.manipulator.AlgaeManipulatorSys;
+import frc.robot.subsystems.manipulator.CoralManipulatorSys;
 
 public class ManipulateObject extends Command {
 

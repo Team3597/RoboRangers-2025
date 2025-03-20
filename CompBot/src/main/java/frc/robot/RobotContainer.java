@@ -14,13 +14,14 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.AlgaeManipulatorSys;
-import frc.robot.subsystems.ClimbSys;
-import frc.robot.subsystems.CoralManipulatorSys;
-import frc.robot.subsystems.ElevatorSys;
-import frc.robot.subsystems.ManipulatorPitchSys;
 import frc.robot.subsystems.StateSys;
+import frc.robot.subsystems.StateSys.climbing;
 import frc.robot.subsystems.StateSys.scoring;
+import frc.robot.subsystems.manipulator.AlgaeManipulatorSys;
+import frc.robot.subsystems.manipulator.CoralManipulatorSys;
+import frc.robot.subsystems.manipulator.ManipulatorPitchSys;
+import frc.robot.subsystems.superstructure.ClimbSys;
+import frc.robot.subsystems.superstructure.ElevatorSys;
 import frc.robot.subsystems.VisionSys;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -28,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OPERATOR;
 import frc.robot.commands.ManipulateObject;
+import frc.robot.commands.SetClimbing;
 import frc.robot.commands.SetScoring;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
@@ -117,6 +119,10 @@ public class RobotContainer {
     return new ManipulateObject(m_stateSys, m_coralManipulatorSys, m_algaeManipulatorSys);
   }
 
+  private SetClimbing SetClimbing(StateSys.climbing target) {
+    return new SetClimbing(target, m_stateSys, m_climbSys);
+  }
+
   private void configureBindings() {
 
     // coral position
@@ -135,6 +141,12 @@ public class RobotContainer {
     m_gunnerController.button(3).onTrue(SetScoring(scoring.AL2)); // b
     m_gunnerController.button(2).onTrue(SetScoring(scoring.AGround)); // a
     m_gunnerController.button(10).onTrue(SetScoring(scoring.AProcessor)); // start
+
+    // climb
+    m_gunnerController.button(0).onTrue(SetClimbing(climbing.Home));
+    m_gunnerController.button(0).onTrue(SetClimbing(climbing.Ready));
+    m_gunnerController.button(0).onTrue(SetClimbing(climbing.Latched));
+    
 
     Command driveRobotOrientedAngularVelocity  = drivebase.driveFieldOriented(driveRobotOriented);
     m_driveController.button(6).whileTrue(driveRobotOrientedAngularVelocity);

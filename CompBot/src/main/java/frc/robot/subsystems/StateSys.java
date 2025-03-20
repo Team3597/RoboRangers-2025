@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CLIMB;
 import frc.robot.Constants.ELEVATOR;
 import frc.robot.Constants.MANIPULATOR;
 
@@ -63,12 +64,34 @@ public class StateSys extends SubsystemBase {
   public static boolean hasCoral;
   public static boolean hasAlgae;
 
+  public enum climbing {
+    Home(CLIMB.HOME),
+    Ready(CLIMB.READY),
+    Latched(CLIMB.LATCHED);
+
+    private double climbPitch;
+
+    climbing(double pitch) {
+      this.climbPitch = pitch;
+    }
+
+    public double pitch() {
+      return climbPitch;
+    }
+  }
+
+  public static boolean climbOverride;
+
+  public climbing climbingState;
   public scoring scoringState;
   
   public StateSys() {
     scoringState = scoring.Home;
     hasCoral = false;
     hasAlgae = false;
+
+    climbingState = climbing.Home;
+    climbOverride = false;
   }
 
   public void setScoringState(scoring newState) {
@@ -77,6 +100,14 @@ public class StateSys extends SubsystemBase {
 
   public scoring getScoringState() {
     return scoringState;
+  }
+
+  public void setClimbingState(climbing newState) {
+    climbingState = newState;
+  }
+
+  public climbing getClimbingState() {
+    return climbingState;
   }
 
   @Override
@@ -90,4 +121,6 @@ public class StateSys extends SubsystemBase {
       super(message);
     }
   }
+
+
 }

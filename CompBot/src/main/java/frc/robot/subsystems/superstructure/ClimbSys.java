@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.superstructure;
 
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -53,44 +53,19 @@ public class ClimbSys extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
   }
 
-  public void setPitch(double pitch) {
-    pitchController.setReference(degreeToEncoder(pitch), ControlType.kPosition);
-  }
-
-  public void setEncoder(double position) {
+  public void setPitch(double position) {
     pitchController.setReference(position, ControlType.kPosition, ClosedLoopSlot.kSlot0);
   }
 
-  private double degreeToEncoder(double degrees) {
-    return (degrees/360) + Constants.MANIPULATOR.MANIPULATOR_PIVOT_OFFSET;
-    //add factor and constant for setpoint in testing
-  }
-
-  // private double encoderToDegree(double counts) {
-  //   return ((counts + Constants.MANIPULATOR.MANIPULATOR_PIVOT_OFFSET)/Constants.MANIPULATOR.THROUGHBORE_CPR) * 360;
-  // }
-
-  public double getEncoder() {
-    return climbPitch.getAbsoluteEncoder().getPosition();
-  }
-
-  // public double getPosition() {
-  //   return encoderToDegree(climbPitch.getAbsoluteEncoder().getPosition());
-  // }
-
-  public void toHome() {
-    setEncoder(CLIMB.HOME);
-  }
-
-  public void toReady() {
-    setEncoder(CLIMB.READY);
-  }
-
-  public void toLatched() {
+  public void setPitchClimb() {
 
     pitchController.setReference(CLIMB.LATCHED, ControlType.kPosition, ClosedLoopSlot.kSlot1);
   }
+
+  public double getPitch() {
+    return climbPitch.getAbsoluteEncoder().getPosition();
+  }
+
 }

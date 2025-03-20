@@ -7,10 +7,10 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ELEVATOR;
 import frc.robot.Constants.MANIPULATOR;
-import frc.robot.subsystems.ElevatorSys;
-import frc.robot.subsystems.ManipulatorPitchSys;
 import frc.robot.subsystems.StateSys;
 import frc.robot.subsystems.StateSys.scoring;
+import frc.robot.subsystems.manipulator.ManipulatorPitchSys;
+import frc.robot.subsystems.superstructure.ElevatorSys;
 
 // nomenclature change: position now only refers to overall scoring position; ie L1
 // height and pitch then refer to the components of this for the elevator and manipulator
@@ -32,7 +32,7 @@ public class SetScoring extends Command {
     this.stateSys = state;
     this.elevatorSys = elevator;
     this.manipulatorPitchSys = manipulator;
-    addRequirements(stateSys, elevatorSys, manipulatorPitchSys);
+    addRequirements(elevatorSys, manipulatorPitchSys);
   }
 
   @Override
