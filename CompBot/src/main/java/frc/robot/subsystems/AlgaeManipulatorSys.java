@@ -56,6 +56,8 @@ public class AlgaeManipulatorSys extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Algae Wheel Velocity", getEncoder());
     //System.out.println(algaeManipulator.getEncoder().getVelocity());
+    SmartDashboard.putBoolean("Algae Beambreak", algaeManipulator.getForwardLimitSwitch().isPressed());
+    SmartDashboard.putBoolean("Coral Beambreak", algaeManipulator.getReverseLimitSwitch().isPressed());
   }
 
   public void intakeAlgae() {

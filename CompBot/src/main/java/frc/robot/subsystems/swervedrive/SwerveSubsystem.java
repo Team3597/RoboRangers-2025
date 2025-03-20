@@ -161,7 +161,7 @@ public class SwerveSubsystem extends SubsystemBase
   public void setupCameraSys()
   {
     cameraSys = new CameraSys();
-    if (GLOBAL.DEBUG_MODE) System.out.println("camera started");
+    // if (GLOBAL.DEBUG_MODE) System.out.println("camera started");
   }
 
   @Override

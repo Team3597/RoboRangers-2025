@@ -8,6 +8,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -40,6 +41,7 @@ import swervelib.SwerveInputStream;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  
   private final SwerveSubsystem drivebase = 
     new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
@@ -48,7 +50,7 @@ public class RobotContainer {
   private static final ElevatorSys m_elevatorSys = new ElevatorSys();
   private static final ManipulatorPitchSys m_manpulatorPitchSys = new ManipulatorPitchSys();
   private static final ClimbSys m_climbSys = new ClimbSys();
-  private static final VisionSys m_visionSys = new VisionSys();
+  //private static final VisionSys m_visionSys = new VisionSys();
   private static final StateSys m_stateSys = new StateSys();
 
 
@@ -80,6 +82,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("test_subsystems", SetScoring(scoring.CL3));
     NamedCommands.registerCommand("home", SetScoring(scoring.Home));
 
+    PortForwarder.add(5800, "photonvision.local", 5800);
+    
     configureBindings();
     setDefaultCommands();
     
@@ -133,7 +137,7 @@ public class RobotContainer {
     m_gunnerController.button(10).onTrue(SetScoring(scoring.AProcessor)); // start
 
     Command driveRobotOrientedAngularVelocity  = drivebase.driveFieldOriented(driveRobotOriented);
-    m_driveController.button(0).whileTrue(driveRobotOrientedAngularVelocity);
+    m_driveController.button(6).whileTrue(driveRobotOrientedAngularVelocity);
 
   }
 

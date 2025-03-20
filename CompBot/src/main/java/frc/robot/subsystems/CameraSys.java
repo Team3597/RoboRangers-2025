@@ -18,7 +18,7 @@ public class CameraSys extends SubsystemBase {
 
   /** Creates a new CameraSys. */
   public CameraSys() {
-    if (GLOBAL.DEBUG_MODE) System.out.println("in camera constructor");
+    // if (GLOBAL.DEBUG_MODE) System.out.println("in camera constructor");
   }
 
   @Override
