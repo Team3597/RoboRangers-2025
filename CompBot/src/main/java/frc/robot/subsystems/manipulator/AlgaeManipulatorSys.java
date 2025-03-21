@@ -31,6 +31,9 @@ public class AlgaeManipulatorSys extends SubsystemBase {
 
   //private static Ultrasonic algaeDistance = new Ultrasonic(null, null)
 
+  public static boolean hasAlgae;
+  public static boolean hasCoral;
+
   public AlgaeManipulatorSys() {
     algaeConfig.closedLoop
       .p(ALGAE.PID.P)
@@ -58,6 +61,9 @@ public class AlgaeManipulatorSys extends SubsystemBase {
     //System.out.println(algaeManipulator.getEncoder().getVelocity());
     SmartDashboard.putBoolean("Algae Beambreak", algaeManipulator.getForwardLimitSwitch().isPressed());
     SmartDashboard.putBoolean("Coral Beambreak", algaeManipulator.getReverseLimitSwitch().isPressed());
+
+    hasCoral = !algaeManipulator.getReverseLimitSwitch().isPressed();
+    
   }
 
   public void intakeAlgae() {

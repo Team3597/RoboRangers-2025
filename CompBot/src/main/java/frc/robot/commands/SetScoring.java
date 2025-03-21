@@ -9,6 +9,7 @@ import frc.robot.Constants.ELEVATOR;
 import frc.robot.Constants.MANIPULATOR;
 import frc.robot.subsystems.StateSys;
 import frc.robot.subsystems.StateSys.scoring;
+import frc.robot.subsystems.manipulator.AlgaeManipulatorSys;
 import frc.robot.subsystems.manipulator.ManipulatorPitchSys;
 import frc.robot.subsystems.superstructure.ElevatorSys;
 
@@ -57,7 +58,7 @@ public class SetScoring extends Command {
     elevatorSys.followProfile();
     // if elevator is above clear move manipulator
     if (elevatorSys.getHeight() > ELEVATOR.CLEAR - ELEVATOR.DEADBAND) {
-      if (StateSys.hasAlgae && targetPos.coral()) {
+      if (AlgaeManipulatorSys.hasAlgae && targetPos.coral()) {
       } else {
         manipulatorPitchSys.setPitch(targetPitch);
       }

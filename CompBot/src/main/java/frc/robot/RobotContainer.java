@@ -144,13 +144,14 @@ public class RobotContainer {
     // m_gunnerController.button(8).onTrue(SetClimbing(climbing.Ready)); // right trigger
     // m_gunnerController.button(12).onTrue(SetClimbing(climbing.Latched)); // right stick
 
-    m_gunnerController.button(6).whileTrue(new climb(0.1, m_climbSys)); // right bumper
-    m_gunnerController.button(8).whileTrue(new climb(-0.1, m_climbSys)); // right trigger
-    m_gunnerController.button(12).whileTrue(new climb(0.1, m_climbSys)); // right stick
+    m_gunnerController.button(6).whileTrue(new climb(0.2, m_climbSys)); // right bumper
+    m_gunnerController.button(8).whileTrue(new climb(-0.2, m_climbSys)); // right trigger
+    m_gunnerController.button(12).whileTrue(new climb(1, m_climbSys)); // right stick
     
 
     Command driveRobotOrientedAngularVelocity  = drivebase.driveFieldOriented(driveRobotOriented);
     m_driveController.button(6).whileTrue(driveRobotOrientedAngularVelocity);
+
 
   }
 

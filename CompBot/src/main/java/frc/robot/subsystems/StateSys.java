@@ -4,14 +4,21 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.CLIMB;
 import frc.robot.Constants.ELEVATOR;
 import frc.robot.Constants.MANIPULATOR;
+import frc.robot.subsystems.StateSys.climbing;
+import frc.robot.subsystems.StateSys.scoring;
 
 public class StateSys extends SubsystemBase {
   /** Creates a new ScoringStateSys. */
+
   public enum scoring {
  // Name        Elevator pos   Manipulator pos      Extended? Coral? Intake at pos?
     Home(       ELEVATOR.HOME, MANIPULATOR.HOME,    false, true,  true),
@@ -61,8 +68,6 @@ public class StateSys extends SubsystemBase {
     }
   };
 
-  public static boolean hasCoral;
-  public static boolean hasAlgae;
 
   public enum climbing {
     Home(CLIMB.HOME),
@@ -87,8 +92,6 @@ public class StateSys extends SubsystemBase {
   
   public StateSys() {
     scoringState = scoring.Home;
-    hasCoral = false;
-    hasAlgae = false;
 
     climbingState = climbing.Home;
     climbOverride = false;

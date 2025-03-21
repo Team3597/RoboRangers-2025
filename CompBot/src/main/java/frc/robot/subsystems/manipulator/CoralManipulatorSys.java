@@ -47,8 +47,12 @@ public class CoralManipulatorSys extends SubsystemBase {
   }
 
   public void intakeCoral() {
+    if (!AlgaeManipulatorSys.hasCoral) {
+      coralManipulator.set(CORAL.INTAKE_SPEED);
+    } else {
+      coralManipulator.stopMotor();
+    }
 
-    coralManipulator.set(CORAL.INTAKE_SPEED);
   }
 
   //for scoring L1-L3

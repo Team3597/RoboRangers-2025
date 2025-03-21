@@ -53,6 +53,8 @@ public class ManipulateObject extends Command {
         algaeManipulatorSys.outtakeAlgae();
       }
     }
+
+    
   }
 
   // Called once the command ends or is interrupted.
