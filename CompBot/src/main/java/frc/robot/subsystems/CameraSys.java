@@ -33,7 +33,14 @@ public class CameraSys extends SubsystemBase {
     PhotonPipelineResult result = camera.getLatestResult(); // gets result from the camera
     if (GLOBAL.DEBUG_MODE) System.out.println("got results from camera");
     if (!result.hasTargets()) return null; // checks if result has targets
-    if (CAMERA.PHOTON_POSE_ESTIMATOR.update(result).isPresent()) return CAMERA.PHOTON_POSE_ESTIMATOR.update(result).get(); // returns an EstimatedRobotPose if available from targets
+    // if (CAMERA.PHOTON_POSE_ESTIMATOR.update(result).isPresent()) 
+    //   return CAMERA.PHOTON_POSE_ESTIMATOR.update(result); // returns an EstimatedRobotPose if available from targets
     return null; // returns null otherwise
+  }
+
+  public void getAprilID() {
+    PhotonPipelineResult result = camera.getLatestResult();
+    if (result.hasTargets()) System.out.println(result.getBestTarget().getFiducialId());
+    else System.out.println(false);
   }
 }

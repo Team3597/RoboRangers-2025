@@ -178,8 +178,9 @@ public class SwerveSubsystem extends SubsystemBase
     if (CAMERA.PATH_PLANNER_ENABLED) // Should update odometry when camera and path planner are set up.
     {
       swerveDrive.updateOdometry();
-      if (GLOBAL.DEBUG_MODE) System.out.println("calling addVisionReading");
-      addVisionReading();
+      // if (GLOBAL.DEBUG_MODE) System.out.println("calling addVisionReading");
+      cameraSys.getAprilID();
+      // addVisionReading();
     }
   }
 
@@ -758,7 +759,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
     EstimatedRobotPose estimatedRobotPose = cameraSys.getEstimatedRobotPose();
     if (estimatedRobotPose == null){
-      if (GLOBAL.DEBUG_MODE) System.out.println("vision reading cancelled");
+      // if (GLOBAL.DEBUG_MODE) System.out.println("vision reading cancelled");
       return;
     }
     if (GLOBAL.DEBUG_MODE) System.out.println("adding vision measurement");
