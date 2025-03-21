@@ -29,7 +29,7 @@ public final class Constants {
   public static final double LOOPER_DELTA_DURATION = 0.01;
 
   public static class GLOBAL {
-    public static boolean DEBUG_MODE = true; //enables debug sysouts
+    public static boolean DEBUG_MODE = false; //enables debug sysouts
     public static boolean MANIPULATOR_CLEAR = false; //are we good to change manipulator pitch?
 
     public static boolean DISABLE_ELEVATOR = false;
@@ -227,6 +227,6 @@ public final class Constants {
 
     public static final PhotonPoseEstimator PHOTON_POSE_ESTIMATOR = new PhotonPoseEstimator(CAMERA.APRIL_TAG_FIELD_LAYOUT, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, CAMERA.CAMERA_TRANSFORM_3D);
 
-    public static final boolean PATH_PLANNER_ENABLED = true; // Actually should be "CAMERA_ENABLED"
+    public static final boolean PATH_PLANNER_ENABLED = false; // Actually should be "CAMERA_ENABLED"
   }
 }

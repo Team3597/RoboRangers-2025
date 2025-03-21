@@ -61,12 +61,20 @@ public class ManipulateObject extends Command {
   @Override
   public void end(boolean interrupted) {
     algaeManipulatorSys.stop();
+    if (AlgaeManipulatorSys.hasCoral) {
+      coralManipulatorSys.stepCoralCmd();
+    }
     coralManipulatorSys.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (currentPos.coral()) {
+      if (AlgaeManipulatorSys.hasCoral) {
+        return true;
+      }
+    }
     return false;
   }
 }

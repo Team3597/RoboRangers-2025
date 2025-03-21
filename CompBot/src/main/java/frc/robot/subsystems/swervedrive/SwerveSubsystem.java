@@ -179,8 +179,8 @@ public class SwerveSubsystem extends SubsystemBase
     {
       swerveDrive.updateOdometry();
       // if (GLOBAL.DEBUG_MODE) System.out.println("calling addVisionReading");
-      cameraSys.getAprilID();
-      // addVisionReading();
+      //cameraSys.getAprilID();
+      addVisionReading();
     }
   }
 

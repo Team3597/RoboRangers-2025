@@ -13,11 +13,16 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CORAL;
 import frc.robot.Constants.DIO;
 import frc.robot.Constants.MANIPULATOR;
+import frc.robot.subsystems.StateSys;
 
 public class CoralManipulatorSys extends SubsystemBase {
   /** Creates a new CoralManipulator. */
@@ -25,6 +30,10 @@ public class CoralManipulatorSys extends SubsystemBase {
   private static SparkMax coralManipulator = new SparkMax(Constants.CAN.CORAL_MANIPULATOR, MotorType.kBrushed);
 
   private static SparkMaxConfig coralConfig = new SparkMaxConfig();
+
+  private boolean hadCoral;
+
+  private Command stepCoralForward;
 
   //DigitalInput coralLimitSwitch = new DigitalInput(DIO.CORAL_LIMIT);
 
@@ -34,12 +43,18 @@ public class CoralManipulatorSys extends SubsystemBase {
       .idleMode(IdleMode.kBrake)
       .smartCurrentLimit(MANIPULATOR.CORAL_AMP_LIMIT);
     coralManipulator.configure(coralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+   // stepCoralForward = Commands.startEnd(() -> coralManipulator.set(CORAL.INTAKE_SPEED), () -> coralManipulator.stopMotor());
   }
 
   @Override
   public void periodic() {
     //SmartDashboard.putBoolean("Coral Limit Switch", coralLimitSwitch.get());
     // This method will be called once per scheduler run
+  }
+
+  public void stepCoralCmd() {
+    Commands.sequence(Commands.startEnd(() -> coralManipulator.set(CORAL.INTAKE_SPEED), () -> coralManipulator.stopMotor()).withTimeout(0.5));
   }
 
   public void manipulateCoral(double speed) {
@@ -54,6 +69,8 @@ public class CoralManipulatorSys extends SubsystemBase {
     }
 
   }
+
+
 
   //for scoring L1-L3
   public void frontOuttakeCoral() {

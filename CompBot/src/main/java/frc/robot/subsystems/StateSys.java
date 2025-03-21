@@ -38,6 +38,8 @@ public class StateSys extends SubsystemBase {
     private final boolean isCoral;
     private final boolean isIntake;
 
+    public boolean ownsCoral;
+
 
     scoring(double height, double pitch, boolean extended, boolean coral, boolean intake) {
       this.elevatorHeight = height;

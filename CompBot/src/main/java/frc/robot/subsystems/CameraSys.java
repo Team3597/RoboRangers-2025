@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.Optional;
+
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -31,16 +33,22 @@ public class CameraSys extends SubsystemBase {
    * Returns null if not targets are found by the camera (check for null to avoid a nullPointerException error). */
   public EstimatedRobotPose getEstimatedRobotPose() {
     PhotonPipelineResult result = camera.getLatestResult(); // gets result from the camera
-    if (GLOBAL.DEBUG_MODE) System.out.println("got results from camera");
-    if (!result.hasTargets()) return null; // checks if result has targets
-    // if (CAMERA.PHOTON_POSE_ESTIMATOR.update(result).isPresent()) 
-    //   return CAMERA.PHOTON_POSE_ESTIMATOR.update(result); // returns an EstimatedRobotPose if available from targets
-    return null; // returns null otherwise
+    Optional<EstimatedRobotPose> optional = CAMERA.PHOTON_POSE_ESTIMATOR.update(result);
+    if (optional.isPresent()) {
+      //System.out.println("Pose: " + optional.get().estimatedPose);
+      return optional.get();
+    }
+    return null;
+    // if (GLOBAL.DEBUG_MODE) System.out.println("got results from camera");
+    //if (!result.hasTargets()) return null; // checks if result has targets
+    //if (CAMERA.PHOTON_POSE_ESTIMATOR.update(result).isPresent()) 
+    //  return CAMERA.PHOTON_POSE_ESTIMATOR.update(result).get(); // returns an EstimatedRobotPose if available from targets
+    //return null; // returns null otherwise
   }
 
-  public void getAprilID() {
-    PhotonPipelineResult result = camera.getLatestResult();
-    if (result.hasTargets()) System.out.println(result.getBestTarget().getFiducialId());
-    else System.out.println(false);
-  }
+  // public void getAprilID() {
+  //   PhotonPipelineResult result = camera.getLatestResult();
+  //   if (result.hasTargets()) System.out.println(result.getBestTarget().getFiducialId());
+  //   //else System.out.println(false);
+  // }
 }
