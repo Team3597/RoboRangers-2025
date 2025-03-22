@@ -14,7 +14,9 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -22,6 +24,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.CORAL;
 import frc.robot.Constants.DIO;
 import frc.robot.Constants.MANIPULATOR;
+import frc.robot.commands.StepCoral;
 import frc.robot.subsystems.StateSys;
 
 public class CoralManipulatorSys extends SubsystemBase {
@@ -53,8 +56,24 @@ public class CoralManipulatorSys extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  public Command runCoralCmd(double speed) {
+    return new Command() {
+      public void initialize() {
+        coralManipulator.set(speed);
+        System.out.println("kys");
+      }
+    };
+  }
+
   public void stepCoralCmd() {
-    Commands.sequence(Commands.startEnd(() -> coralManipulator.set(CORAL.INTAKE_SPEED), () -> coralManipulator.stopMotor()).withTimeout(0.5));
+   //Commands.sequence(Commands.startEnd(() -> coralManipulator.set(CORAL.INTAKE_SPEED), () -> coralManipulator.stopMotor()).withTimeout(3));
+    Commands.sequence(
+      Commands.runOnce(() -> coralManipulator.set(1)),
+      Commands.waitSeconds(3),
+      Commands.runOnce(() -> coralManipulator.stopMotor())
+    ).schedule();
+       //runCoralCmd(1).andThen(Commands.waitSeconds(3)).andThen(Commands.runOnce(() -> coralManipulator.stopMotor())).schedule();
+       
   }
 
   public void manipulateCoral(double speed) {
@@ -62,11 +81,11 @@ public class CoralManipulatorSys extends SubsystemBase {
   }
 
   public void intakeCoral() {
-    if (!AlgaeManipulatorSys.hasCoral) {
+   // if (!AlgaeManipulatorSys.hasCoral) {
       coralManipulator.set(CORAL.INTAKE_SPEED);
-    } else {
-      coralManipulator.stopMotor();
-    }
+  //  } else {
+      //coralManipulator.stopMotor();
+   // }
 
   }
 

@@ -62,7 +62,7 @@ public class AlgaeManipulatorSys extends SubsystemBase {
     SmartDashboard.putBoolean("Algae Beambreak", algaeManipulator.getForwardLimitSwitch().isPressed());
     SmartDashboard.putBoolean("Coral Beambreak", algaeManipulator.getReverseLimitSwitch().isPressed());
 
-    hasCoral = !algaeManipulator.getReverseLimitSwitch().isPressed();
+    hasCoral = algaeManipulator.getReverseLimitSwitch().isPressed();
     
   }
 

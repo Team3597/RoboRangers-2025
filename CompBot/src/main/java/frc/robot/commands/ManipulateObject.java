@@ -51,6 +51,7 @@ public class ManipulateObject extends Command {
         algaeManipulatorSys.intakeAlgae();
       } else {
         algaeManipulatorSys.outtakeAlgae();
+        System.out.println("FUCK");
       }
     }
 
@@ -60,21 +61,23 @@ public class ManipulateObject extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    algaeManipulatorSys.stop();
-    if (AlgaeManipulatorSys.hasCoral) {
-      coralManipulatorSys.stepCoralCmd();
-    }
-    coralManipulatorSys.stop();
+    // algaeManipulatorSys.stop();
+    // if (AlgaeManipulatorSys.hasCoral) {
+    //   coralManipulatorSys.stepCoralCmd();
+    // } else {
+       coralManipulatorSys.stop();
+       algaeManipulatorSys.stop();
+    // }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (currentPos.coral()) {
-      if (AlgaeManipulatorSys.hasCoral) {
-        return true;
-      }
-    }
+    // if (currentPos.coral()) {
+    //   if (AlgaeManipulatorSys.hasCoral) {
+    //     return true;
+    //   }
+    // }
     return false;
   }
 }

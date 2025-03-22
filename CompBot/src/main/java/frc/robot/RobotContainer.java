@@ -21,6 +21,7 @@ import frc.robot.subsystems.superstructure.ClimbSys;
 import frc.robot.subsystems.superstructure.ElevatorSys;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OPERATOR;
@@ -144,9 +145,17 @@ public class RobotContainer {
     // m_gunnerController.button(8).onTrue(SetClimbing(climbing.Ready)); // right trigger
     // m_gunnerController.button(12).onTrue(SetClimbing(climbing.Latched)); // right stick
 
-    m_gunnerController.button(6).whileTrue(new climb(0.2, m_climbSys)); // right bumper
-    m_gunnerController.button(8).whileTrue(new climb(-0.2, m_climbSys)); // right trigger
-    m_gunnerController.button(12).whileTrue(new climb(1, m_climbSys)); // right stick
+    m_gunnerController.button(6).whileTrue(new climb(0.3, m_climbSys)); // right bumper
+    m_gunnerController.button(8).whileTrue(new climb(-0.5, m_climbSys)); // right trigger
+    m_gunnerController.button(12).whileTrue(new climb(0.7, m_climbSys)); // right stick
+
+    // m_gunnerController.button(11).onTrue(
+    //   new SequentialCommandGroup(
+    //     Commands.runOnce(() -> m_coralManipulatorSys.manipulateCoral(1)),
+    //     Commands.waitSeconds(3),
+    //     Commands.runOnce(() -> m_coralManipulatorSys.stop())
+    //   )
+    // );
     
 
     // Command driveRobotOrientedAngularVelocity  = drivebase.driveFieldOriented(driveRobotOriented);
