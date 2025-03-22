@@ -67,10 +67,12 @@ public class CoralManipulatorSys extends SubsystemBase {
 
   public void stepCoralCmd() {
    //Commands.sequence(Commands.startEnd(() -> coralManipulator.set(CORAL.INTAKE_SPEED), () -> coralManipulator.stopMotor()).withTimeout(3));
-    Commands.sequence(
+   System.out.println("stepCoral"); 
+   Commands.sequence(
       Commands.runOnce(() -> coralManipulator.set(1)),
-      Commands.waitSeconds(3),
-      Commands.runOnce(() -> coralManipulator.stopMotor())
+      Commands.waitSeconds(0.15),
+      Commands.runOnce(() -> coralManipulator.stopMotor()),
+      Commands.runOnce(() -> System.out.println("end"))
     ).schedule();
        //runCoralCmd(1).andThen(Commands.waitSeconds(3)).andThen(Commands.runOnce(() -> coralManipulator.stopMotor())).schedule();
        
@@ -81,11 +83,11 @@ public class CoralManipulatorSys extends SubsystemBase {
   }
 
   public void intakeCoral() {
-   // if (!AlgaeManipulatorSys.hasCoral) {
+   if (!AlgaeManipulatorSys.hasCoral) {
       coralManipulator.set(CORAL.INTAKE_SPEED);
-  //  } else {
-      //coralManipulator.stopMotor();
-   // }
+   } else {
+      coralManipulator.stopMotor();
+   }
 
   }
 
