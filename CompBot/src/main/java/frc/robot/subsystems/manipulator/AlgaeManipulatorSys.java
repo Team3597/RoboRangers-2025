@@ -13,6 +13,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -42,16 +43,21 @@ public class AlgaeManipulatorSys extends SubsystemBase {
       .outputRange(ALGAE.PID.MIN, ALGAE.PID.MAX)
       .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
       //includes feedforward due to constant control effort to rotate wheels
-
       .velocityFF(ALGAE.PID.FF);
 
     algaeConfig
       .inverted(true)
       .idleMode(IdleMode.kBrake)
       .smartCurrentLimit(MANIPULATOR.ALGAE_AMP_LIMIT);
+
+    algaeConfig.limitSwitch
+      .forwardLimitSwitchEnabled(false)
+      .reverseLimitSwitchEnabled(false);
+
     algaeManipulator.configure(algaeConfig, null, null);
 
     algaeVelocityController.setReference(0, ControlType.kVelocity);
+
   }
 
   @Override
@@ -63,7 +69,13 @@ public class AlgaeManipulatorSys extends SubsystemBase {
     SmartDashboard.putBoolean("Coral Beambreak", algaeManipulator.getReverseLimitSwitch().isPressed());
 
     hasCoral = algaeManipulator.getReverseLimitSwitch().isPressed();
-    
+    hasAlgae = algaeManipulator.getForwardLimitSwitch().isPressed();
+  }
+
+  public void holdAlgae() {
+    algaeManipulator.set(0.05);
+    //runCoralCmd(1).andThen(Commands.waitSeconds(3)).andThen(Commands.runOnce(() -> coralManipulator.stopMotor())).schedule();
+       
   }
 
   public void intakeAlgae() {

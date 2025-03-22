@@ -68,6 +68,10 @@ public class StateSys extends SubsystemBase {
     public boolean intake() {
       return isIntake;
     }
+
+    public boolean algae() {
+      return !isCoral;
+    }
   };
 
 

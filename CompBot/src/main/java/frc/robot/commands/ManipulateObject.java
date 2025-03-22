@@ -51,7 +51,6 @@ public class ManipulateObject extends Command {
         algaeManipulatorSys.intakeAlgae();
       } else {
         algaeManipulatorSys.outtakeAlgae();
-        System.out.println("FUCK");
       }
     }
 
@@ -66,7 +65,11 @@ public class ManipulateObject extends Command {
       coralManipulatorSys.stepCoralCmd();
     } else {
        coralManipulatorSys.stop();
- 
+    }
+    if (currentPos.algae() && currentPos.intake()) {
+      algaeManipulatorSys.holdAlgae();
+    } else {
+      algaeManipulatorSys.stop();
     }
   }
 
@@ -75,6 +78,10 @@ public class ManipulateObject extends Command {
   public boolean isFinished() {
     if (currentPos == scoring.Home) {
       if (AlgaeManipulatorSys.hasCoral) {
+        return true;
+      }
+    } else if (currentPos.algae() && currentPos.intake()) {
+      if (AlgaeManipulatorSys.hasAlgae) {
         return true;
       }
     }
