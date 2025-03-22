@@ -7,25 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "test_path"
+            "pathName": "RED far left reef drive up"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "test_named_command"
+            "name": "CL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RED far left reef to score"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "test_subsystems"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "home"
+            "name": "dumber_manipulate"
           }
         }
       ]

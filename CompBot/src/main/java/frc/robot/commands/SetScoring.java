@@ -58,10 +58,10 @@ public class SetScoring extends Command {
     elevatorSys.followProfile();
     // if elevator is above clear move manipulator
     if (elevatorSys.getHeight() > ELEVATOR.CLEAR - ELEVATOR.DEADBAND) {
-      if (AlgaeManipulatorSys.hasAlgae && targetPos.coral()) {
-      } else {
+      // if (AlgaeManipulatorSys.hasAlgae && targetPos.coral()) {
+      // } else {
         manipulatorPitchSys.setPitch(targetPitch);
-      }
+      // }
     }
     // once at final position move elevator to target
     if (Math.abs(manipulatorPitchSys.getPitch() - targetPitch) < MANIPULATOR.DEADBAND) {

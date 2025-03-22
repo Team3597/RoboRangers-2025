@@ -7,25 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "test_path_2"
+            "pathName": "BLUE back middle cl4 drive up"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "test_named_command"
+            "pathName": "BLUE back middle cl4 to score"
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "test_subsystems"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "home"
+            "waitTime": 2.0
           }
         }
       ]

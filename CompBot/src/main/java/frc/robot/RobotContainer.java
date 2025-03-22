@@ -67,8 +67,18 @@ public class RobotContainer {
                       .withControllerRotationAxis(m_driveController::getRightX) //Rotate 2
                       .deadband(OPERATOR.DEADBAND)
                       .scaleTranslation(0.8)
-                      .scaleRotation(0-0.4)
+                      .scaleRotation(0-0.7)
                       .allianceRelativeControl(false);
+
+    SwerveInputStream driveAngularVelocityBlue = 
+    SwerveInputStream.of(drivebase.getSwerveDrive(),
+                          () -> m_driveController.getRawAxis(1) * -1, //LY, 1
+                          () -> m_driveController.getRawAxis(0) * -1) //LX, 0
+                      .withControllerRotationAxis(m_driveController::getRightX) //Rotate 2
+                      .deadband(OPERATOR.DEADBAND)
+                      .scaleTranslation(0.8)
+                      .scaleRotation(0.7)
+                      .allianceRelativeControl(false);                    
 
   // Clones the angular velocity input stream and converts it to a robotRelative input stream.
   SwerveInputStream driveRobotOriented = 
@@ -79,8 +89,18 @@ public class RobotContainer {
   public RobotContainer() {
     // Named commands:
     NamedCommands.registerCommand("test_named_command", Commands.print("I EXIST"));
-    NamedCommands.registerCommand("test_subsystems", SetScoring(scoring.CL3));
+    NamedCommands.registerCommand("CL4", SetScoring(scoring.CL4));
+    NamedCommands.registerCommand("CL3", SetScoring(scoring.CL3));
+    NamedCommands.registerCommand("CL2", SetScoring(scoring.CL2));
+    NamedCommands.registerCommand("CL1", SetScoring(scoring.CL1));
     NamedCommands.registerCommand("home", SetScoring(scoring.Home));
+    NamedCommands.registerCommand("dumber_manipulate", 
+      new SequentialCommandGroup(
+        Commands.runOnce(() -> m_coralManipulatorSys.backOuttakeCoral()),
+        (Commands.waitSeconds(2)),
+        (Commands.runOnce(() -> m_coralManipulatorSys.stop()))
+        )
+    );
 
     //PortForwarder.add(5800, "photonvision.local", 5800);
     
@@ -165,7 +185,17 @@ public class RobotContainer {
   }
 
   private void setDefaultCommands() {
-    
+    // var alliance = DriverStation.getAlliance();
+    // if (alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false){ //We're Red
+    //   Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
+    //   drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    // }
+    // else{ // We're Blue
+    //   Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocityBlue);
+    //   drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    // }
+
+    //Comment out all above if we don't do it, and use this:
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 

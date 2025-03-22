@@ -27,7 +27,7 @@ public class StateSys extends SubsystemBase {
     CL3(        ELEVATOR.CL3,  MANIPULATOR.CLOW,    false, true,  false),
     CL4(        ELEVATOR.CL4,  MANIPULATOR.CHIGH,   true,  true,  false),
     AGround(    ELEVATOR.HOME, MANIPULATOR.AGROUND, true,  false, true),
-    AProcessor( ELEVATOR.HOME, MANIPULATOR.AGROUND, true,  false, false),
+    AProcessor( ELEVATOR.HOME, MANIPULATOR.APROCESSOR, true,  false, false),
     AL1(        ELEVATOR.AL1,  MANIPULATOR.AREEF,   true,  false, true),
     AL2(        ELEVATOR.AL2,  MANIPULATOR.AREEF,   true,  false, true),
     ANet(       ELEVATOR.ANET, MANIPULATOR.ANET,   true,  false, false);

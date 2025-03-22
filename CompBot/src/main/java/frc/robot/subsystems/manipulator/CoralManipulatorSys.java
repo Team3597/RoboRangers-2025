@@ -70,7 +70,7 @@ public class CoralManipulatorSys extends SubsystemBase {
    System.out.println("stepCoral"); 
    Commands.sequence(
       Commands.runOnce(() -> coralManipulator.set(1)),
-      Commands.waitSeconds(0.15),
+      Commands.waitSeconds(0.0),
       Commands.runOnce(() -> coralManipulator.stopMotor()),
       Commands.runOnce(() -> System.out.println("end"))
     ).schedule();

@@ -126,7 +126,7 @@ public final class Constants {
     public static final double CLEAR = 4; // clearance height for manipulator
 
     public static final double AL1 = 27; // algae l1, l2, net
-    public static final double AL2 = 41;
+    public static final double AL2 = 42;
     public static final double ANET = 56;
     public static final double APROCESSOR = 2;
 
@@ -168,7 +168,7 @@ public final class Constants {
     public static final double UNSTICK = 0.03; // pitch to unstick coral
 
     public static final double AGROUND = 0.2; // algae ground, processor, reef (l1, l2), net
-    public static final double APROCESSOR = AGROUND;
+    public static final double APROCESSOR = 0.24;
     public static final double AREEF = 0.18;
     public static final double ANET = 0.42;
 

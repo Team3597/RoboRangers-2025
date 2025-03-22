@@ -69,11 +69,11 @@ public class AlgaeManipulatorSys extends SubsystemBase {
     SmartDashboard.putBoolean("Coral Beambreak", algaeManipulator.getReverseLimitSwitch().isPressed());
 
     hasCoral = algaeManipulator.getReverseLimitSwitch().isPressed();
-    hasAlgae = algaeManipulator.getForwardLimitSwitch().isPressed();
+    hasAlgae = !algaeManipulator.getForwardLimitSwitch().isPressed();
   }
 
   public void holdAlgae() {
-    algaeManipulator.set(0.05);
+    algaeManipulator.set(-0.03);
     //runCoralCmd(1).andThen(Commands.waitSeconds(3)).andThen(Commands.runOnce(() -> coralManipulator.stopMotor())).schedule();
        
   }
