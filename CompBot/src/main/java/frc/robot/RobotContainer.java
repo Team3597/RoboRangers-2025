@@ -21,9 +21,11 @@ import frc.robot.subsystems.superstructure.ClimbSys;
 import frc.robot.subsystems.superstructure.ElevatorSys;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.OPERATOR;
 import frc.robot.commands.ManipulateObject;
 import frc.robot.commands.SetClimbing;
@@ -66,7 +68,7 @@ public class RobotContainer {
                           () -> m_driveController.getRawAxis(0) * 1) //LX, 0
                       .withControllerRotationAxis(m_driveController::getRightX) //Rotate 2
                       .deadband(OPERATOR.DEADBAND)
-                      .scaleTranslation(0.8)
+                      .scaleTranslation(0.5)
                       .scaleRotation(0-0.7)
                       .allianceRelativeControl(false);
 
@@ -130,6 +132,7 @@ public class RobotContainer {
 
   // lazy methods to get full set scoring commands from just the target
   private SetScoring SetScoring(StateSys.scoring target) {
+    System.out.println("fuck");
     return new SetScoring(target, m_stateSys, m_elevatorSys, m_manpulatorPitchSys);
   }
 

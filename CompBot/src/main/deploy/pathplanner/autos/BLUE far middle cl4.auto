@@ -11,6 +11,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "CL4"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "BLUE back middle cl4 to score"
@@ -20,6 +26,12 @@
           "type": "wait",
           "data": {
             "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "dumber_manipulate"
           }
         }
       ]
