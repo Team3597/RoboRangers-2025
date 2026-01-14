@@ -10,6 +10,10 @@ import frc.robot.subsystems.StateSys;
 import frc.robot.subsystems.StateSys.climbing;
 import frc.robot.subsystems.superstructure.ClimbSys;
 
+// relic from attempts at using pid control on the climb
+// testing this blew up a versaplanetary so we switched to a dumber strategy and thus this is unused
+// see {climb} command for the cro magnon control we wound up using
+
 public class SetClimbing extends Command {
   
   private final ClimbSys climbSys;

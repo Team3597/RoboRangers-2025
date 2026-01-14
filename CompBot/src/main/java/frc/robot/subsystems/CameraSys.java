@@ -12,7 +12,9 @@ import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAMERA;
-import frc.robot.Constants.GLOBAL;
+
+// since cameras never really got properly figured out most of this is unused and will probably not work.
+// see 2024 code for a better simple camera implementation, and see online docs and example code for position estimation
 
 public class CameraSys extends SubsystemBase {
 

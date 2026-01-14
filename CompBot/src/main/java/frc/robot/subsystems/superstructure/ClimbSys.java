@@ -16,9 +16,11 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.CAN;
 import frc.robot.Constants.CLIMB;
+
+// 95% of this class is unused, as it involves PID control that got replaced with caveman control
+// when the versaplanetary blew up. see {ManipulatorPitchSys} for absolute PID control examples instead
 
 public class ClimbSys extends SubsystemBase {
   /** Creates a new ClimbSys. */
@@ -68,10 +70,11 @@ public class ClimbSys extends SubsystemBase {
     return climbPitch.getAbsoluteEncoder().getPosition();
   }
 
+  // these last 2 methods are basically the only things here that actually get used
   public void climb(double speed) {
     climbPitch.set(speed);
   }
-
+  
   public void stop() {
     climbPitch.stopMotor();
   }

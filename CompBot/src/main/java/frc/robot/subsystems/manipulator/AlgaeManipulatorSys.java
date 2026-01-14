@@ -20,6 +20,10 @@ import frc.robot.Constants;
 import frc.robot.Constants.ALGAE;
 import frc.robot.Constants.MANIPULATOR;
 
+// this class has remnants of an attempt at PID velocity control to securely grip algae. however i was never
+// able to get it working so all PID stuff will be left unexplained and this file should solely be an example
+// of wiring digital inputs through sparkmaxes as limit switches
+
 public class AlgaeManipulatorSys extends SubsystemBase {
   /** Creates a new AlgaeManipulator. */
 
@@ -30,8 +34,7 @@ public class AlgaeManipulatorSys extends SubsystemBase {
   private static SparkMaxConfig algaeConfig = new SparkMaxConfig();
   //Updated config docs: https://docs.revrobotics.com/revlib/configuring-devices
 
-  //private static Ultrasonic algaeDistance = new Ultrasonic(null, null)
-
+  // declare booleans for state of beambreaks
   public static boolean hasAlgae;
   public static boolean hasCoral;
 
@@ -50,6 +53,8 @@ public class AlgaeManipulatorSys extends SubsystemBase {
       .idleMode(IdleMode.kBrake)
       .smartCurrentLimit(MANIPULATOR.ALGAE_AMP_LIMIT);
 
+    // disable limit switches stopping the motor, since our limit switches are actually unrelated coral
+    // and algae beambreaks
     algaeConfig.limitSwitch
       .forwardLimitSwitchEnabled(false)
       .reverseLimitSwitchEnabled(false);
@@ -68,6 +73,7 @@ public class AlgaeManipulatorSys extends SubsystemBase {
     SmartDashboard.putBoolean("Algae Beambreak", algaeManipulator.getForwardLimitSwitch().isPressed());
     SmartDashboard.putBoolean("Coral Beambreak", algaeManipulator.getReverseLimitSwitch().isPressed());
 
+    // how to read the beambreaks. get limit switch object from sparkmax and call ispressed on it
     hasCoral = algaeManipulator.getReverseLimitSwitch().isPressed();
     hasAlgae = !algaeManipulator.getForwardLimitSwitch().isPressed();
   }

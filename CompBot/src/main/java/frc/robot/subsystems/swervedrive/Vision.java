@@ -45,6 +45,7 @@ import swervelib.telemetry.SwerveDriveTelemetry;
 /**
  * Example PhotonVision class to aid in the pursuit of accurate odometry. Taken from
  * https://gitlab.com/ironclad_code/ironclad-2024/-/blob/master/src/main/java/frc/robot/vision/Vision.java?ref_type=heads
+ * we did not get this working properly. this is all prewritten.
  */
 public class Vision
 {

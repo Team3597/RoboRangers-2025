@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+// basically never mess with this file; should just run the backend of everything and actual 
+// actions are set in other classes like robot container
+
 public class Robot extends TimedRobot
 {
 

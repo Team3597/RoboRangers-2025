@@ -61,6 +61,8 @@ import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
+// all prewritten code that should just be copied from the internet
+
 public class SwerveSubsystem extends SubsystemBase
 {
 
