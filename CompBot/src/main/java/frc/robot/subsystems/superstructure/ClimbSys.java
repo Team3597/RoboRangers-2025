@@ -1,0 +1,82 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot.subsystems.superstructure;
+
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
+
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CAN;
+import frc.robot.Constants.CLIMB;
+
+// 95% of this class is unused, as it involves PID control that got replaced with caveman control
+// when the versaplanetary blew up. see {ManipulatorPitchSys} for absolute PID control examples instead
+
+public class ClimbSys extends SubsystemBase {
+  /** Creates a new ClimbSys. */
+
+  private static SparkMax climbPitch = new SparkMax(CAN.CLIMB, MotorType.kBrushless);
+  private static SparkClosedLoopController pitchController;
+
+  private static SparkMaxConfig pitchConfig = new SparkMaxConfig();
+  //+ is down on encoder
+
+  public ClimbSys() {
+    pitchController = climbPitch.getClosedLoopController();
+
+    pitchConfig.closedLoop
+      .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+      .p(CLIMB.PID.P)
+      .i(CLIMB.PID.I)
+      .d(CLIMB.PID.D)
+      .outputRange(CLIMB.PID.MIN, CLIMB.PID.MAX)
+      
+      .p(CLIMB.PID.P_CLIMB, ClosedLoopSlot.kSlot1)
+      .i(CLIMB.PID.I_CLIMB, ClosedLoopSlot.kSlot1)
+      .d(CLIMB.PID.D_CLIMB, ClosedLoopSlot.kSlot1)
+      .outputRange(CLIMB.PID.MIN_CLIMB, CLIMB.PID.MAX_CLIMB);
+
+    pitchConfig
+      .idleMode(IdleMode.kBrake)
+      .inverted(false)
+      .smartCurrentLimit(CLIMB.AMP_LIMIT);
+    climbPitch.configure(pitchConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  }
+
+  @Override
+  public void periodic() {
+  }
+
+  public void setPitch(double position) {
+    pitchController.setReference(position, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+  }
+
+  public void setPitchClimb() {
+
+    pitchController.setReference(CLIMB.LATCHED, ControlType.kPosition, ClosedLoopSlot.kSlot1);
+  }
+
+  public double getPitch() {
+    return climbPitch.getAbsoluteEncoder().getPosition();
+  }
+
+  // these last 2 methods are basically the only things here that actually get used
+  public void climb(double speed) {
+    climbPitch.set(speed);
+  }
+  
+  public void stop() {
+    climbPitch.stopMotor();
+  }
+
+}

@@ -4,44 +4,43 @@
 
 package frc.robot;
 
+/* imports give the file access to external classes
+   only import what you actually need to keep code clean and encapsulated */
+
+// library imports; wpilib imports the libraries you need as you type their commands automatically
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.commands.algae.AManipulate;
-import frc.robot.commands.algae.ToAGround;
-import frc.robot.commands.algae.ToAL1;
-import frc.robot.commands.algae.ToAL2;
-import frc.robot.commands.algae.ToANet;
-import frc.robot.commands.algae.ToAProcessor;
-import frc.robot.commands.climb.ToClimbHome;
-import frc.robot.commands.climb.ToClimbLatched;
-import frc.robot.commands.climb.ToClimbReady;
-import frc.robot.commands.coral.CManipulate;
-import frc.robot.commands.coral.ToCL1;
-import frc.robot.commands.coral.ToCL2;
-import frc.robot.commands.coral.ToCL3;
-import frc.robot.commands.coral.ToCL4;
-import frc.robot.commands.coral.ToHome;
-import frc.robot.subsystems.AlgaeManipulatorSys;
-import frc.robot.subsystems.ClimbSys;
-import frc.robot.subsystems.CoralManipulatorSys;
-import frc.robot.subsystems.ElevatorSys;
-import frc.robot.subsystems.ExampleSys;
-import frc.robot.subsystems.ManipulatorPitchSys;
-import frc.robot.subsystems.StateMonitorSys;
-import frc.robot.subsystems.VisionSys;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.CORAL;
-import frc.robot.Constants.OPERATOR;
-import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 import swervelib.SwerveInputStream;
+
+/* subsystem imports; gives this file access to subsystem classes 
+to make an instance of them to pass to commands */
+import frc.robot.subsystems.StateSys;
+import frc.robot.subsystems.StateSys.scoring;
+import frc.robot.subsystems.manipulator.AlgaeManipulatorSys;
+import frc.robot.subsystems.manipulator.CoralManipulatorSys;
+import frc.robot.subsystems.manipulator.ManipulatorPitchSys;
+import frc.robot.subsystems.superstructure.ClimbSys;
+import frc.robot.subsystems.superstructure.ElevatorSys;
+import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+
+// command imports; gives this file access to commands to run when buttons are pressed
+import frc.robot.commands.ManipulateObject;
+import frc.robot.commands.SetClimbing;
+import frc.robot.commands.SetScoring;
+import frc.robot.commands.climb;
+
+// constants imports; gives this file access to necessary subclasses of constant values
+import frc.robot.Constants.OPERATOR;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -51,38 +50,53 @@ import swervelib.SwerveInputStream;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final SwerveSubsystem drivebase = 
-    new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-                                        "swerve"));
-
-  private static final ExampleSys m_exampleSubsystem = new ExampleSys(); 
-
+  
+  /* make an object of each subsystem class, following format m_subsystem 
+     (important for organization and to distinguish from class itself) */
   private static final AlgaeManipulatorSys m_algaeManipulatorSys = new AlgaeManipulatorSys();
   private static final CoralManipulatorSys m_coralManipulatorSys = new CoralManipulatorSys();
   private static final ElevatorSys m_elevatorSys = new ElevatorSys();
   private static final ManipulatorPitchSys m_manpulatorPitchSys = new ManipulatorPitchSys();
   private static final ClimbSys m_climbSys = new ClimbSys();
-  private static final VisionSys m_visionSys = new VisionSys();
-  private static final StateMonitorSys m_stateMonitorSys = new StateMonitorSys();
+  private static final StateSys m_stateSys = new StateSys();
 
+  // swerve subsystem instatiation is a little different since this code comes from the swerve library
+  private final SwerveSubsystem drivebase = 
+    new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
-  private final CommandXboxController m_controlController = new CommandXboxController(Constants.OPERATOR.CONTROL_CONTROLLER_PORT);
-  private final CommandXboxController m_driver2 = new CommandXboxController(Constants.OPERATOR.DRIVE_CONTROLLER_PORT_2);
+  // make an object for each controller attached to the port specified in operator constants
+  private final CommandXboxController m_gunnerController = new CommandXboxController(OPERATOR.GUNNER_CONTROLLER_PORT);
+  private final CommandXboxController m_driveController = new CommandXboxController(OPERATOR.DRIVE_CONTROLLER_PORT);
 
- // private final Joystick driveJoystick = new Joystick(Constants.OPERATOR.DRIVE_CONTROLLER_PORT);
+  // make an object for the dropdown that you can use to pick a pathplanner auto (may not work lol)
+  private final SendableChooser<Command> autoChooser; 
 
-  //Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
+  // prewritten swerve code, don't significantly mess with unless you've read the swerve docs and really know what you're doing
+  // Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
   SwerveInputStream driveAngularVelocity = 
     SwerveInputStream.of(drivebase.getSwerveDrive(),
-                          () -> m_driver2.getLeftY() * 1, //LY, 1
-                          () -> m_driver2.getLeftX() * 1) //LX, 0
-                      .withControllerRotationAxis(m_driver2::getRightX) //Rotate 2
+                          () -> m_driveController.getRawAxis(1) * 1, //LY, 1
+                          () -> m_driveController.getRawAxis(0) * 1) //LX, 0
+                      .withControllerRotationAxis(m_driveController::getRightX) //Rotate 2
+                      .deadband(OPERATOR.DEADBAND) // ignores tiny controller movement
+                      .scaleTranslation(0.5) // change to adjust translation speed
+                      .scaleRotation(-0.7) // change to adjust rotation speed
+                      .allianceRelativeControl(false); // KEEP THIS OFF!!! UNLESS THIS GETS FIXED!! 
+                                                               // (should work on fixing but TEST FIRST)
+
+    // inverted drive setup for when alliance swaps. we ignore this
+    SwerveInputStream driveAngularVelocityBlue = 
+    SwerveInputStream.of(drivebase.getSwerveDrive(),
+                          () -> m_driveController.getRawAxis(1) * -1, //LY, 1
+                          () -> m_driveController.getRawAxis(0) * -1) //LX, 0
+                      .withControllerRotationAxis(m_driveController::getRightX) //Rotate 2
                       .deadband(OPERATOR.DEADBAND)
                       .scaleTranslation(0.8)
                       .scaleRotation(0-0.4)
                       .cubeTranslationControllerAxis(true)
                       .allianceRelativeControl(false);
 
+  // more prewritten swerve
   // Clones the angular velocity input stream and converts it to a robotRelative input stream.
   SwerveInputStream driveRobotOriented = 
     driveAngularVelocity.copy().robotRelative(true)
@@ -90,12 +104,36 @@ public class RobotContainer {
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the trigger bindings
+
+    // establish all the commands that that show up and can be used in pathplanner
+    NamedCommands.registerCommand("test_named_command", Commands.print("I EXIST"));
+    NamedCommands.registerCommand("CL4", SetScoring(scoring.CL4));
+    NamedCommands.registerCommand("CL3", SetScoring(scoring.CL3));
+    NamedCommands.registerCommand("CL2", SetScoring(scoring.CL2));
+    NamedCommands.registerCommand("CL1", SetScoring(scoring.CL1));
+    NamedCommands.registerCommand("home", SetScoring(scoring.Home));
+
+    // this is multiple commands built inline from methods chained into one command
+    // read the docs for this because i suck at it
+    NamedCommands.registerCommand("dumber_manipulate", 
+      new SequentialCommandGroup(
+        Commands.runOnce(() -> m_coralManipulatorSys.backOuttakeCoral()),
+        (Commands.waitSeconds(2)),
+        (Commands.runOnce(() -> m_coralManipulatorSys.stop()))
+        )
+    );
+    
+    // run methods further below to bind buttons to commands and set commands to run constantly
     configureBindings();
+    setDefaultCommands();
     
     DriverStation.silenceJoystickConnectionWarning(true);
-    NamedCommands.registerCommand("test", Commands.print("I EXIST"));
-  
+
+    // Build an auto chooser dropdown and specify the default auto by its name
+    autoChooser = AutoBuilder.buildAutoChooser("test_auto_2");
+
+    // Send the auto chooser dropdown to the dashboard to be interacted with
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
@@ -107,84 +145,87 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
+
+  // commands need to be passed all relevant subsystems as well as any parameters
+  // since typing all this for every similar binding sucks these methods wrap all that into a single method
+  private SetScoring SetScoring(StateSys.scoring target) {
+    return new SetScoring(target, m_stateSys, m_elevatorSys, m_manpulatorPitchSys);
+  }
+
+  private ManipulateObject ManipulateObject() {
+    return new ManipulateObject(m_stateSys, m_coralManipulatorSys, m_algaeManipulatorSys);
+  }
+
+  // relic from attempts at using pid control on the climb
+  // testing this blew up a versaplanetary so we switched to a dumber strategy and thus this is unused
+  private SetClimbing SetClimbing(StateSys.climbing target) {
+    return new SetClimbing(target, m_stateSys, m_climbSys);
+  }
+
+  /* binds controller buttons to commands. note the use of specific button ids. you can specify buttons 
+     by their conventional names but since we use cheap knockoff controllers sometimes these names dont 
+     match the actual buttons and thus just using ids is safer. make sure you comment the conventional
+     button name so that you know what to actually press though */
   private void configureBindings() {
 
-      // coral position
-      m_controlController.pov(0).onTrue(new ToCL4(m_elevatorSys, m_manpulatorPitchSys)); // up
-      m_controlController.pov(90).onTrue(new ToCL3(m_elevatorSys, m_manpulatorPitchSys)); // right
-      m_controlController.pov(180).onTrue(new ToCL1(m_elevatorSys, m_manpulatorPitchSys)); // down
-      m_controlController.pov(270).onTrue(new ToCL2(m_elevatorSys, m_manpulatorPitchSys)); // left
-      m_controlController.button(9).onTrue(new ToHome(m_elevatorSys, m_manpulatorPitchSys)); // left stick button
+    // coral position
+    m_gunnerController.pov(0).onTrue(SetScoring(scoring.CL4)); // up
+    m_gunnerController.pov(90).onTrue(SetScoring(scoring.CL3)); // right
+    m_gunnerController.pov(180).onTrue(SetScoring(scoring.CL1)); // down
+    m_gunnerController.pov(270).onTrue(SetScoring(scoring.CL2)); // left
+    m_gunnerController.button(9).onTrue(SetScoring(scoring.Home)); // left stick button
+
+    // automatic manipulation
+    m_gunnerController.leftBumper().whileTrue(ManipulateObject()); // left bumper
+
+    // algae position
+    m_gunnerController.button(4).onTrue(SetScoring(scoring.ANet)); // y
+    m_gunnerController.button(1).onTrue(SetScoring(scoring.AL1)); // x
+    m_gunnerController.button(3).onTrue(SetScoring(scoring.AL2)); // b
+    m_gunnerController.button(2).onTrue(SetScoring(scoring.AGround)); // a
+    m_gunnerController.button(10).onTrue(SetScoring(scoring.AProcessor)); // start
+
+    // old pid controlled climb
+    // m_gunnerController.button(6).onTrue(SetClimbing(climbing.Home)); // right bumper
+    // m_gunnerController.button(8).onTrue(SetClimbing(climbing.Ready)); // right trigger
+    // m_gunnerController.button(12).onTrue(SetClimbing(climbing.Latched)); // right stick
+
+    /* this is a more typical example of what a command binding looks like, making a new object of the 
+       climb command and passing it parameters and the instances of the subsystems involved */
+    m_gunnerController.button(6).whileTrue(new climb(0.3, m_climbSys)); // right bumper
+    m_gunnerController.button(8).whileTrue(new climb(-0.5, m_climbSys)); // right trigger
+    m_gunnerController.button(12).whileTrue(new climb(0.7, m_climbSys)); // right stick
+
+    m_gunnerController.button(11).onTrue(
+      new SequentialCommandGroup(
+        Commands.runOnce(() -> m_coralManipulatorSys.manipulateCoral(1)),
+        Commands.waitSeconds(3),
+        Commands.runOnce(() -> m_coralManipulatorSys.stop())
+      )
+    );
+    
+    // toggle driving relative to the robot (tank drive style) instead of to the field
+    // Command driveRobotOrientedAngularVelocity  = drivebase.driveFieldOriented(driveRobotOriented);
+    // m_driveController.button(6).whileTrue(driveRobotOrientedAngularVelocity);
 
 
-      // coral manipultion (replace with automatic single button)
-      m_controlController.leftBumper().whileTrue(new CManipulate(m_coralManipulatorSys, CORAL.INTAKE_SPEED)); // left bumper
-      m_controlController.button(7).whileTrue(new CManipulate(m_coralManipulatorSys, CORAL.FRONT_OUTTAKE_SPEED));
-      m_controlController.button(11).whileTrue(new CManipulate(m_coralManipulatorSys, -CORAL.BACK_OUTTAKE_SPEED));//left stick
+  }
 
-      //algae manipulation
-      m_controlController.rightBumper().whileTrue(new AManipulate(m_algaeManipulatorSys, -0.3)); // left bumper
-      m_controlController.button(8).whileTrue(new AManipulate(m_algaeManipulatorSys, 1));
-      m_algaeManipulatorSys.setDefaultCommand(new AManipulate(m_algaeManipulatorSys, 0));
+  private void setDefaultCommands() {
+    // stuff to invert field oriented driving when alliance swaps. BROKEN AND NEEDS FIXED!!
+    // var alliance = DriverStation.getAlliance();
+    // if (alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false){ //We're Red
+    //   Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
+    //   drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    // }
+    // else{ // We're Blue
+    //   Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocityBlue);
+    //   drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    // }
 
-      // algae position
-      m_controlController.button(4).onTrue(new ToANet(m_elevatorSys, m_manpulatorPitchSys)); // y
-      m_controlController.button(1).onTrue(new ToAL1(m_elevatorSys, m_manpulatorPitchSys)); // x
-      m_controlController.button(3).onTrue(new ToAL2(m_elevatorSys, m_manpulatorPitchSys)); // b
-      m_controlController.button(2).onTrue(new ToAProcessor(m_elevatorSys, m_manpulatorPitchSys)); // a
-      m_controlController.button(10).onTrue(new ToAGround(m_elevatorSys, m_manpulatorPitchSys)); // start
-
-
-    m_driver2.button(1).onTrue(new ToClimbHome(m_climbSys)); //A
-    m_driver2.button(2).onTrue(new ToClimbReady(m_climbSys)); //B
-    m_driver2.button(4).onTrue(new ToClimbLatched(m_climbSys)); //Y
-
-    // Command driveFieldOrientedDirectAngle      = drivebase.driveFieldOriented(driveDirectAngle);
+    // Use the default field-oriented angular velocity drive command
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
-    Command driveRobotOrientedAngularVelocity  = drivebase.driveFieldOriented(driveRobotOriented);
-    // Command driveSetpointGen = drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngle);
-    // Command driveFieldOrientedDirectAngleKeyboard      = drivebase.driveFieldOriented(driveDirectAngleKeyboard);
-    // Command driveFieldOrientedAnglularVelocityKeyboard = drivebase.driveFieldOriented(driveAngularVelocityKeyboard);
-    // Command driveSetpointGenKeyboard = drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngleKeyboard);
-
-    if (RobotBase.isSimulation())
-    {
-      // drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
-    } else
-    {
-      drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-    }
-
-    if (Robot.isSimulation())
-    {
-      m_controlController.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
-      m_controlController.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
-
-    }
-    if (DriverStation.isTest())
-    {
-      drivebase.setDefaultCommand(driveRobotOrientedAngularVelocity); // Overrides drive command above!
-
-      m_controlController.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      m_controlController.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
-      m_controlController.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      m_controlController.back().whileTrue(drivebase.centerModulesCommand());
-      m_controlController.leftBumper().onTrue(Commands.none());
-      m_controlController.rightBumper().onTrue(Commands.none());
-    } else
-    {
-      // m_controlController.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      // m_controlController.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      // m_controlController.b().whileTrue(
-      //     drivebase.driveToPose(
-      //         new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
-      //                         );
-      m_controlController.start().whileTrue(Commands.none());
-      m_controlController.back().whileTrue(Commands.none());
-      m_controlController.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      m_controlController.rightBumper().onTrue(Commands.none());
-
-    }
+    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
   }
 
@@ -194,17 +235,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-  //  return new SequentialCommandGroup( 
-     return drivebase.driveToDistanceCommand(5, 1.5).withTimeout(2);
-    //   new ToCL3(m_elevatorSys, m_manpulatorPitchSys),
-    //   drivebase.driveToDistanceCommand(0.2, -0.5).withTimeout(2),
-    //   new CManipulate(m_coralManipulatorSys, MOTION.CORAL_FRONT_OUTTAKE_SPEED)
-    // );
-    
-    //Autos.exampleAuto(m_exampleSubsystem);
+    // sends command selected from autochooser dropdown
+    return autoChooser.getSelected();
   }
 
+  // used to unbrake motors when robot is disabled
   public void setMotorBrake(boolean brake)
   {
     drivebase.setMotorBrake(brake);

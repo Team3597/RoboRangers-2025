@@ -36,6 +36,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
+import frc.robot.Constants.CAMERA;
+import frc.robot.Constants.GLOBAL;
 import frc.robot.Constants.PROPERTIES;
 import frc.robot.subsystems.CameraSys;
 import frc.robot.subsystems.swervedrive.Vision.Cameras;
@@ -59,6 +61,8 @@ import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
+// all prewritten code that should just be copied from the internet
+
 public class SwerveSubsystem extends SubsystemBase
 {
 
@@ -80,9 +84,9 @@ public class SwerveSubsystem extends SubsystemBase
   private Vision vision;
 
   /**
-   * Creates a CameraSys object (connects to camera).
+   * Creates a CameraSys object (connected to camera in setupCameraSys).
    */
-  private CameraSys cameraSys = new CameraSys();
+  private CameraSys cameraSys;
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -119,6 +123,14 @@ public class SwerveSubsystem extends SubsystemBase
       // Stop the odometry thread if we are using vision that way we can synchronize updates better.
       swerveDrive.stopOdometryThread();
     }
+
+    if (CAMERA.PATH_PLANNER_ENABLED) // Sets up cameraSys and manually stops default odemetry thread (will update manually in periodic) when camera and path planner are set up.
+    {
+      if (GLOBAL.DEBUG_MODE) System.out.println("seting up camera in swerve subsystem");
+      setupCameraSys();
+      swerveDrive.stopOdometryThread();
+    }
+    
     setupPathPlanner();
   }
 
@@ -145,17 +157,32 @@ public class SwerveSubsystem extends SubsystemBase
     vision = new Vision(swerveDrive::getPose, swerveDrive.field);
   }
 
+  /**
+   * Setup cameraSys (created by Makili 3/12/2025).
+   */
+  public void setupCameraSys()
+  {
+    cameraSys = new CameraSys();
+    // if (GLOBAL.DEBUG_MODE) System.out.println("camera started");
+  }
+
   @Override
   public void periodic()
   {
-    // Uncomment the following line to update odometry every loop of periodic? Note by Makili Mar. 1, 2025.
-    // addVisionReading(); // adds vision reading (should automatically update odometry using the addVisionMeasurement method)
-
+    
     // When vision is enabled we must manually update odometry in SwerveDrive
     if (visionDriveTest)
     {
       swerveDrive.updateOdometry();
       vision.updatePoseEstimation(swerveDrive);
+    }
+
+    if (CAMERA.PATH_PLANNER_ENABLED) // Should update odometry when camera and path planner are set up.
+    {
+      swerveDrive.updateOdometry();
+      // if (GLOBAL.DEBUG_MODE) System.out.println("calling addVisionReading");
+      //cameraSys.getAprilID();
+      addVisionReading();
     }
   }
 
@@ -280,6 +307,7 @@ public class SwerveSubsystem extends SubsystemBase
   public Command driveToPose(Pose2d pose)
   {
 // Create the constraints to use while pathfinding
+
     PathConstraints constraints = new PathConstraints(
         swerveDrive.getMaximumChassisVelocity(), 4.0,
         swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(720));
@@ -732,7 +760,11 @@ public class SwerveSubsystem extends SubsystemBase
   public void addVisionReading()
   {
     EstimatedRobotPose estimatedRobotPose = cameraSys.getEstimatedRobotPose();
-    if (estimatedRobotPose == null) return;
+    if (estimatedRobotPose == null){
+      // if (GLOBAL.DEBUG_MODE) System.out.println("vision reading cancelled");
+      return;
+    }
+    if (GLOBAL.DEBUG_MODE) System.out.println("adding vision measurement");
     swerveDrive.addVisionMeasurement(estimatedRobotPose.estimatedPose.toPose2d(), estimatedRobotPose.timestampSeconds);
   }
 
