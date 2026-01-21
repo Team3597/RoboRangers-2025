@@ -92,8 +92,9 @@ public class RobotContainer {
                       .withControllerRotationAxis(m_driveController::getRightX) //Rotate 2
                       .deadband(OPERATOR.DEADBAND)
                       .scaleTranslation(0.8)
-                      .scaleRotation(0.7)
-                      .allianceRelativeControl(false);                    
+                      .scaleRotation(0-0.4)
+                      .cubeTranslationControllerAxis(true)
+                      .allianceRelativeControl(false);
 
   // more prewritten swerve
   // Clones the angular velocity input stream and converts it to a robotRelative input stream.
@@ -222,7 +223,7 @@ public class RobotContainer {
     //   drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
     // }
 
-    //Comment out all above if we don't do it, and use this:
+    // Use the default field-oriented angular velocity drive command
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 

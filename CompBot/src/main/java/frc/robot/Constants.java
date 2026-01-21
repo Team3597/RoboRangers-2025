@@ -50,7 +50,7 @@ public final class Constants {
     public static final int DRIVE_CONTROLLER_PORT = 0;
     public static final int GUNNER_CONTROLLER_PORT = 1;
     
-    public static final double DEADBAND = 0.05;
+    public static final double DEADBAND = 0.01;
     public static final double LEFT_Y_DEADBAND = 0.1;
     public static final double RIGHT_X_DEADBAND = 0.1;
     public static final double TURN_CONSTANT = 3; // was 6
@@ -157,7 +157,8 @@ public final class Constants {
 
     }
 
-    public static final double MANIPULATOR_PIVOT_OFFSET = 0.0;
+    public static final double MANIPULATOR_PIVOT_OFFSET = 0;
+    //encoder got screwed so zeroed + am lazy
 
     public static final double MANIPULATOR_MIN_PITCH = 0;
     // 0.57 pre zero
